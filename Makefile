@@ -1,5 +1,5 @@
 # Nornickel Hypothesis Factory — команды запуска.
-# Полный стек: docker compose (frontend :80, backend :8080, sidecar :8765).
+# Полный стек: docker compose (frontend :80, backend :8080, sidecar :8766).
 # Стек работает без .env, LLM-ключей и Postgres (Postgres — опция, профиль rag).
 
 COMPOSE ?= docker compose
@@ -16,7 +16,7 @@ build: ## собрать все docker-образы
 
 up: ## поднять стек в фоне (с пересборкой)
 	$(COMPOSE) up -d --build
-	@echo "frontend: http://localhost · backend: http://localhost:8080 · sidecar: http://localhost:8765"
+	@echo "frontend: http://localhost · backend: http://localhost:8080 · sidecar: http://localhost:8766"
 
 down: ## остановить и удалить контейнеры
 	$(COMPOSE) down

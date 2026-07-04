@@ -112,17 +112,61 @@ impl DiagnosticsSource for HttpDiagnosticsSource {
     }
 }
 
-/// `ExtractSource` через `POST {SIDECAR_URL}/extract`.
+/// `ExtractSource` через `POST {SIDECAR_URL}/extract`, fallback на файл.
 pub struct HttpExtractSource {
     sidecar_url: String,
-    _fallback: FileExtractSource,
+    fallback: FileExtractSource,
+    corpus_config: std::path::PathBuf,
 }
 
 impl HttpExtractSource {
-    pub fn new(sidecar_url: String, fallback: FileExtractSource) -> Self {
+    pub fn new(
+        sidecar_url: String,
+        fallback: FileExtractSource,
+        base_dir: impl AsRef<std::path::Path>,
+    ) -> Self {
         HttpExtractSource {
             sidecar_url,
-            _fallback: fallback,
+            fallback,
+            corpus_config: base_dir.as_ref().join("extract_corpus.json"),
+        }
+    }
+
+    /// Корпус live-извлечения из `docs/extract_corpus.json` (список документов —
+    /// это ДАННЫЕ, не код); нет/битый файл -> минимальный набор заметок.
+    fn live_extract_docs(&self) -> Vec<(String, String)> {
+        #[derive(serde::Deserialize)]
+        struct CorpusDoc {
+            path: String,
+            #[serde(default)]
+            mime: Option<String>,
+        }
+        #[derive(serde::Deserialize)]
+        struct Corpus {
+            docs: Vec<CorpusDoc>,
+        }
+        let parsed: Option<Corpus> = std::fs::read_to_string(&self.corpus_config)
+            .ok()
+            .and_then(|text| serde_json::from_str(&text).ok());
+        match parsed {
+            Some(corpus) if !corpus.docs.is_empty() => corpus
+                .docs
+                .into_iter()
+                .map(|d| {
+                    let mime = d.mime.unwrap_or_else(|| mime_of(&d.path).to_string());
+                    (d.path, mime)
+                })
+                .collect(),
+            _ => vec![
+                (
+                    "docs/sample_docs/flotation/classification_notes.txt".to_string(),
+                    "text/plain".to_string(),
+                ),
+                (
+                    "docs/sample_docs/flotation/flotation_kinetics_notes.txt".to_string(),
+                    "text/plain".to_string(),
+                ),
+            ],
         }
     }
 }
@@ -130,18 +174,20 @@ impl HttpExtractSource {
 impl ExtractSource for HttpExtractSource {
     fn load(&self) -> Result<ExtractResponse, String> {
         let url = format!("{}/extract", self.sidecar_url.trim_end_matches('/'));
-        let docs: Vec<Value> = live_extract_docs()
+        let docs: Vec<Value> = self
+            .live_extract_docs()
             .into_iter()
-            .map(|path| json!({ "path": path, "mime": mime_of(path) }))
+            .map(|(path, mime)| json!({ "path": path, "mime": mime }))
             .collect();
         let body = json!({ "docs": docs, "pack_id": "flotation-v1" });
-        blocking_post::<ExtractResponse>(url, body)
+        // Демо-страховка (README: стек обязан работать без LLM-ключей): live
+        // недоступен/не сконфигурирован -> зафиксированная фикстура, /run не падает.
+        match blocking_post::<ExtractResponse>(url, body) {
+            Ok(extract) => Ok(extract),
+            Err(e) => {
+                eprintln!("sidecar /extract failed: {e}; using file fallback");
+                self.fallback.load()
+            }
+        }
     }
-}
-
-fn live_extract_docs() -> [&'static str; 2] {
-    [
-        "docs/sample_docs/flotation/classification_notes.txt",
-        "docs/sample_docs/flotation/flotation_kinetics_notes.txt",
-    ]
 }

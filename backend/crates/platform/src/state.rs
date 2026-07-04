@@ -38,6 +38,7 @@ impl AppState {
             Some(url) => Arc::new(HttpExtractSource::new(
                 url.clone(),
                 FileExtractSource::new(&base_dir),
+                &base_dir,
             )),
             None => Arc::new(FileExtractSource::new(&base_dir)),
         };

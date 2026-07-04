@@ -48,3 +48,11 @@ Thumbs.db
 .codex/
 .claude/
 .impeccable/
+
+# приватные материалы команды — не для публичного репо
+telegram_messages.txt
+qa-session-voice*.txt
+voice.m4a
+*.png
+!docs/*.png
+norn-dop-data/

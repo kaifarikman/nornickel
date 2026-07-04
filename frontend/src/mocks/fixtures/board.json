@@ -27,7 +27,7 @@
   "diagnostics": {
     "factory_id": "kgmk",
     "pack_id": "flotation-v1",
-    "source_file": "/Users/kaifarikman/projects/nornickel-hackathon/norn-hack/Пример 1/Хвосты КГМК.xlsx",
+    "source_file": "norn-hack/Пример 1/Хвосты КГМК.xlsx",
     "sections": [
       "rock"
     ],

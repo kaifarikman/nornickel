@@ -1,0 +1,9 @@
+{
+  "_comment": "Корпус live-извлечения (POST /extract при SIDECAR_URL). Список документов — данные, не код: platform читает этот файл (NORNIKEL_ROOT/extract_corpus.json), пути резолвятся сайдкаром от корня репо. mime опционален (выводится из расширения). Для больших PDF используйте офлайн-прогон agent-system/app/scripts/extract_corpus.py и фиксируйте результат в fixtures/extract_response.json.",
+  "pack_id": "flotation-v1",
+  "docs": [
+    { "path": "norn-hack/Как читать отчет института по хвостам.docx" },
+    { "path": "docs/sample_docs/flotation/classification_notes.txt" },
+    { "path": "docs/sample_docs/flotation/flotation_kinetics_notes.txt" }
+  ]
+}

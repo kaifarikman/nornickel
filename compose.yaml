@@ -39,15 +39,13 @@ services:
     build:
       context: ./agent-system
       dockerfile: Dockerfile
+    # Режим целиком задаёт agent-system/.env (см. .env.example): без него —
+    # дефолты settings.py (mock-извлечение, LLM выключен) и стек обязан
+    # подниматься на чистой машине без ключей (обещание README).
+    # ВАЖНО: блок environment: перекрывал бы env_file — не возвращать его сюда.
     env_file:
       - path: ./agent-system/.env
         required: false
-    environment:
-      LLM_PROVIDER: ${LLM_PROVIDER:-openai}
-      OPENAI_MODEL_EXTRACT: ${OPENAI_MODEL_EXTRACT:-gpt-5.5}
-      OPENAI_MODEL_FAST: ${OPENAI_MODEL_FAST:-gpt-5.5}
-      OPENAI_EMBEDDING_MODEL: ${OPENAI_EMBEDDING_MODEL:-text-embedding-3-small}
-      SIDECAR_LLM_ENABLED: ${SIDECAR_LLM_ENABLED:-true}
     ports:
       - "8766:8765"
     volumes:
