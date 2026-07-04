@@ -1,0 +1,51 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_MODE: http
+    ports:
+      - "80:8080"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      NORNIKEL_ROOT: /data/docs
+      SIDECAR_URL: http://sidecar:8765
+      BIND_ADDR: 0.0.0.0:8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./docs:/data/docs:ro
+    depends_on:
+      - sidecar
+
+  sidecar:
+    build:
+      context: ./agent-system
+      dockerfile: Dockerfile
+    environment:
+      SIDECAR_LLM_ENABLED: "false"
+    ports:
+      - "8765:8765"
+    volumes:
+      - ./docs:/app/docs:ro
+      - ./norn-hack:/app/norn-hack:ro
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    profiles: ["rag"]
+    environment:
+      POSTGRES_DB: nornikel
+      POSTGRES_USER: nornikel
+      POSTGRES_PASSWORD: nornikel
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:

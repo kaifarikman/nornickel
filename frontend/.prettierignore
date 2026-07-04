@@ -1,0 +1,7 @@
+dist
+coverage
+node_modules
+.pnpm-store
+pnpm-lock.yaml
+src/mocks/fixtures
+public/mockServiceWorker.js

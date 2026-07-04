@@ -1,0 +1,1271 @@
+{
+  "snapshot": {
+    "id": "snapshot_kgmk_fixture_001",
+    "hash": "fixture-kgmk-001",
+    "pack_id": "flotation-v1"
+  },
+  "kpi_contract": {
+    "factory_id": "kgmk",
+    "target": {
+      "metric": "recoverable_losses_element_28",
+      "direction": "decrease",
+      "minimum_delta_percent": 10
+    },
+    "constraints": [
+      {
+        "metric": "capex_class",
+        "op": "<=",
+        "value": 3,
+        "unit": "class"
+      }
+    ],
+    "prices_usd_per_t": {
+      "element_28": 16500,
+      "element_29": 9500
+    }
+  },
+  "diagnostics": {
+    "factory_id": "kgmk",
+    "pack_id": "flotation-v1",
+    "source_file": "/Users/kaifarikman/projects/nornickel-hackathon/norn-hack/Пример 1/Хвосты КГМК.xlsx",
+    "sections": [
+      "rock"
+    ],
+    "totals": {
+      "tails_smt": 5824591.0,
+      "element_28": {
+        "pct": 0.1784,
+        "tons": 10392.3
+      },
+      "element_29": {
+        "pct": 0.0726,
+        "tons": 4229.7
+      }
+    },
+    "loss_cells": [
+      {
+        "section": "rock",
+        "size_class": "+71",
+        "mineral_form": "open_pnt_cp",
+        "element": "element_28",
+        "tons": 13.43,
+        "share_of_class_pct": 0.5,
+        "recoverable": true,
+        "diagnosis": "flotation_kinetics",
+        "cell_ref": "Итог!E43"
+      },
+      {
+        "section": "rock",
+        "size_class": "+71",
+        "mineral_form": "open_pnt_cp",
+        "element": "element_29",
+        "tons": 14.61,
+        "share_of_class_pct": 1.27,
+        "recoverable": true,
+        "diagnosis": "flotation_kinetics",
+        "cell_ref": "Итог!G43"
+      },
+      {
+        "section": "rock",
+        "size_class": "+71",
+        "mineral_form": "closed_pnt_cp",
+        "element": "element_28",
+        "tons": 2088.28,
+        "share_of_class_pct": 77.89,
+        "recoverable": true,
+        "diagnosis": "liberation_deficit",
+        "cell_ref": "Итог!E44"
+      },
+      {
+        "section": "rock",
+        "size_class": "+71",
+        "mineral_form": "closed_pnt_cp",
+        "element": "element_29",
+        "tons": 1134.65,
+        "share_of_class_pct": 98.73,
+        "recoverable": true,
+        "diagnosis": "liberation_deficit",
+        "cell_ref": "Итог!G44"
+      },
+      {
+        "section": "rock",
+        "size_class": "+71",
+        "mineral_form": "pyrrhotite_impurity",
+        "element": "element_28",
+        "tons": 28.68,
+        "share_of_class_pct": 1.07,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!E45"
+      },
+      {
+        "section": "rock",
+        "size_class": "+71",
+        "mineral_form": "pyrrhotite_impurity",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!G45"
+      },
+      {
+        "section": "rock",
+        "size_class": "+71",
+        "mineral_form": "silicate_valleriite",
+        "element": "element_28",
+        "tons": 550.55,
+        "share_of_class_pct": 20.54,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!E46"
+      },
+      {
+        "section": "rock",
+        "size_class": "+71",
+        "mineral_form": "silicate_valleriite",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!G46"
+      },
+      {
+        "section": "rock",
+        "size_class": "+71",
+        "mineral_form": "pyrite_other_sulfides",
+        "element": "element_28",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!E47"
+      },
+      {
+        "section": "rock",
+        "size_class": "+71",
+        "mineral_form": "pyrite_other_sulfides",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!G47"
+      },
+      {
+        "section": "rock",
+        "size_class": "+71",
+        "mineral_form": "millerite",
+        "element": "element_28",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": true,
+        "diagnosis": "flotation_kinetics",
+        "cell_ref": "Итог!E48"
+      },
+      {
+        "section": "rock",
+        "size_class": "+71",
+        "mineral_form": "millerite",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": null,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!G48"
+      },
+      {
+        "section": "rock",
+        "size_class": "-71 + 45",
+        "mineral_form": "open_pnt_cp",
+        "element": "element_28",
+        "tons": 45.29,
+        "share_of_class_pct": 3.11,
+        "recoverable": true,
+        "diagnosis": "flotation_kinetics",
+        "cell_ref": "Итог!E58"
+      },
+      {
+        "section": "rock",
+        "size_class": "-71 + 45",
+        "mineral_form": "open_pnt_cp",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": true,
+        "diagnosis": "flotation_kinetics",
+        "cell_ref": "Итог!G58"
+      },
+      {
+        "section": "rock",
+        "size_class": "-71 + 45",
+        "mineral_form": "closed_pnt_cp",
+        "element": "element_28",
+        "tons": 916.66,
+        "share_of_class_pct": 62.87,
+        "recoverable": true,
+        "diagnosis": "liberation_deficit",
+        "cell_ref": "Итог!E59"
+      },
+      {
+        "section": "rock",
+        "size_class": "-71 + 45",
+        "mineral_form": "closed_pnt_cp",
+        "element": "element_29",
+        "tons": 527.08,
+        "share_of_class_pct": 100.0,
+        "recoverable": true,
+        "diagnosis": "liberation_deficit",
+        "cell_ref": "Итог!G59"
+      },
+      {
+        "section": "rock",
+        "size_class": "-71 + 45",
+        "mineral_form": "pyrrhotite_impurity",
+        "element": "element_28",
+        "tons": 15.11,
+        "share_of_class_pct": 1.04,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!E60"
+      },
+      {
+        "section": "rock",
+        "size_class": "-71 + 45",
+        "mineral_form": "pyrrhotite_impurity",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!G60"
+      },
+      {
+        "section": "rock",
+        "size_class": "-71 + 45",
+        "mineral_form": "silicate_valleriite",
+        "element": "element_28",
+        "tons": 480.9,
+        "share_of_class_pct": 32.98,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!E61"
+      },
+      {
+        "section": "rock",
+        "size_class": "-71 + 45",
+        "mineral_form": "silicate_valleriite",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!G61"
+      },
+      {
+        "section": "rock",
+        "size_class": "-71 + 45",
+        "mineral_form": "pyrite_other_sulfides",
+        "element": "element_28",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!E62"
+      },
+      {
+        "section": "rock",
+        "size_class": "-71 + 45",
+        "mineral_form": "pyrite_other_sulfides",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!G62"
+      },
+      {
+        "section": "rock",
+        "size_class": "-71 + 45",
+        "mineral_form": "millerite",
+        "element": "element_28",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": true,
+        "diagnosis": "flotation_kinetics",
+        "cell_ref": "Итог!E63"
+      },
+      {
+        "section": "rock",
+        "size_class": "-45 + 20",
+        "mineral_form": "open_pnt_cp",
+        "element": "element_28",
+        "tons": 140.27,
+        "share_of_class_pct": 5.87,
+        "recoverable": true,
+        "diagnosis": "flotation_kinetics",
+        "cell_ref": "Итог!E73"
+      },
+      {
+        "section": "rock",
+        "size_class": "-45 + 20",
+        "mineral_form": "open_pnt_cp",
+        "element": "element_29",
+        "tons": 140.83,
+        "share_of_class_pct": 16.3,
+        "recoverable": true,
+        "diagnosis": "flotation_kinetics",
+        "cell_ref": "Итог!G73"
+      },
+      {
+        "section": "rock",
+        "size_class": "-45 + 20",
+        "mineral_form": "closed_pnt_cp",
+        "element": "element_28",
+        "tons": 1392.71,
+        "share_of_class_pct": 58.31,
+        "recoverable": true,
+        "diagnosis": "liberation_deficit",
+        "cell_ref": "Итог!E74"
+      },
+      {
+        "section": "rock",
+        "size_class": "-45 + 20",
+        "mineral_form": "closed_pnt_cp",
+        "element": "element_29",
+        "tons": 723.15,
+        "share_of_class_pct": 83.7,
+        "recoverable": true,
+        "diagnosis": "liberation_deficit",
+        "cell_ref": "Итог!G74"
+      },
+      {
+        "section": "rock",
+        "size_class": "-45 + 20",
+        "mineral_form": "pyrrhotite_impurity",
+        "element": "element_28",
+        "tons": 68.57,
+        "share_of_class_pct": 2.87,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!E75"
+      },
+      {
+        "section": "rock",
+        "size_class": "-45 + 20",
+        "mineral_form": "pyrrhotite_impurity",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!G75"
+      },
+      {
+        "section": "rock",
+        "size_class": "-45 + 20",
+        "mineral_form": "silicate_valleriite",
+        "element": "element_28",
+        "tons": 786.73,
+        "share_of_class_pct": 32.94,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!E76"
+      },
+      {
+        "section": "rock",
+        "size_class": "-45 + 20",
+        "mineral_form": "silicate_valleriite",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!G76"
+      },
+      {
+        "section": "rock",
+        "size_class": "-45 + 20",
+        "mineral_form": "pyrite_other_sulfides",
+        "element": "element_28",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!E77"
+      },
+      {
+        "section": "rock",
+        "size_class": "-45 + 20",
+        "mineral_form": "pyrite_other_sulfides",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!G77"
+      },
+      {
+        "section": "rock",
+        "size_class": "-45 + 20",
+        "mineral_form": "millerite",
+        "element": "element_28",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": true,
+        "diagnosis": "flotation_kinetics",
+        "cell_ref": "Итог!E78"
+      },
+      {
+        "section": "rock",
+        "size_class": "-20 + 10",
+        "mineral_form": "open_pnt_cp",
+        "element": "element_28",
+        "tons": 161.21,
+        "share_of_class_pct": 18.29,
+        "recoverable": true,
+        "diagnosis": "flotation_kinetics",
+        "cell_ref": "Итог!E88"
+      },
+      {
+        "section": "rock",
+        "size_class": "-20 + 10",
+        "mineral_form": "open_pnt_cp",
+        "element": "element_29",
+        "tons": 248.91,
+        "share_of_class_pct": 73.87,
+        "recoverable": true,
+        "diagnosis": "flotation_kinetics",
+        "cell_ref": "Итог!G88"
+      },
+      {
+        "section": "rock",
+        "size_class": "-20 + 10",
+        "mineral_form": "closed_pnt_cp",
+        "element": "element_28",
+        "tons": 382.22,
+        "share_of_class_pct": 43.37,
+        "recoverable": true,
+        "diagnosis": "liberation_deficit",
+        "cell_ref": "Итог!E89"
+      },
+      {
+        "section": "rock",
+        "size_class": "-20 + 10",
+        "mineral_form": "closed_pnt_cp",
+        "element": "element_29",
+        "tons": 88.04,
+        "share_of_class_pct": 26.13,
+        "recoverable": true,
+        "diagnosis": "liberation_deficit",
+        "cell_ref": "Итог!G89"
+      },
+      {
+        "section": "rock",
+        "size_class": "-20 + 10",
+        "mineral_form": "pyrrhotite_impurity",
+        "element": "element_28",
+        "tons": 81.14,
+        "share_of_class_pct": 9.21,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!E90"
+      },
+      {
+        "section": "rock",
+        "size_class": "-20 + 10",
+        "mineral_form": "pyrrhotite_impurity",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!G90"
+      },
+      {
+        "section": "rock",
+        "size_class": "-20 + 10",
+        "mineral_form": "silicate_valleriite",
+        "element": "element_28",
+        "tons": 256.77,
+        "share_of_class_pct": 29.13,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!E91"
+      },
+      {
+        "section": "rock",
+        "size_class": "-20 + 10",
+        "mineral_form": "silicate_valleriite",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!G91"
+      },
+      {
+        "section": "rock",
+        "size_class": "-20 + 10",
+        "mineral_form": "pyrite_other_sulfides",
+        "element": "element_28",
+        "tons": 0.02,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!E92"
+      },
+      {
+        "section": "rock",
+        "size_class": "-20 + 10",
+        "mineral_form": "millerite",
+        "element": "element_28",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": true,
+        "diagnosis": "flotation_kinetics",
+        "cell_ref": "Итог!E93"
+      },
+      {
+        "section": "rock",
+        "size_class": "-10",
+        "mineral_form": "open_pnt_cp",
+        "element": "element_28",
+        "tons": 2409.93,
+        "share_of_class_pct": 80.77,
+        "recoverable": true,
+        "diagnosis": "slimes_overgrinding",
+        "cell_ref": "Итог!E103"
+      },
+      {
+        "section": "rock",
+        "size_class": "-10",
+        "mineral_form": "open_pnt_cp",
+        "element": "element_29",
+        "tons": 1352.48,
+        "share_of_class_pct": 100.0,
+        "recoverable": true,
+        "diagnosis": "slimes_overgrinding",
+        "cell_ref": "Итог!G103"
+      },
+      {
+        "section": "rock",
+        "size_class": "-10",
+        "mineral_form": "closed_pnt_cp",
+        "element": "element_28",
+        "tons": 14.11,
+        "share_of_class_pct": 0.47,
+        "recoverable": true,
+        "diagnosis": "liberation_deficit",
+        "cell_ref": "Итог!E104"
+      },
+      {
+        "section": "rock",
+        "size_class": "-10",
+        "mineral_form": "closed_pnt_cp",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": true,
+        "diagnosis": "liberation_deficit",
+        "cell_ref": "Итог!G104"
+      },
+      {
+        "section": "rock",
+        "size_class": "-10",
+        "mineral_form": "pyrrhotite_impurity",
+        "element": "element_28",
+        "tons": 82.97,
+        "share_of_class_pct": 2.78,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!E105"
+      },
+      {
+        "section": "rock",
+        "size_class": "-10",
+        "mineral_form": "pyrrhotite_impurity",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!G105"
+      },
+      {
+        "section": "rock",
+        "size_class": "-10",
+        "mineral_form": "silicate_valleriite",
+        "element": "element_28",
+        "tons": 476.7,
+        "share_of_class_pct": 15.98,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!E106"
+      },
+      {
+        "section": "rock",
+        "size_class": "-10",
+        "mineral_form": "silicate_valleriite",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!G106"
+      },
+      {
+        "section": "rock",
+        "size_class": "-10",
+        "mineral_form": "pyrite_other_sulfides",
+        "element": "element_28",
+        "tons": 0.08,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!E107"
+      },
+      {
+        "section": "rock",
+        "size_class": "-10",
+        "mineral_form": "pyrite_other_sulfides",
+        "element": "element_29",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": false,
+        "diagnosis": "not_recoverable",
+        "cell_ref": "Итог!G107"
+      },
+      {
+        "section": "rock",
+        "size_class": "-10",
+        "mineral_form": "millerite",
+        "element": "element_28",
+        "tons": 0.0,
+        "share_of_class_pct": 0.0,
+        "recoverable": true,
+        "diagnosis": "flotation_kinetics",
+        "cell_ref": "Итог!E108"
+      }
+    ],
+    "diagnosis_summary": [
+      {
+        "diagnosis": "liberation_deficit",
+        "element": "element_28",
+        "tons": 4794.0
+      },
+      {
+        "diagnosis": "not_recoverable",
+        "element": "element_28",
+        "tons": 2828.2
+      },
+      {
+        "diagnosis": "liberation_deficit",
+        "element": "element_29",
+        "tons": 2472.9
+      },
+      {
+        "diagnosis": "slimes_overgrinding",
+        "element": "element_28",
+        "tons": 2409.9
+      },
+      {
+        "diagnosis": "slimes_overgrinding",
+        "element": "element_29",
+        "tons": 1352.5
+      },
+      {
+        "diagnosis": "flotation_kinetics",
+        "element": "element_29",
+        "tons": 404.4
+      },
+      {
+        "diagnosis": "flotation_kinetics",
+        "element": "element_28",
+        "tons": 360.2
+      },
+      {
+        "diagnosis": "not_recoverable",
+        "element": "element_29",
+        "tons": 0.0
+      }
+    ],
+    "data_quality": [
+      {
+        "issue": "ref_error",
+        "location": "Итог!D28",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!E28",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!F28",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!G28",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!D29",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!E29",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!F29",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!G29",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!D30",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!E30",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!F30",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!D31",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!E31",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!F31",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!G31",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!D32",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!E32",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!F32",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!G32",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!D33",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!E33",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!D36",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!E36",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!F36",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!G36",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!D38",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!E38",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!F38",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!G38",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!D39",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!E39",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!F39",
+        "handling": "treated_as_zero"
+      },
+      {
+        "issue": "ref_error",
+        "location": "Итог!G39",
+        "handling": "treated_as_zero"
+      }
+    ],
+    "diag_refs": [
+      { "id": "diag_kgmk_closed_71", "cell_ref": "Итог!E44", "size_class": "+71", "mineral_form": "closed_pnt_cp", "diagnosis": "liberation_deficit" },
+      { "id": "diag_kgmk_closed_71_45", "cell_ref": "Итог!E59", "size_class": "-71 + 45", "mineral_form": "closed_pnt_cp", "diagnosis": "liberation_deficit" },
+      { "id": "diag_kgmk_closed_45_20", "cell_ref": "Итог!E74", "size_class": "-45 + 20", "mineral_form": "closed_pnt_cp", "diagnosis": "liberation_deficit" },
+      { "id": "diag_kgmk_closed_20_10", "cell_ref": "Итог!E89", "size_class": "-20 + 10", "mineral_form": "closed_pnt_cp", "diagnosis": "liberation_deficit" },
+      { "id": "diag_kgmk_open_20_10", "cell_ref": "Итог!E88", "size_class": "-20 + 10", "mineral_form": "open_pnt_cp", "diagnosis": "flotation_kinetics" },
+      { "id": "diag_kgmk_open_10", "cell_ref": "Итог!E103", "size_class": "-10", "mineral_form": "open_pnt_cp", "diagnosis": "slimes_overgrinding" }
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": "hyp_001",
+      "title": "Заменить песковые насадки гидроциклонов 12\" → 8\"",
+      "summary": "Смещение границы разделения в тонкую сторону вернёт крупные сростки на доизмельчение и снизит потери закрытого Pnt/Cp в классах +71 и -71+45.",
+      "status": "recommended",
+      "rank": 1,
+      "score_total": 0.867,
+      "score_breakdown": {
+        "kpi_impact": 0.95,
+        "evidence": 0.85,
+        "plausibility": 0.9,
+        "cost": 0.95,
+        "risk": 0.7,
+        "novelty": 0.35
+      },
+      "economic_effect": {
+        "addressable_tons": {
+          "element_28": 4794.0
+        },
+        "recovery_gain_pct_range": [
+          5,
+          15
+        ],
+        "value_usd_range": [
+          3955050,
+          11865150
+        ],
+        "assumptions": [
+          "price element_28 = 16500 $/t (параметр KpiContract)",
+          "диагноз liberation_deficit: addressable_tons из diagnostics_kgmk.json",
+          "recovery gain range — консервативная оценка из trace-claims"
+        ]
+      },
+      "trace": [
+        "diag_kgmk_closed_71",
+        "claim_001",
+        "claim_002",
+        "claim_003",
+        "claim_017"
+      ],
+      "source_nodes": [
+        "node_hydrocyclone_nozzle",
+        "node_separation_size",
+        "node_regrind_circuit",
+        "node_liberation",
+        "node_diag_liberation_deficit"
+      ],
+      "risks": [
+        "рост циркулирующей нагрузки на мельницы — проверить запас производительности"
+      ],
+      "missing_evidence": [
+        "нет claim о влиянии на извлечение element_29 напрямую"
+      ],
+      "doe_plan": {
+        "objective": "Подтвердить рост раскрытия закрытого Pnt/Cp в крупных классах после смены насадок.",
+        "factors": [
+          "диаметр песковой насадки",
+          "давление на входе ГЦ"
+        ],
+        "measurements": [
+          "гранулометрия слива",
+          "доля закрытого Pnt/Cp по классам",
+          "содержание element_28 в хвостах"
+        ],
+        "minimum_runs": 6
+      },
+      "expert_match": { "matched": true, "expert_hypothesis_id": "kgmk_h3" }
+    },
+    {
+      "id": "hyp_002",
+      "title": "Изменить геометрию футеровки шаровых мельниц",
+      "summary": "Оптимизация профиля футеровки повышает эффективность измельчения и стабильность помола — меньше недоизмельчённых сростков без роста шламов.",
+      "status": "watch",
+      "rank": 2,
+      "score_total": 0.732,
+      "score_breakdown": {
+        "kpi_impact": 0.8,
+        "evidence": 0.7,
+        "plausibility": 0.8,
+        "cost": 0.75,
+        "risk": 0.6,
+        "novelty": 0.4
+      },
+      "economic_effect": {
+        "addressable_tons": {
+          "element_28": 4794.0
+        },
+        "recovery_gain_pct_range": [
+          3,
+          10
+        ],
+        "value_usd_range": [
+          2373030,
+          7910100
+        ],
+        "assumptions": [
+          "price element_28 = 16500 $/t (параметр KpiContract)",
+          "диагноз liberation_deficit: addressable_tons из diagnostics_kgmk.json",
+          "recovery gain range — консервативная оценка из trace-claims"
+        ]
+      },
+      "trace": [
+        "diag_kgmk_closed_45_20",
+        "claim_004",
+        "claim_014",
+        "claim_003"
+      ],
+      "source_nodes": [
+        "node_mill_liner_geometry",
+        "node_grind_stability",
+        "node_liberation",
+        "node_diag_liberation_deficit"
+      ],
+      "risks": [
+        "эффект зависит от износа текущей футеровки",
+        "простой мельницы на перефутеровку"
+      ],
+      "missing_evidence": [
+        "нет данных по текущему профилю футеровки КГМК"
+      ],
+      "doe_plan": {
+        "objective": "Сравнить гранулометрию разгрузки до/после смены профиля футеровки.",
+        "factors": [
+          "профиль футеровки",
+          "заполнение мелющей средой"
+        ],
+        "measurements": [
+          "гранулометрия разгрузки",
+          "производительность",
+          "удельный расход электроэнергии"
+        ],
+        "minimum_runs": 4
+      },
+      "expert_match": { "matched": true, "expert_hypothesis_id": "kgmk_h2" }
+    },
+    {
+      "id": "hyp_004",
+      "title": "Грохота тонкого грохочения после 2-й стадии измельчения",
+      "summary": "Грохочение разделяет по размеру, а не по плотности — точнее отсекает нераскрытые сростки на доизмельчение, чем гидроциклоны.",
+      "status": "watch",
+      "rank": 3,
+      "score_total": 0.708,
+      "score_breakdown": {
+        "kpi_impact": 0.9,
+        "evidence": 0.7,
+        "plausibility": 0.8,
+        "cost": 0.35,
+        "risk": 0.5,
+        "novelty": 0.6
+      },
+      "economic_effect": {
+        "addressable_tons": {
+          "element_28": 4794.0
+        },
+        "recovery_gain_pct_range": [
+          8,
+          20
+        ],
+        "value_usd_range": [
+          6328080,
+          15820200
+        ],
+        "assumptions": [
+          "price element_28 = 16500 $/t (параметр KpiContract)",
+          "диагноз liberation_deficit: addressable_tons из diagnostics_kgmk.json",
+          "recovery gain range — консервативная оценка из trace-claims"
+        ]
+      },
+      "trace": [
+        "diag_kgmk_closed_71_45",
+        "claim_011",
+        "claim_002",
+        "claim_003"
+      ],
+      "source_nodes": [
+        "node_fine_screening",
+        "node_separation_size",
+        "node_regrind_circuit",
+        "node_liberation",
+        "node_diag_liberation_deficit"
+      ],
+      "risks": [
+        "capex: закупка и монтаж грохотов",
+        "площадка в цехе"
+      ],
+      "missing_evidence": [
+        "нет ТЭО для конкретной площадки КГМК"
+      ],
+      "doe_plan": {
+        "objective": "Пилот: сравнить точность разделения грохот vs ГЦ на потоке 2-й стадии.",
+        "factors": [
+          "размер ячейки сетки",
+          "нагрузка на грохот"
+        ],
+        "measurements": [
+          "гранулометрия продуктов",
+          "доля закрытого Pnt/Cp в сливе",
+          "извлечение"
+        ],
+        "minimum_runs": 5
+      },
+      "expert_match": { "matched": true, "expert_hypothesis_id": "kgmk_h1" }
+    },
+    {
+      "id": "hyp_003",
+      "title": "Увеличить фронт первой контрольной флотации",
+      "summary": "Раскрытый Pnt/Cp средних классов не извлекается из-за недостатка времени флотации — перераспределение фронта добавит время контрольной операции.",
+      "status": "watch",
+      "rank": 4,
+      "score_total": 0.695,
+      "score_breakdown": {
+        "kpi_impact": 0.55,
+        "evidence": 0.75,
+        "plausibility": 0.85,
+        "cost": 0.9,
+        "risk": 0.75,
+        "novelty": 0.3
+      },
+      "economic_effect": {
+        "addressable_tons": {
+          "element_28": 360.2
+        },
+        "recovery_gain_pct_range": [
+          5,
+          12
+        ],
+        "value_usd_range": [
+          297165,
+          713196
+        ],
+        "assumptions": [
+          "price element_28 = 16500 $/t (параметр KpiContract)",
+          "диагноз flotation_kinetics: addressable_tons из diagnostics_kgmk.json",
+          "recovery gain range — консервативная оценка из trace-claims"
+        ]
+      },
+      "trace": [
+        "diag_kgmk_open_20_10",
+        "claim_009",
+        "claim_016"
+      ],
+      "source_nodes": [
+        "node_flotation_front",
+        "node_flotation_recovery_kinetics",
+        "node_diag_flotation_kinetics"
+      ],
+      "risks": [
+        "снижение качества концентрата при затянутой флотации"
+      ],
+      "missing_evidence": [
+        "нет кинетической кривой флотации для руды КГМК"
+      ],
+      "doe_plan": {
+        "objective": "Снять кинетику контрольной флотации и определить оптимальное время.",
+        "factors": [
+          "время флотации",
+          "расход собирателя"
+        ],
+        "measurements": [
+          "извлечение element_28 по времени",
+          "качество концентрата"
+        ],
+        "minimum_runs": 6
+      },
+      "expert_match": null
+    },
+    {
+      "id": "hyp_005",
+      "title": "Магнитная сепарация надцелевого класса с доизмельчением в отдельном цикле",
+      "summary": "Выделение пирротиновой фракции крупных классов магнитной сепарацией в отдельный цикл доизмельчения и дофлотации.",
+      "status": "watch",
+      "rank": 5,
+      "score_total": 0.679,
+      "score_breakdown": {
+        "kpi_impact": 0.92,
+        "evidence": 0.6,
+        "plausibility": 0.75,
+        "cost": 0.3,
+        "risk": 0.45,
+        "novelty": 0.7
+      },
+      "economic_effect": {
+        "addressable_tons": {
+          "element_28": 4794.0
+        },
+        "recovery_gain_pct_range": [
+          10,
+          25
+        ],
+        "value_usd_range": [
+          7910100,
+          19775250
+        ],
+        "assumptions": [
+          "price element_28 = 16500 $/t (параметр KpiContract)",
+          "диагноз liberation_deficit: addressable_tons из diagnostics_kgmk.json",
+          "recovery gain range — консервативная оценка из trace-claims"
+        ]
+      },
+      "trace": [
+        "diag_kgmk_closed_20_10",
+        "claim_012",
+        "claim_002",
+        "claim_016"
+      ],
+      "source_nodes": [
+        "node_magnetic_separation",
+        "node_regrind_circuit",
+        "node_liberation",
+        "node_diag_liberation_deficit"
+      ],
+      "risks": [
+        "крупный capex (новое оборудование + отдельный цикл)",
+        "магнитные свойства пирротина КГМК требуют подтверждения"
+      ],
+      "missing_evidence": [
+        "нет данных по магнитной восприимчивости пирротиновой фракции КГМК"
+      ],
+      "doe_plan": {
+        "objective": "Лабораторная магнитная сепарация проб хвостов крупных классов.",
+        "factors": [
+          "напряжённость поля",
+          "крупность питания"
+        ],
+        "measurements": [
+          "выход магнитной фракции",
+          "содержание element_28/29 в фракциях"
+        ],
+        "minimum_runs": 6
+      },
+      "expert_match": { "matched": true, "expert_hypothesis_id": "kgmk_h5" }
+    },
+    {
+      "id": "hyp_006",
+      "title": "Снизить переизмельчение: контроль гранулометрии и стабилизация помола",
+      "summary": "Раскрытый минерал в классе -10 мкм уже потерян для флотации — стабилизация питания (зазор дробилок) и режима помола сокращает генерацию шламов.",
+      "status": "watch",
+      "rank": 6,
+      "score_total": 0.677,
+      "score_breakdown": {
+        "kpi_impact": 0.6,
+        "evidence": 0.75,
+        "plausibility": 0.8,
+        "cost": 0.7,
+        "risk": 0.7,
+        "novelty": 0.45
+      },
+      "economic_effect": {
+        "addressable_tons": {
+          "element_28": 2409.9
+        },
+        "recovery_gain_pct_range": [
+          3,
+          8
+        ],
+        "value_usd_range": [
+          1192901,
+          3181068
+        ],
+        "assumptions": [
+          "price element_28 = 16500 $/t (параметр KpiContract)",
+          "диагноз slimes_overgrinding: addressable_tons из diagnostics_kgmk.json",
+          "recovery gain range — консервативная оценка из trace-claims"
+        ]
+      },
+      "trace": [
+        "diag_kgmk_open_10",
+        "claim_013",
+        "claim_014",
+        "claim_006",
+        "claim_007"
+      ],
+      "source_nodes": [
+        "node_crusher_gap_control",
+        "node_grind_stability",
+        "node_slime_generation",
+        "node_diag_slimes_overgrinding"
+      ],
+      "risks": [
+        "эффект размазан по всей цепочке — сложно изолировать вклад"
+      ],
+      "missing_evidence": [
+        "нет тренда гранулометрии питания мельниц КГМК"
+      ],
+      "doe_plan": {
+        "objective": "Оценить связь стабильности питания и доли класса -10 мкм в хвостах.",
+        "factors": [
+          "зазор щели дробилки",
+          "подача воды в мельницы"
+        ],
+        "measurements": [
+          "гранулометрия питания",
+          "доля -10 мкм в хвостах",
+          "потери раскрытого Pnt/Cp в -10"
+        ],
+        "minimum_runs": 8
+      },
+      "expert_match": null
+    }
+  ]
+}

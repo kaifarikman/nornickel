@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="648" viewBox="0 0 880 648" font-family="'Helvetica Neue', Arial, sans-serif">
+  <style>
+    .title { font-size: 16px; font-weight: 700; fill: #1a1a17; }
+    .lg    { font-size: 11px; font-weight: 500; fill: #4a4a45; }
+    .zh    { font-size: 13px; font-weight: 700; }
+    .zs    { font-size: 10.5px; font-weight: 500; }
+    .pt    { font-size: 11.5px; font-weight: 600; }
+    .ps    { font-size: 9.5px; font-weight: 400; }
+    .bk    { font-size: 11px; font-weight: 700; }
+    .gh    { font-size: 12px; font-weight: 700; fill: #3A3A36; }
+    .gs    { font-size: 9.5px; font-weight: 400; fill: #6f6f6a; }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#8a887f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="880" height="648" fill="#FCFCFB"/>
+  <text class="title" x="30" y="30">Граница волатильности: что переживает пивот, а что переписывается</text>
+
+  <circle cx="34" cy="50" r="5" fill="#EF9F27"/><text class="lg" x="44" y="54">Python — волатильно (агент)</text>
+  <circle cx="232" cy="50" r="5" fill="#1D9E75"/><text class="lg" x="242" y="54">Rust — стабильно (ядро+платформа)</text>
+  <circle cx="470" cy="50" r="5" fill="#7F77DD"/><text class="lg" x="480" y="54">TS — фронт</text>
+  <circle cx="540" cy="50" r="5" fill="#B8B7B0"/><text class="lg" x="550" y="54">вход</text>
+
+  <!-- INPUTS -->
+  <g>
+    <rect x="30" y="68" width="219" height="50" rx="8" fill="#F4F4F2" stroke="#B8B7B0" stroke-width="1"/>
+    <text class="pt" x="139" y="90" text-anchor="middle" fill="#3A3A36">KPI-контракт</text>
+    <text class="ps" x="139" y="105" text-anchor="middle" fill="#6f6f6a">+ ограничения</text>
+
+    <rect x="266" y="68" width="219" height="50" rx="8" fill="#F4F4F2" stroke="#B8B7B0" stroke-width="1"/>
+    <text class="pt" x="375" y="90" text-anchor="middle" fill="#3A3A36">Корпус</text>
+    <text class="ps" x="375" y="105" text-anchor="middle" fill="#6f6f6a">локальная папка PDF/DOCX/CSV</text>
+
+    <rect x="502" y="68" width="218" height="50" rx="8" fill="#E8F5EF" stroke="#1D9E75" stroke-width="2" stroke-dasharray="5 4"/>
+    <text class="pt" x="611" y="90" text-anchor="middle" fill="#0F5132">Domain Pack</text>
+    <text class="ps" x="611" y="105" text-anchor="middle" fill="#3E7A60">точка пересборки домена</text>
+  </g>
+  <line x1="375" y1="118" x2="375" y2="136" stroke="#8a887f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- PYTHON ZONE -->
+  <rect x="30" y="138" width="690" height="148" rx="12" fill="#FCF3E2" stroke="#EF9F27" stroke-width="1.2"/>
+  <text class="zh" x="46" y="160" fill="#7A4E08">PYTHON · sidecar-агент</text>
+  <text class="zs" x="46" y="175" fill="#9A7330">волатильно — при смене задачи переписывается этот слой</text>
+
+  <g>
+    <rect x="42" y="184" width="210" height="44" rx="7" fill="#FFFBF2" stroke="#EF9F27" stroke-width="1"/>
+    <text class="pt" x="147" y="205" text-anchor="middle" fill="#7A4E08">Парсинг документов</text>
+    <text class="ps" x="147" y="219" text-anchor="middle" fill="#9A7330">PDF · DOCX · CSV → claims</text>
+
+    <rect x="270" y="184" width="210" height="44" rx="7" fill="#FFFBF2" stroke="#EF9F27" stroke-width="1"/>
+    <text class="pt" x="375" y="205" text-anchor="middle" fill="#7A4E08">LLM-извлечение</text>
+    <text class="ps" x="375" y="219" text-anchor="middle" fill="#9A7330">строгая схема + валидатор</text>
+
+    <rect x="498" y="184" width="210" height="44" rx="7" fill="#FFFBF2" stroke="#EF9F27" stroke-width="1"/>
+    <text class="pt" x="603" y="205" text-anchor="middle" fill="#7A4E08">Эмбеддинги</text>
+    <text class="ps" x="603" y="219" text-anchor="middle" fill="#9A7330">вектор-поиск доказательств</text>
+
+    <rect x="156" y="234" width="210" height="44" rx="7" fill="#FFFBF2" stroke="#EF9F27" stroke-width="1"/>
+    <text class="pt" x="261" y="255" text-anchor="middle" fill="#7A4E08">Skeptic · Narrator</text>
+    <text class="ps" x="261" y="269" text-anchor="middle" fill="#9A7330">LLM-рассуждение / объяснение</text>
+
+    <rect x="384" y="234" width="210" height="44" rx="7" fill="#FFFBF2" stroke="#EF9F27" stroke-width="1"/>
+    <text class="pt" x="489" y="255" text-anchor="middle" fill="#7A4E08">Оркестрация pipeline</text>
+    <text class="ps" x="489" y="269" text-anchor="middle" fill="#9A7330">агент идёт по тактам</text>
+  </g>
+
+  <line x1="375" y1="286" x2="375" y2="310" stroke="#8a887f" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text class="gs" x="385" y="302" fill="#6f6f6a">контракт: только JSON, Rust валидирует на входе · без PyO3</text>
+
+  <!-- RUST ZONE -->
+  <rect x="30" y="312" width="690" height="158" rx="12" fill="#E8F5EF" stroke="#1D9E75" stroke-width="1.4"/>
+  <text class="zh" x="46" y="334" fill="#0F5132">RUST · детерминированное ядро + платформа</text>
+  <text class="zs" x="46" y="349" fill="#3E7A60">стабильно — generic-граф; вся доменная семантика приходит из pack</text>
+
+  <g>
+    <rect x="42" y="358" width="210" height="46" rx="7" fill="#F2FBF7" stroke="#1D9E75" stroke-width="1"/>
+    <text class="pt" x="147" y="379" text-anchor="middle" fill="#0F5132">Граф / Claim-стор</text>
+    <text class="ps" x="147" y="393" text-anchor="middle" fill="#3E7A60">snapshot + hash · sqlite</text>
+
+    <rect x="270" y="358" width="210" height="46" rx="7" fill="#F2FBF7" stroke="#1D9E75" stroke-width="1"/>
+    <text class="pt" x="375" y="379" text-anchor="middle" fill="#0F5132">Discovery Engine</text>
+    <text class="ps" x="375" y="393" text-anchor="middle" fill="#3E7A60">обход назад от KPI · generic-операторы</text>
+
+    <rect x="498" y="358" width="210" height="46" rx="7" fill="#F2FBF7" stroke="#1D9E75" stroke-width="1"/>
+    <text class="pt" x="603" y="379" text-anchor="middle" fill="#0F5132">Scoring + хард-фильтры</text>
+    <text class="ps" x="603" y="393" text-anchor="middle" fill="#3E7A60">веса и ограничения ← pack</text>
+
+    <rect x="156" y="412" width="210" height="46" rx="7" fill="#F2FBF7" stroke="#1D9E75" stroke-width="1"/>
+    <text class="pt" x="261" y="433" text-anchor="middle" fill="#0F5132">Skeptic-rules engine</text>
+    <text class="ps" x="261" y="447" text-anchor="middle" fill="#3E7A60">правила ← pack</text>
+
+    <rect x="384" y="412" width="210" height="46" rx="7" fill="#F2FBF7" stroke="#1D9E75" stroke-width="1"/>
+    <text class="pt" x="489" y="433" text-anchor="middle" fill="#0F5132">axum API + Tauri shell</text>
+    <text class="ps" x="489" y="447" text-anchor="middle" fill="#3E7A60">file dialog · скан · spawn python</text>
+  </g>
+
+  <line x1="375" y1="470" x2="375" y2="488" stroke="#8a887f" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- TS ZONE -->
+  <rect x="30" y="490" width="690" height="134" rx="12" fill="#EDECFA" stroke="#7F77DD" stroke-width="1.2"/>
+  <text class="zh" x="46" y="512" fill="#3B349C">FRONTEND · React / TS</text>
+  <text class="zs" x="46" y="527" fill="#5A52B8">остаётся; при пивоте меняются ярлыки, не структура</text>
+
+  <g>
+    <rect x="42" y="536" width="210" height="42" rx="7" fill="#F6F5FD" stroke="#7F77DD" stroke-width="1"/>
+    <text class="pt" x="147" y="556" text-anchor="middle" fill="#3B349C">Доска-портфель</text>
+    <text class="ps" x="147" y="570" text-anchor="middle" fill="#5A52B8">Pareto · статусы</text>
+
+    <rect x="270" y="536" width="210" height="42" rx="7" fill="#F6F5FD" stroke="#7F77DD" stroke-width="1"/>
+    <text class="pt" x="375" y="556" text-anchor="middle" fill="#3B349C">Карточка гипотезы</text>
+    <text class="ps" x="375" y="570" text-anchor="middle" fill="#5A52B8">trace · score · DOE</text>
+
+    <rect x="498" y="536" width="210" height="42" rx="7" fill="#F6F5FD" stroke="#7F77DD" stroke-width="1"/>
+    <text class="pt" x="603" y="556" text-anchor="middle" fill="#3B349C">Rerun-чат</text>
+    <text class="ps" x="603" y="570" text-anchor="middle" fill="#5A52B8">steer &amp; rerun</text>
+
+    <rect x="156" y="582" width="210" height="36" rx="7" fill="#F6F5FD" stroke="#7F77DD" stroke-width="1"/>
+    <text class="pt" x="261" y="604" text-anchor="middle" fill="#3B349C">Manager View · What-If</text>
+
+    <rect x="384" y="582" width="210" height="36" rx="7" fill="#F6F5FD" stroke="#7F77DD" stroke-width="1"/>
+    <text class="pt" x="489" y="604" text-anchor="middle" fill="#3B349C">Data Readiness</text>
+  </g>
+
+  <!-- PIVOT BRACKETS -->
+  <path d="M740 68 h14 v218 h-14" fill="none" stroke="#EF9F27" stroke-width="1.6"/>
+  <text class="bk" x="772" y="177" text-anchor="middle" fill="#7A4E08" transform="rotate(90 772 177)">перехуяривается при пивоте · агент + pack</text>
+
+  <path d="M740 312 h14 v312 h-14" fill="none" stroke="#1D9E75" stroke-width="1.6"/>
+  <text class="bk" x="772" y="468" text-anchor="middle" fill="#0F5132" transform="rotate(90 772 468)">остаётся при пивоте · ядро + UI</text>
+</svg>

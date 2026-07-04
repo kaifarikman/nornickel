@@ -1,0 +1,47 @@
+# Большие исходные материалы кейса не публикуем целиком: в них есть PDF >100MB.
+# Для docker-compose демо в репе оставляем только малые xlsx/docx примеры.
+norn-hack/*
+!norn-hack/Пример 1/
+!norn-hack/Пример 1/**
+!norn-hack/Пример 2/
+!norn-hack/Пример 2/**
+!norn-hack/Пример 3/
+!norn-hack/Пример 3/**
+!norn-hack/Пример 4/
+!norn-hack/Пример 4/**
+!norn-hack/Как читать отчет института по хвостам.docx
+
+# Большие/локальные материалы вне поставки.
+norn-dop-data/
+voice*.m4a
+/*.png
+
+# build/runtime
+target/
+node_modules/
+dist/
+coverage/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pnpm-store/
+.venv/
+venv/
+runs/
+*.tsbuildinfo
+
+# OS/IDE
+.DS_Store
+.idea/
+.vscode/
+
+# env/secrets
+.env
+.env.*
+!.env.example
+*.local
+.playwright-mcp/
+.codex/
+.claude/

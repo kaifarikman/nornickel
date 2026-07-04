@@ -1,0 +1,117 @@
+id: flotation-v1
+name: Flotation tails loss-reduction pack
+description: >
+  Домен кейса: флотационное обогащение Cu-Ni руд, минимизация потерь металлов
+  с отвальными хвостами. Вся доменная семантика — здесь, не в engine-коде.
+  Элементы анонимизированы (element_28 / element_29) — как в данных кейса.
+
+units:
+  tons: t
+  size_class: um
+  pulp_density: percent_solids
+  flotation_time: min
+  reagent_dosage: g_per_t
+  capex_class: class
+
+node_types:
+  factor:
+    tags: [controllable]
+  mechanism:
+    tags: []
+  property:
+    tags: []
+  kpi:
+    tags: [kpi]
+
+extra_tags:
+  constraint:
+    description: "KPI-узел-ограничение (capex_class, производительность), а не цель"
+    applies_to: [kpi]
+  kpi_proxy:
+    description: "Property-узел, косвенно отражающий KPI (гранулометрия слива ≈ раскрытие)"
+    applies_to: [property]
+  diagnosis:
+    description: >
+      Property-узел диагноза потерь. Получает properties.addressable_tons
+      из DiagnosticsReport.diagnosis_summary при построении графа.
+    applies_to: [property]
+
+edge_types:
+  - mechanism
+  - tradeoff
+  - substitution
+  - proxy
+
+operators:
+  - mechanism_path
+  - substitution
+  - gap
+
+# Консервативный диапазон прироста извлечения для economic_effect,
+# когда у конкретного пути нет своего диапазона из claims (см. SCORING.md).
+default_gain_pct_range: [5, 15]
+
+scoring_weights:
+  kpi_impact:   0.35   # ∝ addressable_tons × recovery_gain × price (из KpiContract)
+  evidence:     0.20
+  plausibility: 0.15
+  cost:         0.15
+  risk:         0.10
+  novelty:      0.05
+
+hard_constraints:
+  - { metric: capex_class, op: "<=", value: 3 }
+
+skeptic_rules:
+  - id: uncovered_constraint
+    when: "kpi_contract has constraint with no claim on that property"
+    flag: "Need expert review: влияние на <property> не покрыто ни одним claim"
+  - id: low_evidence_top_candidate
+    when: "hypothesis rank <= 3 and evidence < 0.55"
+    flag: "Топ-гипотеза со слабой доказательной базой — нужен эксперт"
+  - id: capex_domination
+    when: "exists hypothesis B: same diagnosis, capex_class lower, kpi_impact >= 0.8 * this"
+    flag: "Есть гипотеза с сопоставимым эффектом при меньших затратах"
+
+# --- Диагностика потерь (читают sidecar /diagnose И engine) ---
+# Логика из методички кейса «Как читать отчет института по хвостам»
+diagnosis_config:
+  size_class_groups:
+    coarse: ["+125", "-125 +71", "+71", "-71 +45"]
+    medium: ["-45 +20", "-20 +10"]
+    fine:   ["-10"]
+  recoverability:
+    element_28: [open_pnt_cp, closed_pnt_cp, millerite]
+    element_29: [open_pnt_cp, closed_pnt_cp]
+  rules:
+    # порядок важен: первое сработавшее
+    - diagnosis: not_recoverable
+      when: { recoverable: false }
+      label: "Неизвлекаемо текущей технологией (силикаты, примесь в пирротине)"
+    - diagnosis: liberation_deficit
+      when: { mineral_form: closed_pnt_cp, size_group: [coarse, medium] }
+      label: "Недораскрытие сростков — проблема измельчения/классификации"
+    - diagnosis: slimes_overgrinding
+      when: { mineral_form: open_pnt_cp, size_group: [fine] }
+      label: "Переизмельчение: раскрытый минерал ушёл в шламы (< 10 мкм плохо флотируется)"
+    - diagnosis: flotation_kinetics
+      when: { mineral_form: open_pnt_cp, size_group: [coarse, medium] }
+      label: "Раскрыт и флотируемого размера, но не извлечён — кинетика/режим флотации"
+
+# --- Словарь синонимов для Entity Resolver (sidecar) ---
+synonyms:
+  hydrocyclone: [гидроциклон, циклон, ГЦ, ГЦ-660, гидроциклонная батарея]
+  spiral_classifier: [классификатор, спиральный классификатор, 1КСП24М, 2КСН24, КСН]
+  ball_mill: [шаровая мельница, мельница, МШР, МШЦ, МШРГУ, мельница 3.3м, мельница 6м]
+  cone_crusher: [конусная дробилка, дробилка, КМД, КРД, КМД-2200Т]
+  fine_screen: [грохот тонкого грохочения, тонкое грохочение, грохот, Sibra]
+  flotation_bank: [флотомашина, флотационная машина, ФПМ, ФМ-16УМ, фронт флотации]
+  contact_tank: [контактный чан, чан, контактирование, агитация]
+  magnetic_separator: [магнитная сепарация, магнитный сепаратор, ММС]
+  collector_reagent: [собиратель, ксантогенат, бутиловый ксантогенат, реагент]
+  depressant_reagent: [депрессор, сернистый натрий, Finfix, финфикс]
+  grinding_media: [мелющие шары, мелящие шары, шары, шары 120мм]
+  mill_liner: [футеровка, футеровка мельницы, геометрия футеровки]
+  pentlandite: [Pnt, пентландит]
+  chalcopyrite: [Cp, халькопирит]
+  pyrrhotite: [пирротин, Po]

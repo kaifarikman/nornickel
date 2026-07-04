@@ -1,0 +1,38 @@
+services:
+  frontend:
+    build: .
+    container_name: frontend
+    ports:
+      - '8080:8080'
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/run
+    security_opt:
+      - no-new-privileges:true
+
+  # backend:
+  #   image: hypothesis-factory-backend
+  #   container_name: backend
+  #   restart: unless-stopped
+
+  dev:
+    image: node:22-alpine
+    container_name: frontend-dev
+    profiles: ['dev']
+    working_dir: /app
+    command: sh -c "corepack enable && pnpm install --frozen-lockfile && pnpm dev --host 0.0.0.0"
+    environment:
+      VITE_USE_POLLING: 'true'
+    ports:
+      - '5173:5173'
+    volumes:
+      - .:/app
+      - dev_node_modules:/app/node_modules
+      - dev_pnpm_store:/app/.pnpm-store
+
+volumes:
+  dev_node_modules:
+  dev_pnpm_store:

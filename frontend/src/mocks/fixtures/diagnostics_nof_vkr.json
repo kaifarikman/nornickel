@@ -1,0 +1,779 @@
+{
+  "factory_id": "nof_vkr",
+  "pack_id": "flotation-v1",
+  "source_file": "norn-hack/Пример 2/Хвосты НОФ Вкр.xlsx",
+  "sections": [
+    "rock"
+  ],
+  "totals": {
+    "tails_smt": 4376437.99,
+    "element_28": {
+      "pct": 0.1004,
+      "tons": 4392.5
+    },
+    "element_29": {
+      "pct": 0.0344,
+      "tons": 1506.3
+    }
+  },
+  "loss_cells": [
+    {
+      "section": "rock",
+      "size_class": "+125",
+      "mineral_form": "open_pnt_cp",
+      "element": "element_28",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!E28"
+    },
+    {
+      "section": "rock",
+      "size_class": "+125",
+      "mineral_form": "open_pnt_cp",
+      "element": "element_29",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!G28"
+    },
+    {
+      "section": "rock",
+      "size_class": "+125",
+      "mineral_form": "closed_pnt_cp",
+      "element": "element_28",
+      "tons": 845.73,
+      "share_of_class_pct": 57.48,
+      "recoverable": true,
+      "diagnosis": "liberation_deficit",
+      "cell_ref": "Итог!E29"
+    },
+    {
+      "section": "rock",
+      "size_class": "+125",
+      "mineral_form": "closed_pnt_cp",
+      "element": "element_29",
+      "tons": 715.03,
+      "share_of_class_pct": 99.31,
+      "recoverable": true,
+      "diagnosis": "liberation_deficit",
+      "cell_ref": "Итог!G29"
+    },
+    {
+      "section": "rock",
+      "size_class": "+125",
+      "mineral_form": "pyrrhotite_impurity",
+      "element": "element_28",
+      "tons": 52.33,
+      "share_of_class_pct": 3.56,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E30"
+    },
+    {
+      "section": "rock",
+      "size_class": "+125",
+      "mineral_form": "silicate_valleriite",
+      "element": "element_28",
+      "tons": 544.5,
+      "share_of_class_pct": 37.01,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E31"
+    },
+    {
+      "section": "rock",
+      "size_class": "+125",
+      "mineral_form": "silicate_valleriite",
+      "element": "element_29",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G31"
+    },
+    {
+      "section": "rock",
+      "size_class": "+125",
+      "mineral_form": "pyrite_other_sulfides",
+      "element": "element_28",
+      "tons": 1.01,
+      "share_of_class_pct": 0.07,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E32"
+    },
+    {
+      "section": "rock",
+      "size_class": "+125",
+      "mineral_form": "pyrite_other_sulfides",
+      "element": "element_29",
+      "tons": 4.97,
+      "share_of_class_pct": 0.69,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G32"
+    },
+    {
+      "section": "rock",
+      "size_class": "+125",
+      "mineral_form": "millerite",
+      "element": "element_28",
+      "tons": 27.74,
+      "share_of_class_pct": 1.89,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!E33"
+    },
+    {
+      "section": "rock",
+      "size_class": "-125 +71",
+      "mineral_form": "open_pnt_cp",
+      "element": "element_28",
+      "tons": 84.15,
+      "share_of_class_pct": 14.27,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!E43"
+    },
+    {
+      "section": "rock",
+      "size_class": "-125 +71",
+      "mineral_form": "open_pnt_cp",
+      "element": "element_29",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!G43"
+    },
+    {
+      "section": "rock",
+      "size_class": "-125 +71",
+      "mineral_form": "closed_pnt_cp",
+      "element": "element_28",
+      "tons": 260.64,
+      "share_of_class_pct": 44.21,
+      "recoverable": true,
+      "diagnosis": "liberation_deficit",
+      "cell_ref": "Итог!E44"
+    },
+    {
+      "section": "rock",
+      "size_class": "-125 +71",
+      "mineral_form": "closed_pnt_cp",
+      "element": "element_29",
+      "tons": 73.6,
+      "share_of_class_pct": 93.07,
+      "recoverable": true,
+      "diagnosis": "liberation_deficit",
+      "cell_ref": "Итог!G44"
+    },
+    {
+      "section": "rock",
+      "size_class": "-125 +71",
+      "mineral_form": "pyrrhotite_impurity",
+      "element": "element_28",
+      "tons": 50.21,
+      "share_of_class_pct": 8.52,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E45"
+    },
+    {
+      "section": "rock",
+      "size_class": "-125 +71",
+      "mineral_form": "pyrrhotite_impurity",
+      "element": "element_29",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G45"
+    },
+    {
+      "section": "rock",
+      "size_class": "-125 +71",
+      "mineral_form": "silicate_valleriite",
+      "element": "element_28",
+      "tons": 193.86,
+      "share_of_class_pct": 32.89,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E46"
+    },
+    {
+      "section": "rock",
+      "size_class": "-125 +71",
+      "mineral_form": "silicate_valleriite",
+      "element": "element_29",
+      "tons": 3.27,
+      "share_of_class_pct": 4.14,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G46"
+    },
+    {
+      "section": "rock",
+      "size_class": "-125 +71",
+      "mineral_form": "pyrite_other_sulfides",
+      "element": "element_28",
+      "tons": 0.16,
+      "share_of_class_pct": 0.03,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E47"
+    },
+    {
+      "section": "rock",
+      "size_class": "-125 +71",
+      "mineral_form": "pyrite_other_sulfides",
+      "element": "element_29",
+      "tons": 2.21,
+      "share_of_class_pct": 2.79,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G47"
+    },
+    {
+      "section": "rock",
+      "size_class": "-125 +71",
+      "mineral_form": "millerite",
+      "element": "element_28",
+      "tons": 0.48,
+      "share_of_class_pct": 0.08,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!E48"
+    },
+    {
+      "section": "rock",
+      "size_class": "-125 +71",
+      "mineral_form": "millerite",
+      "element": "element_29",
+      "tons": 0.0,
+      "share_of_class_pct": null,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G48"
+    },
+    {
+      "section": "rock",
+      "size_class": "-71 + 45",
+      "mineral_form": "open_pnt_cp",
+      "element": "element_28",
+      "tons": 122.94,
+      "share_of_class_pct": 23.98,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!E58"
+    },
+    {
+      "section": "rock",
+      "size_class": "-71 + 45",
+      "mineral_form": "open_pnt_cp",
+      "element": "element_29",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!G58"
+    },
+    {
+      "section": "rock",
+      "size_class": "-71 + 45",
+      "mineral_form": "closed_pnt_cp",
+      "element": "element_28",
+      "tons": 168.12,
+      "share_of_class_pct": 32.8,
+      "recoverable": true,
+      "diagnosis": "liberation_deficit",
+      "cell_ref": "Итог!E59"
+    },
+    {
+      "section": "rock",
+      "size_class": "-71 + 45",
+      "mineral_form": "closed_pnt_cp",
+      "element": "element_29",
+      "tons": 53.66,
+      "share_of_class_pct": 95.25,
+      "recoverable": true,
+      "diagnosis": "liberation_deficit",
+      "cell_ref": "Итог!G59"
+    },
+    {
+      "section": "rock",
+      "size_class": "-71 + 45",
+      "mineral_form": "pyrrhotite_impurity",
+      "element": "element_28",
+      "tons": 41.75,
+      "share_of_class_pct": 8.15,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E60"
+    },
+    {
+      "section": "rock",
+      "size_class": "-71 + 45",
+      "mineral_form": "pyrrhotite_impurity",
+      "element": "element_29",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G60"
+    },
+    {
+      "section": "rock",
+      "size_class": "-71 + 45",
+      "mineral_form": "silicate_valleriite",
+      "element": "element_28",
+      "tons": 174.97,
+      "share_of_class_pct": 34.13,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E61"
+    },
+    {
+      "section": "rock",
+      "size_class": "-71 + 45",
+      "mineral_form": "silicate_valleriite",
+      "element": "element_29",
+      "tons": 2.37,
+      "share_of_class_pct": 4.21,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G61"
+    },
+    {
+      "section": "rock",
+      "size_class": "-71 + 45",
+      "mineral_form": "pyrite_other_sulfides",
+      "element": "element_28",
+      "tons": 0.03,
+      "share_of_class_pct": 0.01,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E62"
+    },
+    {
+      "section": "rock",
+      "size_class": "-71 + 45",
+      "mineral_form": "pyrite_other_sulfides",
+      "element": "element_29",
+      "tons": 0.3,
+      "share_of_class_pct": 0.54,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G62"
+    },
+    {
+      "section": "rock",
+      "size_class": "-71 + 45",
+      "mineral_form": "millerite",
+      "element": "element_28",
+      "tons": 4.8,
+      "share_of_class_pct": 0.94,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!E63"
+    },
+    {
+      "section": "rock",
+      "size_class": "-45 + 20",
+      "mineral_form": "open_pnt_cp",
+      "element": "element_28",
+      "tons": 55.44,
+      "share_of_class_pct": 14.01,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!E73"
+    },
+    {
+      "section": "rock",
+      "size_class": "-45 + 20",
+      "mineral_form": "open_pnt_cp",
+      "element": "element_29",
+      "tons": 36.99,
+      "share_of_class_pct": 79.48,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!G73"
+    },
+    {
+      "section": "rock",
+      "size_class": "-45 + 20",
+      "mineral_form": "closed_pnt_cp",
+      "element": "element_28",
+      "tons": 149.85,
+      "share_of_class_pct": 37.88,
+      "recoverable": true,
+      "diagnosis": "liberation_deficit",
+      "cell_ref": "Итог!E74"
+    },
+    {
+      "section": "rock",
+      "size_class": "-45 + 20",
+      "mineral_form": "closed_pnt_cp",
+      "element": "element_29",
+      "tons": 9.53,
+      "share_of_class_pct": 20.47,
+      "recoverable": true,
+      "diagnosis": "liberation_deficit",
+      "cell_ref": "Итог!G74"
+    },
+    {
+      "section": "rock",
+      "size_class": "-45 + 20",
+      "mineral_form": "pyrrhotite_impurity",
+      "element": "element_28",
+      "tons": 68.83,
+      "share_of_class_pct": 17.4,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E75"
+    },
+    {
+      "section": "rock",
+      "size_class": "-45 + 20",
+      "mineral_form": "pyrrhotite_impurity",
+      "element": "element_29",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G75"
+    },
+    {
+      "section": "rock",
+      "size_class": "-45 + 20",
+      "mineral_form": "silicate_valleriite",
+      "element": "element_28",
+      "tons": 121.26,
+      "share_of_class_pct": 30.65,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E76"
+    },
+    {
+      "section": "rock",
+      "size_class": "-45 + 20",
+      "mineral_form": "silicate_valleriite",
+      "element": "element_29",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G76"
+    },
+    {
+      "section": "rock",
+      "size_class": "-45 + 20",
+      "mineral_form": "pyrite_other_sulfides",
+      "element": "element_28",
+      "tons": 0.21,
+      "share_of_class_pct": 0.05,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E77"
+    },
+    {
+      "section": "rock",
+      "size_class": "-45 + 20",
+      "mineral_form": "pyrite_other_sulfides",
+      "element": "element_29",
+      "tons": 0.02,
+      "share_of_class_pct": 0.05,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G77"
+    },
+    {
+      "section": "rock",
+      "size_class": "-45 + 20",
+      "mineral_form": "millerite",
+      "element": "element_28",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!E78"
+    },
+    {
+      "section": "rock",
+      "size_class": "-20 + 10",
+      "mineral_form": "open_pnt_cp",
+      "element": "element_28",
+      "tons": 17.15,
+      "share_of_class_pct": 6.81,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!E88"
+    },
+    {
+      "section": "rock",
+      "size_class": "-20 + 10",
+      "mineral_form": "open_pnt_cp",
+      "element": "element_29",
+      "tons": 27.65,
+      "share_of_class_pct": 83.46,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!G88"
+    },
+    {
+      "section": "rock",
+      "size_class": "-20 + 10",
+      "mineral_form": "closed_pnt_cp",
+      "element": "element_28",
+      "tons": 64.32,
+      "share_of_class_pct": 25.55,
+      "recoverable": true,
+      "diagnosis": "liberation_deficit",
+      "cell_ref": "Итог!E89"
+    },
+    {
+      "section": "rock",
+      "size_class": "-20 + 10",
+      "mineral_form": "closed_pnt_cp",
+      "element": "element_29",
+      "tons": 5.12,
+      "share_of_class_pct": 15.45,
+      "recoverable": true,
+      "diagnosis": "liberation_deficit",
+      "cell_ref": "Итог!G89"
+    },
+    {
+      "section": "rock",
+      "size_class": "-20 + 10",
+      "mineral_form": "pyrrhotite_impurity",
+      "element": "element_28",
+      "tons": 59.05,
+      "share_of_class_pct": 23.45,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E90"
+    },
+    {
+      "section": "rock",
+      "size_class": "-20 + 10",
+      "mineral_form": "pyrrhotite_impurity",
+      "element": "element_29",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G90"
+    },
+    {
+      "section": "rock",
+      "size_class": "-20 + 10",
+      "mineral_form": "silicate_valleriite",
+      "element": "element_28",
+      "tons": 111.25,
+      "share_of_class_pct": 44.19,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E91"
+    },
+    {
+      "section": "rock",
+      "size_class": "-20 + 10",
+      "mineral_form": "silicate_valleriite",
+      "element": "element_29",
+      "tons": 0.36,
+      "share_of_class_pct": 1.09,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G91"
+    },
+    {
+      "section": "rock",
+      "size_class": "-20 + 10",
+      "mineral_form": "pyrite_other_sulfides",
+      "element": "element_28",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E92"
+    },
+    {
+      "section": "rock",
+      "size_class": "-20 + 10",
+      "mineral_form": "millerite",
+      "element": "element_28",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!E93"
+    },
+    {
+      "section": "rock",
+      "size_class": "-10",
+      "mineral_form": "open_pnt_cp",
+      "element": "element_28",
+      "tons": 836.87,
+      "share_of_class_pct": 71.42,
+      "recoverable": true,
+      "diagnosis": "slimes_overgrinding",
+      "cell_ref": "Итог!E103"
+    },
+    {
+      "section": "rock",
+      "size_class": "-10",
+      "mineral_form": "open_pnt_cp",
+      "element": "element_29",
+      "tons": 207.68,
+      "share_of_class_pct": 36.36,
+      "recoverable": true,
+      "diagnosis": "slimes_overgrinding",
+      "cell_ref": "Итог!G103"
+    },
+    {
+      "section": "rock",
+      "size_class": "-10",
+      "mineral_form": "closed_pnt_cp",
+      "element": "element_28",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": true,
+      "diagnosis": "liberation_deficit",
+      "cell_ref": "Итог!E104"
+    },
+    {
+      "section": "rock",
+      "size_class": "-10",
+      "mineral_form": "closed_pnt_cp",
+      "element": "element_29",
+      "tons": 6.74,
+      "share_of_class_pct": 1.18,
+      "recoverable": true,
+      "diagnosis": "liberation_deficit",
+      "cell_ref": "Итог!G104"
+    },
+    {
+      "section": "rock",
+      "size_class": "-10",
+      "mineral_form": "pyrrhotite_impurity",
+      "element": "element_28",
+      "tons": 108.13,
+      "share_of_class_pct": 9.23,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E105"
+    },
+    {
+      "section": "rock",
+      "size_class": "-10",
+      "mineral_form": "pyrrhotite_impurity",
+      "element": "element_29",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G105"
+    },
+    {
+      "section": "rock",
+      "size_class": "-10",
+      "mineral_form": "silicate_valleriite",
+      "element": "element_28",
+      "tons": 226.04,
+      "share_of_class_pct": 19.29,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E106"
+    },
+    {
+      "section": "rock",
+      "size_class": "-10",
+      "mineral_form": "silicate_valleriite",
+      "element": "element_29",
+      "tons": 34.66,
+      "share_of_class_pct": 6.07,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G106"
+    },
+    {
+      "section": "rock",
+      "size_class": "-10",
+      "mineral_form": "pyrite_other_sulfides",
+      "element": "element_28",
+      "tons": 0.67,
+      "share_of_class_pct": 0.06,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!E107"
+    },
+    {
+      "section": "rock",
+      "size_class": "-10",
+      "mineral_form": "pyrite_other_sulfides",
+      "element": "element_29",
+      "tons": 322.13,
+      "share_of_class_pct": 56.39,
+      "recoverable": false,
+      "diagnosis": "not_recoverable",
+      "cell_ref": "Итог!G107"
+    },
+    {
+      "section": "rock",
+      "size_class": "-10",
+      "mineral_form": "millerite",
+      "element": "element_28",
+      "tons": 0.0,
+      "share_of_class_pct": 0.0,
+      "recoverable": true,
+      "diagnosis": "flotation_kinetics",
+      "cell_ref": "Итог!E108"
+    }
+  ],
+  "diagnosis_summary": [
+    {
+      "diagnosis": "not_recoverable",
+      "element": "element_28",
+      "tons": 1754.3
+    },
+    {
+      "diagnosis": "liberation_deficit",
+      "element": "element_28",
+      "tons": 1488.7
+    },
+    {
+      "diagnosis": "liberation_deficit",
+      "element": "element_29",
+      "tons": 863.7
+    },
+    {
+      "diagnosis": "slimes_overgrinding",
+      "element": "element_28",
+      "tons": 836.9
+    },
+    {
+      "diagnosis": "not_recoverable",
+      "element": "element_29",
+      "tons": 370.3
+    },
+    {
+      "diagnosis": "flotation_kinetics",
+      "element": "element_28",
+      "tons": 312.7
+    },
+    {
+      "diagnosis": "slimes_overgrinding",
+      "element": "element_29",
+      "tons": 207.7
+    },
+    {
+      "diagnosis": "flotation_kinetics",
+      "element": "element_29",
+      "tons": 64.6
+    }
+  ],
+  "data_quality": []
+}

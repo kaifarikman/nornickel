@@ -1,0 +1,22 @@
+# ТОФ, талнахские руды (Пример 4). Самый полный список — из регламента кейса
+# «Типичный список оборудования 1-3» (дробильный + измельчительно-флотационный цех).
+# Единственная фабрика с пирротиновыми хвостами (вторая секция в xlsx).
+factory_id: tof
+tails_sections: [rock, pyrrhotite]
+grinding_stages: 2
+equipment:
+  - { id: cone_crusher,       label: "Дробилки конусные КРД 700/75, КМД-2200Т", present: true }
+  - { id: coarse_screen,      label: "Грохоты Sibra 2DR 25×60",        present: true }
+  - { id: ball_mill,          label: "Мельницы МШРГУ 4,5×6,0 / МШР 3,2×3,8 / МШЦ 4,5×6,0", present: true }
+  - { id: mill_liner,         label: "Футеровка мельниц",              present: true }
+  - { id: grinding_media,     label: "Мелющие шары",                   present: true }
+  - { id: spiral_classifier,  label: "Классификаторы спиральные 1КСП24М / 2КСН24 (регулируемая скорость)", present: true }
+  - { id: hydrocyclone,       label: "Гидроциклоны ГЦ-660 (батареи)",  present: true }
+  - { id: flotation_bank,     label: "Флотомашины ФПМ-16-4К (29) + ФМ-16УМ-4К (4)", present: true }
+  - { id: thickener,          label: "Сгустители радиальные П-30/П-50", present: true }
+  - { id: contact_tank,       label: "Контактные чаны",                present: true }
+  - { id: collector_reagent,  label: "Реагентный режим (собиратель)",  present: true }
+  - { id: depressant_reagent, label: "Реагентный режим (депрессор)",   present: true }
+  # эксперты предлагают добавить (гипотеза 5):
+  - { id: fine_screen,        label: "Грохота тонкого грохочения (после 2 стадии классификации)", present: false }
+  - { id: magnetic_separator, label: "Магнитная сепарация",            present: false }

@@ -1,0 +1,19 @@
+# КГМК (Пример 1). Оборудование восстановлено из схем/регламентов кейса и
+# контекста эталонных гипотез: что предлагают ДОБАВИТЬ — помечено present: false.
+factory_id: kgmk
+tails_sections: [rock]
+grinding_stages: 2
+equipment:
+  - { id: cone_crusher,       label: "Конусные дробилки",              present: true }
+  - { id: ball_mill,          label: "Шаровые мельницы (2 стадии)",    present: true }
+  - { id: mill_liner,         label: "Футеровка мельниц",              present: true }
+  - { id: grinding_media,     label: "Мелющие шары",                   present: true }
+  - { id: spiral_classifier,  label: "Спиральные классификаторы",      present: true }
+  - { id: hydrocyclone,       label: "Гидроциклоны (насадки 12\")",    present: true }
+  - { id: flotation_bank,     label: "Флотомашины",                    present: true }
+  - { id: contact_tank,       label: "Контактные чаны",                present: true }
+  - { id: collector_reagent,  label: "Реагентный режим (собиратель)",  present: true }
+  - { id: depressant_reagent, label: "Реагентный режим (депрессор)",   present: true }
+  # эксперты предлагают добавить (гипотезы 1 и 5) — сейчас отсутствует:
+  - { id: magnetic_separator, label: "Магнитная сепарация",            present: false }
+  - { id: fine_screen,        label: "Грохота тонкого грохочения",     present: false }

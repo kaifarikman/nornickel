@@ -1,0 +1,20 @@
+# НОФ, медистые руды (Пример 3).
+factory_id: nof_med
+tails_sections: [rock]
+grinding_stages: 2
+equipment:
+  - { id: cone_crusher,       label: "Конусные дробилки",              present: true }
+  - { id: ball_mill,          label: "Мельницы 6м",                    present: true }
+  - { id: mill_liner,         label: "Футеровка мельниц",              present: true }
+  - { id: grinding_media,     label: "Мелющие шары (120 мм доступны)", present: true }
+  - { id: spiral_classifier,  label: "Классификаторы",                 present: true }
+  - { id: hydrocyclone,       label: "Гидроциклоны (насадки 12\")",    present: true }
+  - { id: flotation_bank,     label: "Флотомашины (основная + контрольная)", present: true }
+  - { id: contact_tank,       label: "Контактные чаны (перед основной флотацией)", present: true }
+  - { id: collector_reagent,  label: "Реагентный режим (собиратель)",  present: true }
+  - { id: depressant_reagent, label: "Реагентный режим (Finfix 300 доступен)", present: true }
+  - { id: pulp_density_control, label: "Контроль плотности пульпы",    present: true }
+  # эксперты предлагают добавить (гипотеза 4):
+  - { id: pebble_crusher,     label: "Дробилка рудной гали",           present: false }
+  - { id: magnetic_separator, label: "Магнитная сепарация",            present: false }
+  - { id: fine_screen,        label: "Грохота тонкого грохочения",     present: false }

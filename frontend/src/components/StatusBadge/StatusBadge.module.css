@@ -1,0 +1,35 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  padding: 0 var(--space-2);
+  border-radius: 999px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.recommended {
+  color: var(--color-recommended);
+  background: var(--color-recommended-soft);
+  border-color: var(--color-recommended-border);
+}
+
+.watch {
+  color: var(--color-watch);
+  background: var(--color-watch-soft);
+  border-color: var(--color-watch-border);
+}
+
+.rejected {
+  color: var(--color-rejected);
+  background: var(--color-rejected-soft);
+  border-color: var(--color-rejected-border);
+}
+
+.review {
+  color: var(--color-review);
+  background: var(--color-review-soft);
+  border-color: var(--color-review-border);
+}

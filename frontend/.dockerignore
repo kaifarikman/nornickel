@@ -1,0 +1,14 @@
+node_modules
+dist
+coverage
+.git
+.playwright-mcp
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+tests
+.github
+*.md
+Dockerfile
+docker-compose.yml

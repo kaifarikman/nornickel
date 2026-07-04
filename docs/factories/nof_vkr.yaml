@@ -1,0 +1,18 @@
+# НОФ, вкрапленные руды (Пример 2).
+factory_id: nof_vkr
+tails_sections: [rock]
+grinding_stages: 2
+equipment:
+  - { id: cone_crusher,       label: "Конусные дробилки (регулируемый зазор)", present: true }
+  - { id: ball_mill,          label: "Мельницы 3,3м и 6м",             present: true }
+  - { id: mill_liner,         label: "Футеровка мельниц",              present: true }
+  - { id: grinding_media,     label: "Мелющие шары",                   present: true }
+  - { id: spiral_classifier,  label: "Классификаторы (с насадками)",   present: true }
+  - { id: hydrocyclone,       label: "Гидроциклоны",                   present: true }
+  - { id: flotation_bank,     label: "Флотомашины (фронт флотации, контрольная операция)", present: true }
+  - { id: contact_tank,       label: "Контактные чаны",                present: true }
+  - { id: collector_reagent,  label: "Реагентный режим (собиратель)",  present: true }
+  - { id: depressant_reagent, label: "Реагентный режим (депрессор)",   present: true }
+  - { id: water_control,      label: "Подача воды в мельницы (ручная)", present: true }
+  - { id: magnetic_separator, label: "Магнитная сепарация",            present: false }
+  - { id: fine_screen,        label: "Грохота тонкого грохочения",     present: false }

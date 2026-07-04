@@ -1,0 +1,191 @@
+[
+  {
+    "id": "kgmk_h1",
+    "factory_id": "kgmk",
+    "text": "Магнитная сепарация над целевого класса с последующим доизмельчением в отдельном цикле",
+    "lever_type": "new_equipment",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "kgmk_h2",
+    "factory_id": "kgmk",
+    "text": "Изменение геометрии футеровки шаровых мельниц",
+    "lever_type": "grinding",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "kgmk_h3",
+    "factory_id": "kgmk",
+    "text": "Замена песковых насадок на гидроциклонах с уменьшением диаметра с 12 на 8",
+    "lever_type": "classification",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "kgmk_h4",
+    "factory_id": "kgmk",
+    "text": "Полная замена классификаторов на гидроциклоны",
+    "lever_type": "classification",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "kgmk_h5",
+    "factory_id": "kgmk",
+    "text": "Грохота тонкого грохочения после 2 стадии измельчения как альтернатива магнитной сепарации",
+    "lever_type": "new_equipment",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "nof_vkr_h1",
+    "factory_id": "nof_vkr",
+    "text": "Изменение геометрии футеровки мельниц 3,3м и 6м.",
+    "lever_type": "grinding",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "nof_vkr_h2",
+    "factory_id": "nof_vkr",
+    "text": "Контроль гранулометрии руды после конусных дробилок",
+    "lever_type": "grinding",
+    "diagnosis_hint": "slimes_overgrinding"
+  },
+  {
+    "id": "nof_vkr_h3",
+    "factory_id": "nof_vkr",
+    "text": "Автоматическое регулирование зазора щели конусных дробилок",
+    "lever_type": "grinding",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "nof_vkr_h4",
+    "factory_id": "nof_vkr",
+    "text": "Автоматизация подачи воды в шаровые мельницы второго этапа измельчения",
+    "lever_type": "grinding",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "nof_vkr_h5",
+    "factory_id": "nof_vkr",
+    "text": "Замена насадок на классификторах для лучшего контроля возвратной нагрузки",
+    "lever_type": "classification",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "nof_vkr_h6",
+    "factory_id": "nof_vkr",
+    "text": "Перераспределение фронта флотации для увеличения времени первой контрольной операции",
+    "lever_type": "flotation",
+    "diagnosis_hint": "flotation_kinetics"
+  },
+  {
+    "id": "nof_med_h1",
+    "factory_id": "nof_med",
+    "text": "Контроль гранулометрии руды питающей 6м мельницы",
+    "lever_type": "grinding",
+    "diagnosis_hint": "slimes_overgrinding"
+  },
+  {
+    "id": "nof_med_h2",
+    "factory_id": "nof_med",
+    "text": "Повышение целевой плотности пульпы на входе в основную флотацию",
+    "lever_type": "flotation",
+    "diagnosis_hint": "flotation_kinetics"
+  },
+  {
+    "id": "nof_med_h3",
+    "factory_id": "nof_med",
+    "text": "Добавление промежуточных контактных чанов для увеличения времени агитации перед операцией контрольной флотации",
+    "lever_type": "flotation",
+    "diagnosis_hint": "flotation_kinetics"
+  },
+  {
+    "id": "nof_med_h4",
+    "factory_id": "nof_med",
+    "text": "Добавление промежуточной дробилки рудной гали для снижения возвратной нагрузки перед 6м мельницами",
+    "lever_type": "grinding",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "nof_med_h5",
+    "factory_id": "nof_med",
+    "text": "Замена песковых насадок на гидроциклонах с уменьшением диаметра с 12 на 8",
+    "lever_type": "classification",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "nof_med_h6",
+    "factory_id": "nof_med",
+    "text": "Добавление реагента Finfix 300 в контактные чаны перед основной флотацией",
+    "lever_type": "reagents",
+    "diagnosis_hint": "flotation_kinetics"
+  },
+  {
+    "id": "nof_med_h7",
+    "factory_id": "nof_med",
+    "text": "Переход на 100% загрузку мелящих шаров диаметром 120мм",
+    "lever_type": "grinding",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "nof_med_h8",
+    "factory_id": "nof_med",
+    "text": "На 6м мельницах опробовать переход на мелящие шары 5-го класса повышенной износостойкости",
+    "lever_type": "grinding",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "tof_h1",
+    "factory_id": "tof",
+    "text": "Донастройка скорости вращения классификаторов",
+    "lever_type": "classification",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "tof_h2",
+    "factory_id": "tof",
+    "text": "Изменение геометрии футеровки мельниц",
+    "lever_type": "grinding",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "tof_h3",
+    "factory_id": "tof",
+    "text": "Дополнительная классификация целевого класса",
+    "lever_type": "classification",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "tof_h4",
+    "factory_id": "tof",
+    "text": "Замена классификаторов на более производительные",
+    "lever_type": "classification",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "tof_h5",
+    "factory_id": "tof",
+    "text": "Грохота тонкого грохочения после 2 стадии классификации",
+    "lever_type": "new_equipment",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "tof_h6",
+    "factory_id": "tof",
+    "text": "Опробование эффективности гидроциклонов",
+    "lever_type": "classification",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "tof_h7",
+    "factory_id": "tof",
+    "text": "Классификация хвостов и возврат в голову процесса",
+    "lever_type": "classification",
+    "diagnosis_hint": "liberation_deficit"
+  },
+  {
+    "id": "tof_h8",
+    "factory_id": "tof",
+    "text": "Контрольная классификация",
+    "lever_type": "classification",
+    "diagnosis_hint": "liberation_deficit"
+  }
+]

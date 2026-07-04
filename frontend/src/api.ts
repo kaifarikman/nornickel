@@ -1,0 +1,358 @@
+import type {
+  BoardResponse,
+  DiagnosticsReport,
+  ExpertHypothesis,
+  ExtractResponse,
+  FactoryId,
+  Hypothesis,
+  KnownFactoryId,
+  ParseConstraintsResponse,
+  RerunAction,
+} from './contracts.ts'
+import type { LibraryMock } from '@/mocks/library.ts'
+import { libraryMock } from '@/mocks/library.ts'
+import { applyRerun } from '@/lib/rerun.ts'
+import {
+  assertBoard,
+  assertExpertHypotheses,
+  assertExtract,
+  assertHypothesis,
+  assertLibrary,
+} from '@/lib/validate.ts'
+import boardFixture from '@/mocks/fixtures/board.json'
+import extractFixture from '@/mocks/fixtures/extract_response.json'
+import expertFixture from '@/mocks/fixtures/expert_hypotheses.json'
+import diagnosticsKgmk from '@/mocks/fixtures/diagnostics_kgmk.json'
+import diagnosticsNofVkr from '@/mocks/fixtures/diagnostics_nof_vkr.json'
+import diagnosticsNofMed from '@/mocks/fixtures/diagnostics_nof_med.json'
+import diagnosticsTof from '@/mocks/fixtures/diagnostics_tof.json'
+
+export interface FactoryBoard {
+  diagnostics: DiagnosticsReport
+  board: BoardResponse | null
+}
+
+export interface ApiClient {
+  getBoard: (factory: FactoryId) => Promise<BoardResponse | null>
+  getHypothesis: (factory: FactoryId, id: string) => Promise<Hypothesis | null>
+  getDiagnostics: (factory: FactoryId) => Promise<DiagnosticsReport>
+  getExtract: () => Promise<ExtractResponse>
+  getExpertHypotheses: () => Promise<ExpertHypothesis[]>
+  getLibrary: () => Promise<LibraryMock>
+  parseConstraints: (factory: FactoryId, text: string) => Promise<ParseConstraintsResponse>
+  rerun: (factory: FactoryId, action: RerunAction) => Promise<BoardResponse | null>
+  resetRun: (factory: FactoryId) => Promise<BoardResponse | null>
+}
+
+export const PACK_ID = 'flotation-v1'
+
+const initialBoard = boardFixture as unknown as BoardResponse
+const extract = extractFixture as unknown as ExtractResponse
+const expert = expertFixture as unknown as ExpertHypothesis[]
+
+const DIAGNOSTICS: Record<KnownFactoryId, DiagnosticsReport> = {
+  kgmk: diagnosticsKgmk as unknown as DiagnosticsReport,
+  nof_vkr: diagnosticsNofVkr as unknown as DiagnosticsReport,
+  nof_med: diagnosticsNofMed as unknown as DiagnosticsReport,
+  tof: diagnosticsTof as unknown as DiagnosticsReport,
+}
+
+function diagnosticsFor(factory: FactoryId): DiagnosticsReport {
+  return DIAGNOSTICS[factory as KnownFactoryId] ?? DIAGNOSTICS.kgmk
+}
+
+const LATENCY_SCALE = import.meta.env.MODE === 'test' ? 0 : 1
+
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms * LATENCY_SCALE))
+}
+
+function createFixtureClient(): ApiClient {
+  const boards: Partial<Record<FactoryId, BoardResponse>> = {
+    kgmk: structuredClone(initialBoard),
+  }
+
+  return {
+    async getBoard(factory) {
+      await delay(100)
+      const board = boards[factory]
+      return board !== undefined ? structuredClone(board) : null
+    },
+    async getHypothesis(factory, id) {
+      await delay(80)
+      const hyp = boards[factory]?.hypotheses.find((h) => h.id === id)
+      return hyp !== undefined ? structuredClone(hyp) : null
+    },
+    async getDiagnostics(factory) {
+      await delay(80)
+      return structuredClone(diagnosticsFor(factory))
+    },
+    async getExtract() {
+      await delay(60)
+      return structuredClone(extract)
+    },
+    async getExpertHypotheses() {
+      await delay(60)
+      return structuredClone(expert)
+    },
+    async getLibrary() {
+      await delay(80)
+      return structuredClone(libraryMock)
+    },
+    async parseConstraints(factory, text) {
+      await delay(120)
+      const board = boards[factory] ?? boards.kgmk
+      return parseConstraintsFixture(text, board ?? initialBoard, extract)
+    },
+    async rerun(factory, action) {
+      await delay(200)
+      const board = boards[factory]
+      if (board === undefined) {
+        return null
+      }
+      boards[factory] = applyRerun(board, extract, action)
+      return structuredClone(boards[factory] as BoardResponse)
+    },
+    async resetRun(factory) {
+      await delay(120)
+      if (factory === 'kgmk') {
+        boards.kgmk = structuredClone(initialBoard)
+        return structuredClone(boards.kgmk)
+      }
+      const board = boards[factory]
+      return board !== undefined ? structuredClone(board) : null
+    },
+  }
+}
+
+const API_URL = import.meta.env.VITE_API_URL
+const API_MODE = import.meta.env.VITE_API_MODE
+
+export const API_BASE = API_URL !== undefined && API_URL.length > 0 ? API_URL : '/api'
+
+async function getJson(url: string): Promise<unknown> {
+  const res = await fetch(url, { headers: { Accept: 'application/json' } })
+  if (!res.ok) {
+    throw new Error(`GET ${url} → ${res.status}`)
+  }
+  return await res.json()
+}
+
+async function postJson(url: string, body: unknown): Promise<unknown> {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify(body),
+  })
+  if (!res.ok) {
+    throw new Error(`POST ${url} → ${res.status}`)
+  }
+  return await res.json()
+}
+
+function warnFallback(op: string, err: unknown): void {
+  console.warn(`[api] backend "${op}" failed, using fixture data:`, err)
+}
+
+interface RunResponse {
+  run_id: string
+  board: BoardResponse
+}
+
+function assertRun(v: unknown): RunResponse {
+  if (
+    typeof v !== 'object' ||
+    v === null ||
+    typeof (v as Record<string, unknown>)['run_id'] !== 'string'
+  ) {
+    throw new Error('contract validation failed: RunResponse')
+  }
+  const run = v as Record<string, unknown>
+  return { run_id: run['run_id'] as string, board: assertBoard(run['board']) }
+}
+
+function assertParseConstraints(v: unknown): ParseConstraintsResponse {
+  if (typeof v !== 'object' || v === null || !Array.isArray((v as { actions?: unknown }).actions)) {
+    throw new Error('contract validation failed: ParseConstraintsResponse')
+  }
+  const parsed = v as { actions: unknown[]; unparsed?: unknown[]; kpi_contract_patch?: unknown }
+  return {
+    actions: parsed.actions as RerunAction[],
+    kpi_contract_patch:
+      typeof parsed.kpi_contract_patch === 'object' && parsed.kpi_contract_patch !== null
+        ? (parsed.kpi_contract_patch as Record<string, unknown>)
+        : {},
+    unparsed: Array.isArray(parsed.unparsed) ? parsed.unparsed.map(String) : [],
+  }
+}
+
+function normalizeText(text: string): string {
+  return text.toLowerCase().replaceAll('ё', 'е').replace(/\s+/g, ' ').trim()
+}
+
+function parseElement(text: string): 'element_28' | 'element_29' | null {
+  if (/\b28\b|элемент\s*28|никел|nickel|\bni\b/.test(text)) return 'element_28'
+  if (/\b29\b|элемент\s*29|мед|copper|\bcu\b/.test(text)) return 'element_29'
+  return null
+}
+
+function parseNumber(text: string): number | null {
+  const matches = [...text.matchAll(/\d[\d _]*/g)]
+  if (matches.length === 0) return null
+  const raw = (matches.at(-1)?.[0] ?? '').replace(/[^\d]/g, '')
+  return raw.length > 0 ? Number(raw) : null
+}
+
+function parseConstraintsFixture(
+  text: string,
+  board: BoardResponse,
+  extractResponse: ExtractResponse,
+): ParseConstraintsResponse {
+  const normalized = normalizeText(text)
+  const actions: RerunAction[] = []
+  const unparsed: string[] = []
+  const element = parseElement(normalized)
+  if ((normalized.includes('цен') || normalized.includes('вдвое')) && element !== null) {
+    const usd_per_t = normalized.includes('вдвое')
+      ? board.kpi_contract.prices_usd_per_t[element] * 2
+      : parseNumber(normalized)
+    if (usd_per_t !== null) {
+      actions.push({ kind: 'change_price', payload: { element, usd_per_t } })
+    }
+  }
+  if (
+    normalized.includes('без капзатрат') ||
+    normalized.includes('капзатраты запрещ') ||
+    normalized.includes('капекс запрещ') ||
+    normalized.includes('без capex') ||
+    normalized.includes('только настройки')
+  ) {
+    actions.push({
+      kind: 'add_constraint',
+      payload: { metric: 'capex_class', op: '<=', value: 1 },
+    })
+  }
+  for (const match of normalized.matchAll(
+    /(?:исключи|исключить|не использовать|без)\s+([^,.]+)/g,
+  )) {
+    const term = (match[1] ?? '').trim()
+    if (term.includes('кап') || term.includes('capex')) continue
+    const factor = extractResponse.entities
+      .filter((n) => n.tags.includes('controllable'))
+      .find((n) => normalizeText(`${n.id} ${n.label}`).includes(term))
+    if (factor === undefined) {
+      unparsed.push(term)
+    } else {
+      actions.push({ kind: 'exclude_factor', payload: { factor_id: factor.id } })
+    }
+  }
+  if (actions.length === 0 && unparsed.length === 0 && text.trim().length > 0) {
+    unparsed.push(text.trim())
+  }
+  return { actions, kpi_contract_patch: {}, unparsed }
+}
+
+export function createHttpClient(baseUrl: string): ApiClient {
+  const base = baseUrl.replace(/\/$/, '')
+  const runIds = new Map<FactoryId, string>()
+  const fallback = createFixtureClient()
+
+  async function ensureRun(factory: FactoryId): Promise<RunResponse> {
+    const cached = runIds.get(factory)
+    if (cached !== undefined) {
+      const board = assertBoard(await getJson(`${base}/board?run_id=${encodeURIComponent(cached)}`))
+      return { run_id: cached, board }
+    }
+    const run = assertRun(await postJson(`${base}/run`, { factory_id: factory, pack_id: PACK_ID }))
+    runIds.set(factory, run.run_id)
+    return run
+  }
+
+  const client: ApiClient = {
+    async getBoard(factory) {
+      try {
+        return (await ensureRun(factory)).board
+      } catch (err) {
+        warnFallback('getBoard', err)
+        return fallback.getBoard(factory)
+      }
+    },
+    async getHypothesis(factory, id) {
+      try {
+        return assertHypothesis(await getJson(`${base}/hypothesis/${encodeURIComponent(id)}`))
+      } catch (err) {
+        warnFallback('getHypothesis', err)
+        const board = await client.getBoard(factory)
+        return board?.hypotheses.find((h) => h.id === id) ?? null
+      }
+    },
+    async getDiagnostics(factory) {
+      try {
+        return (await ensureRun(factory)).board.diagnostics
+      } catch (err) {
+        warnFallback('getDiagnostics', err)
+        return fallback.getDiagnostics(factory)
+      }
+    },
+    async getExtract() {
+      try {
+        return assertExtract(await getJson(`${base}/extract`))
+      } catch (err) {
+        warnFallback('getExtract', err)
+        return fallback.getExtract()
+      }
+    },
+    async getExpertHypotheses() {
+      try {
+        return assertExpertHypotheses(await getJson(`${base}/expert_hypotheses`))
+      } catch (err) {
+        warnFallback('getExpertHypotheses', err)
+        return fallback.getExpertHypotheses()
+      }
+    },
+    async getLibrary() {
+      try {
+        return assertLibrary(await getJson(`${base}/library`))
+      } catch (err) {
+        warnFallback('getLibrary', err)
+        return fallback.getLibrary()
+      }
+    },
+    async parseConstraints(factory, text) {
+      try {
+        const runId = runIds.get(factory) ?? (await ensureRun(factory)).run_id
+        return assertParseConstraints(
+          await postJson(`${base}/constraints/parse`, { run_id: runId, text }),
+        )
+      } catch (err) {
+        warnFallback('parseConstraints', err)
+        return fallback.parseConstraints(factory, text)
+      }
+    },
+    async rerun(factory, action) {
+      try {
+        const runId = runIds.get(factory) ?? (await ensureRun(factory)).run_id
+        return assertBoard(await postJson(`${base}/rerun`, { run_id: runId, action }))
+      } catch (err) {
+        warnFallback('rerun', err)
+        return fallback.rerun(factory, action)
+      }
+    },
+    async resetRun(factory) {
+      runIds.delete(factory)
+      try {
+        return (await ensureRun(factory)).board
+      } catch (err) {
+        warnFallback('resetRun', err)
+        return fallback.resetRun(factory)
+      }
+    },
+  }
+
+  return client
+}
+
+export const usingBackend =
+  API_MODE === 'msw' || API_MODE === 'http' || (typeof API_URL === 'string' && API_URL.length > 0)
+
+export const api: ApiClient = usingBackend ? createHttpClient(API_BASE) : createFixtureClient()

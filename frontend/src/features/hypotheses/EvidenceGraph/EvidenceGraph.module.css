@@ -1,0 +1,45 @@
+.figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.legendDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.legendItem[data-kind='factor'] .legendDot {
+  background: var(--node-factor);
+}
+
+.legendItem[data-kind='mechanism'] .legendDot {
+  background: var(--node-mechanism);
+}
+
+.legendItem[data-kind='property'] .legendDot {
+  background: var(--node-property);
+}
+
+.legendItem[data-kind='kpi'] .legendDot {
+  background: var(--node-kpi);
+  box-shadow: 0 0 0 2px rgb(204 122 64 / 0.3);
+}

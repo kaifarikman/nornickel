@@ -1,0 +1,146 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.detail {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.stagesPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.stages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.stage {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.stageIcon {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-tertiary);
+  background: var(--color-surface-sunken);
+}
+
+.stageLabel {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+}
+
+.pending .stageLabel {
+  color: var(--color-text-tertiary);
+}
+
+.active .stageIcon {
+  border-color: var(--color-accent-border);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.active .stageLabel {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.done .stageIcon {
+  border-color: var(--color-recommended-border);
+  background: var(--color-recommended-soft);
+  color: var(--color-mint-deep);
+}
+
+.done .stageLabel {
+  color: var(--color-text);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.spin {
+  animation: rotate 1s linear infinite;
+}
+
+.finishing {
+  font-size: var(--text-sm);
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.graphPanel {
+  padding: 0;
+  overflow: hidden;
+}
+
+.graphFigure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.graphCaption {
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+  border-top: 1px solid var(--color-border);
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spin {
+    animation: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,157 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.mesh {
+  position: absolute;
+  width: 540px;
+  height: auto;
+  opacity: 0.48;
+  filter: saturate(1.4);
+  will-change: translate;
+  animation-fill-mode: both;
+}
+
+.topLeft {
+  top: -360px;
+  left: -420px;
+  width: 1080px;
+  transform: rotate(-18deg);
+  animation:
+    fade-in 0.9s ease-out both,
+    drift-a 32s ease-in-out infinite;
+}
+
+.topRight {
+  top: -300px;
+  right: -280px;
+  width: 780px;
+  transform: scaleX(-1) rotate(24deg);
+  animation:
+    fade-in 0.9s ease-out both,
+    drift-b 34s ease-in-out infinite;
+}
+
+.midLeft {
+  top: 6%;
+  left: -520px;
+  width: 1000px;
+  transform: rotate(64deg);
+  animation:
+    fade-in 0.9s ease-out both,
+    drift-b 38s ease-in-out infinite;
+}
+
+.midRight {
+  top: -140px;
+  right: -560px;
+  width: 1240px;
+  transform: scaleY(-1) rotate(-40deg);
+  animation:
+    fade-in 0.9s ease-out both,
+    drift-a 40s ease-in-out infinite;
+}
+
+.bottomLeft {
+  bottom: -420px;
+  left: -300px;
+  width: 900px;
+  transform: rotate(158deg);
+  animation:
+    fade-in 0.9s ease-out both,
+    drift-b 36s ease-in-out infinite;
+}
+
+.bottomRight {
+  bottom: -480px;
+  right: -420px;
+  width: 1200px;
+  transform: scaleX(-1) rotate(-152deg);
+  animation:
+    fade-in 0.9s ease-out both,
+    drift-a 42s ease-in-out infinite;
+}
+
+.spark {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-mint-bright);
+  box-shadow: 0 0 8px 2px var(--color-mint-bright);
+  opacity: 0;
+  animation: twinkle 5s ease-in-out infinite;
+}
+
+.sparkA {
+  top: 22%;
+  right: 20%;
+  animation-delay: 0.4s;
+}
+
+.sparkB {
+  bottom: 26%;
+  left: 16%;
+  width: 4px;
+  height: 4px;
+  animation-delay: 2s;
+}
+
+.sparkC {
+  top: 54%;
+  right: 30%;
+  width: 5px;
+  height: 5px;
+  animation-delay: 3.4s;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes drift-a {
+  50% {
+    translate: 0 22px;
+  }
+}
+
+@keyframes drift-b {
+  50% {
+    translate: 0 -20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mesh {
+    animation: fade-in 0.6s ease-out both;
+  }
+
+  .spark {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
+@media print {
+  .backdrop {
+    display: none;
+  }
+}
