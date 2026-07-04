@@ -32,12 +32,28 @@
    15–20 claims вручную-честно: цитата из статьи + документ, оформить тем же
    скриптом с флагом `--from-json` или просто руками по схеме) →
    `docs/fixtures/extract_response_metallurgy.json`.
-5. Backend: научить `FileExtractSource`/`HttpExtractSource` выбирать фикстуру и
-   корпус по `pack_id` из запроса (`extract_response_{pack_id}.json` если
-   существует, иначе дефолтная; corpus-конфиг `extract_corpus_{pack_id}.json`
-   аналогично). Требует протащить pack_id в `ExtractSource::load(pack_id:&str)` —
-   мелкая правка порта + всех реализаций + вызовов в run.rs/factories.rs/board.rs.
-   Контракт HTTP НЕ меняется (pack_id в RunRequest уже есть).
+5. Backend — выбор фикстуры/корпуса по `pack_id`. Механику НЕ переписывать с нуля,
+   расширить существующую (см. текущее состояние ниже):
+   - Порт `ExtractSource::load` сейчас `fn load(&self) -> Result<ExtractResponse, String>`
+     (`crates/platform/src/application/ports.rs:11`). Добавить аргумент:
+     `fn load(&self, pack_id: &str)`.
+   - Вызовов ровно два (board.rs extract НЕ грузит — НЕ трогать):
+     `application/run.rs:40` (`extract_source.load()` → передать `&pack_id`, он там
+     уже вычислен строкой выше) и `application/factories.rs:23`
+     (`base_extract = extract_source.load()` → передать pack фабричного прогона,
+     по умолчанию `"flotation-v1"`).
+   - `FileExtractSource` (`infrastructure/file_extract_source.rs`): сейчас путь
+     фикстуры строится в `new` как `base_dir/fixtures/extract_response.json`.
+     Сохранить `base_dir` в структуре и в `load(pack_id)` выбирать
+     `fixtures/extract_response_{pack_id}.json` если существует, иначе
+     `fixtures/extract_response.json`.
+   - `HttpExtractSource` (`infrastructure/http_sidecar.rs`): сейчас хранит
+     `corpus_config = base_dir/extract_corpus.json` (построен в `new`) и читает его
+     в методе `live_extract_docs()`; fallback — тот же `FileExtractSource`.
+     Сохранить `base_dir`, а в `live_extract_docs`/`load` выбирать
+     `extract_corpus_{pack_id}.json` если существует, иначе `extract_corpus.json`;
+     fallback-фикстуру грузить с тем же pack_id.
+   - Контракт HTTP НЕ меняется (pack_id в RunRequest уже есть).
 6. Смоук: `POST /run {"factory_id":"slag_case","pack_id":"metallurgy-v1"}` →
    claims-only портфель с метал-гипотезами (без тоннажа/денег — это ок, пометка
    `no quantitative diagnostics` уже реализована), `/trace` ведёт к статьям.
