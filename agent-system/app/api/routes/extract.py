@@ -20,7 +20,7 @@ def extract(request: ExtractRequest, http_request: Request) -> Response:
         if settings.sidecar_llm_enabled:
             result = extract_with_llm(request, settings=settings)
         else:
-            result = load_mock_extract_response()
+            result = load_mock_extract_response(request.pack_id)
         run_id, artifact_path = write_artifact(
             endpoint="/extract",
             request=request,

@@ -68,13 +68,28 @@ def test_extract_route_uses_mock_fixture_when_sidecar_llm_disabled(monkeypatch: 
         "get_settings",
         lambda: SimpleNamespace(sidecar_llm_enabled=False),
     )
-    monkeypatch.setattr(extract_route, "load_mock_extract_response", lambda: fixture_response)
+    monkeypatch.setattr(
+        extract_route, "load_mock_extract_response", lambda *_a, **_k: fixture_response
+    )
     monkeypatch.setattr(extract_route, "extract_with_llm", fail_if_live_extract_is_called)
 
     response = extract_route.extract(_fixture_request(), SimpleNamespace(headers={}))
 
     assert response.media_type == "application/json"
     assert json.loads(response.body) == fixture_response.model_dump(mode="json")
+
+
+def test_mock_extract_selects_fixture_by_pack_id() -> None:
+    # В mock-режиме (режим жюри без LLM) не-флотационный pack обязан отдать свой
+    # граф; иначе металлургический промт вернул бы флотационные claims.
+    flotation = load_mock_extract_response("flotation-v1")
+    metallurgy = load_mock_extract_response("metallurgy-v1")
+
+    assert flotation.pack_id == "flotation-v1"
+    assert metallurgy.pack_id == "metallurgy-v1"
+    assert {c.id for c in metallurgy.claims} != {c.id for c in flotation.claims}
+    # неизвестный pack -> дефолтная фикстура, а не падение
+    assert load_mock_extract_response("does-not-exist").pack_id == "flotation-v1"
 
 
 def test_parse_llm_extract_content_accepts_fenced_json_and_nodes_alias() -> None:
