@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Фабрика гипотез — GoatWhistle</title>
+<style>
+/* ============ Токены: палитра фронтенда (фиолетовый + мятный) ============ */
+:root{
+  --surface:#ffffff; --page:#f7f6fb;
+  --ink:#221c35; --ink-2:#55506b; --muted:#8b87a0;
+  --grid:#e6e3f0; --ring:rgba(34,28,53,.10);
+  --acc:#6d28d9;            /* основной фиолетовый (как активные элементы UI) */
+  --acc-deep:#5b21b6;
+  --mint-bg:#d9f5e9; --mint:#0f9d6e; --mint-text:#0b8a5f;
+  --lav-bg:#ece7f8;
+  --warn:#e8b93c;
+  /* sequential purple ramp 100→700 (цвет = тонны, как в UI) */
+  --q100:#f1ecfa; --q150:#e7dff7; --q200:#dcd0f3; --q250:#cbb9ed;
+  --q300:#b89fe6; --q350:#a284de; --q400:#8b64d3; --q450:#7a4fc9;
+  --q500:#6b3ac0; --q550:#5d2bb3; --q600:#4f21a0; --q650:#43188c; --q700:#371277;
+  --hatch-a:#f0eff5; --hatch-b:#e2dfea;           /* неизвлекаемо */
+  --refh-a:#faf3e0; --refh-b:#f1e4c2;             /* битые ячейки #REF! */
+  --mono:ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --surface:#1c1930; --page:#131120;
+    --ink:#f4f2fa; --ink-2:#c4c0d4; --muted:#8b87a0;
+    --grid:#2e2a44; --ring:rgba(255,255,255,.10);
+    --acc:#a284de; --acc-deep:#b89fe6;
+    --mint-bg:#123527; --mint:#2fbe8c; --mint-text:#2fbe8c;
+    --lav-bg:#2a2344;
+    --hatch-a:#232038; --hatch-b:#2c2846;
+    --refh-a:#332b18; --refh-b:#3e341e;
+  }
+}
+/* ============ Каркас дека ============ */
+*{box-sizing:border-box; margin:0}
+html{scroll-snap-type:y mandatory; scroll-behavior:smooth}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:var(--page); color:var(--ink); line-height:1.45;
+}
+.slide{
+  min-height:100vh; scroll-snap-align:start;
+  display:flex; flex-direction:column; justify-content:center;
+  padding:6vh 7vw; position:relative;
+  background:var(--page);
+}
+.slide + .slide{border-top:1px solid var(--grid)}
+.kicker{
+  font-family:var(--mono); font-size:.78rem; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--acc); margin-bottom:1.2rem;
+}
+h1{font-size:clamp(2.2rem,6vw,4.2rem); line-height:1.08; font-weight:700}
+h2{font-size:clamp(1.5rem,3.4vw,2.4rem); line-height:1.15; font-weight:700; margin-bottom:1.4rem}
+.hero{
+  font-size:clamp(3.2rem,9vw,7.6rem); font-weight:750; line-height:1.05;
+  letter-spacing:-.02em; margin:.6rem 0 .8rem;
+}
+.hero-cap{font-size:clamp(1rem,2vw,1.35rem); color:var(--ink-2)}
+.lead{font-size:clamp(1.05rem,2vw,1.4rem); color:var(--ink-2); max-width:60ch}
+.rows3{display:flex; flex-direction:column; gap:1rem; margin-top:2rem; max-width:72ch}
+.rows3 .row{display:flex; gap:1rem; align-items:baseline; font-size:clamp(1.05rem,2.1vw,1.5rem)}
+.rows3 .n{
+  flex:0 0 2.2rem; height:2.2rem; border-radius:50%;
+  background:var(--acc); color:#fff; font-weight:700; font-size:1.05rem;
+  font-family:var(--mono);
+  display:flex; align-items:center; justify-content:center; align-self:center;
+}
+.rows3 b{font-weight:700}
+.foot{position:absolute; left:7vw; right:7vw; bottom:2.2vh;
+  display:flex; justify-content:space-between; font-size:.72rem; color:var(--muted);
+  font-family:var(--mono); letter-spacing:.06em}
+.src{font-size:.78rem; color:var(--muted); margin-top:1.4rem}
+.src code, code{font-family:var(--mono); font-size:.95em}
+.todo{
+  display:inline-block; padding:.05em .55em; border:1.5px dashed var(--warn);
+  border-radius:.5em; color:var(--ink-2); font-weight:500; white-space:nowrap;
+}
+.quote{border-left:3px solid var(--acc); padding:.2rem 0 .2rem 1.2rem;
+  font-size:clamp(1.05rem,2.2vw,1.5rem); color:var(--ink-2); max-width:62ch; margin-top:1.6rem}
+/* Заметки спикера */
+.notes{display:none; margin-top:1.8rem; padding:1rem 1.2rem; border-radius:12px;
+  background:var(--surface); border:1px solid var(--grid);
+  font-size:.9rem; color:var(--ink-2); max-width:80ch}
+.notes::before{content:"Спикер"; display:block; font-family:var(--mono); font-size:.68rem;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--acc); margin-bottom:.35rem}
+body.show-notes .notes{display:block}
+/* Таблицы */
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse; width:100%; background:var(--surface);
+  border:1px solid var(--grid); border-radius:14px; overflow:hidden; font-size:.95rem}
+th,td{padding:.65rem .85rem; text-align:left; vertical-align:top; border-top:1px solid var(--grid)}
+thead th{border-top:none; font-family:var(--mono); font-size:.7rem; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--muted); font-weight:600; background:var(--surface)}
+td.num,th.num{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+/* Плитки KPI — как в UI: белая / мятная / лавандовая */
+.tiles{display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1.6rem}
+.tile{flex:1 1 200px; background:var(--surface); border:1px solid var(--grid);
+  border-radius:14px; padding:1rem 1.2rem}
+.tile.mint{background:var(--mint-bg); border-color:transparent}
+.tile.lav{background:var(--lav-bg); border-color:transparent}
+.tile .lbl{font-family:var(--mono); font-size:.68rem; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:.3rem}
+.tile .val{font-size:clamp(1.7rem,3.6vw,2.6rem); font-weight:700; line-height:1.1;
+  font-family:var(--mono); letter-spacing:-.02em}
+.tile .sub{font-size:.8rem; color:var(--ink-2); margin-top:.25rem}
+/* Heatmap — карта потерь как в UI */
+.hm{display:grid; grid-template-columns:minmax(11rem,auto) repeat(6,minmax(4.6rem,1fr));
+  gap:3px; background:var(--page); font-size:.82rem; max-width:920px}
+.hm .h{background:transparent; color:var(--muted); font-family:var(--mono); font-size:.7rem;
+  font-weight:600; display:flex; align-items:flex-end; justify-content:flex-end;
+  padding:.15rem .4rem; text-align:right}
+.hm .rl{background:transparent; color:var(--ink-2); display:flex; align-items:center;
+  justify-content:flex-end; text-align:right; padding:.15rem .6rem .15rem 0; gap:.4rem}
+.hm .rl .ok{color:var(--mint-text); font-weight:700}
+.hm .c{min-height:2.5rem; display:flex; align-items:center; justify-content:flex-end;
+  padding:.15rem .55rem; border-radius:8px; font-variant-numeric:tabular-nums;
+  font-family:var(--mono);
+  background:var(--surface); border:1px solid var(--grid); color:var(--ink-2)}
+.hm .c[data-ink="w"]{color:#fff; border-color:transparent}
+.hm .c[data-ink="b"]{color:#241d38; border-color:transparent} /* фикс. тёмный: фон ячейки не зависит от темы */
+.hm .c.zero{color:var(--muted)}
+.hm .c.max{font-weight:750}
+.hm .c.nr{background:repeating-linear-gradient(45deg,var(--hatch-a) 0 6px,var(--hatch-b) 6px 12px);
+  border-color:transparent; color:var(--muted)}
+.hm .ref{background:repeating-linear-gradient(45deg,var(--refh-a) 0 6px,var(--refh-b) 6px 12px);
+  border-color:transparent; color:var(--muted); justify-content:center; font-weight:600}
+.hm-legend{display:flex; align-items:center; gap:.7rem; margin-top:.8rem;
+  font-size:.75rem; color:var(--muted); flex-wrap:wrap; font-family:var(--mono)}
+.hm-scale{width:180px; height:10px; border-radius:5px;
+  background:linear-gradient(90deg,var(--q100),var(--q300),var(--q500),var(--q700))}
+.sw-nr{display:inline-block; width:26px; height:12px; border-radius:4px; vertical-align:-2px;
+  background:repeating-linear-gradient(45deg,var(--hatch-a) 0 5px,var(--hatch-b) 5px 10px)}
+.callout{margin-top:1.1rem; padding:.7rem 1rem; border-radius:12px;
+  background:var(--surface); border:1px solid var(--grid);
+  border-left:3px solid var(--warn); font-size:.9rem; color:var(--ink-2); max-width:76ch}
+/* Схема (слайд 5) */
+.flow{display:flex; flex-direction:column; gap:.9rem; max-width:1000px}
+.flow .lane{display:flex; align-items:stretch; gap:.6rem; flex-wrap:wrap}
+.fb{background:var(--surface); border:1px solid var(--grid); border-radius:12px;
+  padding:.6rem .9rem; font-size:.88rem; flex:1 1 0; min-width:12rem}
+.fb b{display:block; font-size:.92rem}
+.fb .d{color:var(--ink-2); font-size:.8rem; margin-top:.15rem}
+.fb.core{border-color:var(--acc); border-width:1.5px}
+.fb.out{background:var(--acc-deep); border-color:transparent; color:#fff}
+.fb.out .d{color:rgba(255,255,255,.85)}
+.arr{align-self:center; color:var(--muted); font-size:1.2rem; flex:0 0 auto}
+.conv{display:flex; justify-content:center; color:var(--muted); font-size:1.2rem; line-height:1}
+/* Карточка гипотезы (слайд 7) */
+.card{background:var(--surface); border:1px solid var(--grid); border-radius:16px;
+  padding:1.4rem 1.6rem; max-width:920px}
+.card h3{font-size:clamp(1.2rem,2.4vw,1.7rem); margin-bottom:.2rem}
+.badges{display:flex; gap:.5rem; margin:.5rem 0 1rem; flex-wrap:wrap}
+.badge{font-family:var(--mono); font-size:.72rem; padding:.18em .75em; border-radius:1em;
+  border:1px solid var(--grid); color:var(--ink-2); background:var(--page)}
+.badge.acc{border-color:var(--acc); color:var(--acc); font-weight:600}
+.badge.rec{border-color:var(--mint); color:var(--mint-text); font-weight:600}
+.chain{display:flex; flex-wrap:wrap; gap:.45rem; align-items:center; margin:.5rem 0 .9rem}
+.chain .st{background:var(--lav-bg); border:1px solid transparent; border-radius:8px;
+  padding:.3rem .7rem; font-size:.85rem}
+.chain .sep{color:var(--muted)}
+.trace{font-family:var(--mono); font-size:.85rem;
+  background:var(--page); border:1px solid var(--grid); border-radius:10px;
+  padding:.6rem .9rem; margin:.6rem 0}
+.kv{display:grid; grid-template-columns:auto 1fr; gap:.35rem 1rem; font-size:.92rem; margin-top:.6rem}
+.kv .k{font-family:var(--mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted); white-space:nowrap; padding-top:.25em}
+/* Benchmark (слайд 8) */
+.match{max-width:880px}
+.match .mrow{display:grid; grid-template-columns:1fr 2.4rem 1fr; gap:.4rem;
+  align-items:center; padding:.4rem 0; border-top:1px solid var(--grid); font-size:.9rem}
+.match .mrow:first-child{border-top:none}
+.match .exp{text-align:right; color:var(--ink-2)}
+.match .sys{color:var(--ink)}
+.match .mk{text-align:center; font-weight:700; font-family:var(--mono)}
+.mk.hit{color:var(--mint-text)}
+.mk.miss{color:var(--muted)}
+.pill{display:inline-block; font-family:var(--mono); font-size:.65rem; padding:.15em .6em;
+  border-radius:1em; font-weight:600; vertical-align:middle; letter-spacing:.04em}
+.pill.new{background:var(--acc); color:#fff}
+.pill.hit{background:var(--mint-bg); color:var(--mint-text); border:1px solid var(--mint)}
+/* Range bars (слайд 9) */
+.range{position:relative; height:22px; min-width:180px}
+.range .track{position:absolute; inset:7px 0; height:8px; border-radius:4px; background:var(--grid); opacity:.7}
+.range .bar{position:absolute; top:7px; height:8px; border-radius:4px; background:var(--acc)}
+/* YAML / код */
+pre{background:var(--surface); border:1px solid var(--grid); border-radius:14px;
+  padding:1rem 1.2rem; font-family:var(--mono);
+  font-size:.8rem; line-height:1.55; overflow-x:auto; color:var(--ink-2)}
+pre .k{color:var(--acc)}
+.cols{display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:start}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+ul.clean{list-style:none; display:flex; flex-direction:column; gap:.7rem; font-size:1rem}
+ul.clean li{padding-left:1.3rem; position:relative; color:var(--ink-2)}
+ul.clean li::before{content:"→"; position:absolute; left:0; color:var(--acc)}
+/* Тулбар и счётчик */
+.toolbar{position:fixed; right:14px; top:14px; z-index:9; display:flex; gap:8px}
+.toolbar button{font-family:var(--mono); font-size:.72rem; padding:.4em .9em; border-radius:9px;
+  border:1px solid var(--grid); background:var(--surface); color:var(--ink-2); cursor:pointer}
+.counter{position:fixed; right:16px; bottom:12px; z-index:9;
+  font-size:.72rem; color:var(--muted); font-family:var(--mono)}
+.divider{align-items:flex-start; justify-content:center}
+.divider h1{color:var(--muted); font-size:clamp(1.6rem,4vw,2.6rem)}
+/* Печать → PDF (цвета сохраняются как на экране) */
+@media print{
+  html{scroll-snap-type:none}
+  *{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+  body{background:var(--page)}
+  .slide{break-after:page; min-height:calc(100vh - 2px); padding:6vh 6vw}
+  .slide + .slide{border-top:none}
+  .slide:last-child{break-after:auto}
+  .toolbar,.counter{display:none}
+  body.show-notes .notes{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button id="btn-notes" title="Клавиша S">Заметки спикера</button>
+  <button onclick="window.print()" title="PDF через печать">PDF</button>
+</div>
+<div class="counter" id="counter">1</div>
+
+<!-- ==================== 1. Титул ==================== -->
+<section class="slide" id="s1">
+  <div class="kicker">Задача 1 · команда GoatWhistle</div>
+  <h1>«Фабрика гипотез»</h1>
+  <p class="quote">Диагноз потерь фабрики в деньгах + гипотезы уровня экспертного
+    мозгового штурма — за 3 минуты, воспроизводимо.</p>
+  <div class="foot"><span>Фабрика гипотез · GoatWhistle</span><span>1</span></div>
+</section>
+
+<!-- ==================== 2. Проблема в деньгах ==================== -->
+<section class="slide" id="s2">
+  <div class="kicker">Проблема — в деньгах</div>
+  <div class="hero">$124 млн/год</div>
+  <div class="hero-cap">потенциал одной фабрики</div>
+  <div class="rows3">
+    <div class="row"><span class="n">1</span><span>В хвостах КГМК — <b>10 392 т</b> металла-28 в год</span></div>
+    <div class="row"><span class="n">2</span><span>Из них <b>7 564 т</b> технологически извлекаемы ≈ <b>$124,8 млн</b> при $16 500/т</span></div>
+    <div class="row"><span class="n">3</span><span>Чтобы понять, как их вернуть, эксперты собирают мозговые штурмы — <b>недели работы</b>, результат зависит от того, кто пришёл на встречу</span></div>
+  </div>
+  <p class="src">Данные: <code>fixtures/diagnostics_kgmk.json</code> · 10 392,3 − 2 828,2 неизвлекаемых = 7 564,1 т · заголовок округлён вниз</p>
+  <div class="notes">Это не наша оценка рынка — это посчитано из отчёта института по хвостам,
+    который организаторы дали в кейсе. Цена металла — параметр, металл анонимизирован.</div>
+  <div class="foot"><span>Фабрика гипотез · GoatWhistle</span><span>2</span></div>
+</section>
+
+<!-- ==================== 3. Аналоги ==================== -->
+<section class="slide" id="s3">
+  <h2>Почему это ещё не решено: аналоги</h2>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Категория</th><th>Кто</th><th>Что умеют</th><th>Почему мимо кейса</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>AI-учёные</b><br>гипотезы из литературы</td>
+        <td>Google <b>Co-Scientist</b> (multi-agent на Gemini, 2025), <b>FutureHouse Robin</b> · Kosmos («1 500 статей за прогон»)</td>
+        <td>Генерация и ранжирование научных гипотез из литературы; биомед-кейсы (drug repurposing)</td>
+        <td>Не видят производственные данные предприятия; два прогона LLM — два разных ответа; нет привязки к экономике конкретной фабрики</td>
+      </tr>
+      <tr>
+        <td><b>Materials informatics</b></td>
+        <td><b>Citrine</b> (партнёрства с BASF), <b>Uncountable</b>, Polymerize</td>
+        <td>ML-предсказание свойств материалов по большим датасетам экспериментов</td>
+        <td>Требуют тысяч структурированных экспериментов; наш вход — 4 отчёта и учебники; не работают с обогащением руд</td>
+      </tr>
+      <tr>
+        <td><b>AI-оптимизация флотации</b></td>
+        <td><b>IntelliSense.io</b> (кейс: +1–3% извлечения ≈ <b>$5,5 млн/мес</b>), <b>Metso</b>, Imubit</td>
+        <td>Real-time управление уставками: воздух, реагенты, уровни</td>
+        <td>Оптимизируют существующий процесс — не генерируют R&amp;D-гипотезы об изменении технологии; не читают литературу; нет цепочки до источника</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="quote">Мы — на пустом пересечении: производственные отчёты × научная литература ×
+    детерминированная объяснимость × экономика.</p>
+  <div class="notes">Ключ: кейс IntelliSense — лучшая валидация задачи: даже 1% извлечения на одной
+    фабрике стоит миллионы долларов в месяц. Но real-time оптимизаторы крутят ручки существующей схемы.
+    Вопрос «что ИЗМЕНИТЬ в технологии» сегодня решается только мозговым штурмом. Мы автоматизируем именно его.</div>
+  <div class="foot"><span>Фабрика гипотез · GoatWhistle</span><span>3</span></div>
+</section>
+
+<!-- ==================== 4. Подход ==================== -->
+<section class="slide" id="s4">
+  <h2>Наш подход — не «чат с LLM»</h2>
+  <div class="rows3" style="margin-top:1rem">
+    <div class="row"><span class="n">1</span><span>Диагноз потерь ставит <b>детерминированный код</b> — ноль LLM</span></div>
+    <div class="row"><span class="n">2</span><span>Гипотезы находит <b>граф знаний</b> — LLM только читает литературу</span></div>
+    <div class="row"><span class="n">3</span><span>Тот же вход → <b>байт-в-байт тот же результат</b> (snapshot hash)</span></div>
+  </div>
+  <div class="notes">Большинство решений на этом хакатоне — промпт поверх RAG. Ответ такой системы
+    нельзя воспроизвести и нельзя защитить перед главным инженером фабрики.
+    У нас LLM не принимает ни одного решения.</div>
+  <div class="foot"><span>Фабрика гипотез · GoatWhistle</span><span>4</span></div>
+</section>
+
+<!-- ==================== 5. Как работает ==================== -->
+<section class="slide" id="s5">
+  <h2>Как работает</h2>
+  <div class="flow">
+    <div class="lane">
+      <div class="fb"><b>xlsx отчёта фабрики</b><span class="d">баланс + крупность + минералогия</span></div>
+      <div class="arr">→</div>
+      <div class="fb"><b>Диагност</b><span class="d">детерминированный парсер</span></div>
+      <div class="arr">→</div>
+      <div class="fb"><b>Тонны потерь</b><span class="d">[класс × минерал] + причина</span></div>
+    </div>
+    <div class="lane">
+      <div class="fb"><b>PDF учебников + открытые статьи</b><span class="d">ru + en корпус</span></div>
+      <div class="arr">→</div>
+      <div class="fb"><b>LLM-чтение под валидатором</b><span class="d">только извлечение</span></div>
+      <div class="arr">→</div>
+      <div class="fb"><b>Claims</b><span class="d">с точной ссылкой (страница)</span></div>
+    </div>
+    <div class="conv">↘&nbsp;&nbsp;&nbsp;&nbsp;↙</div>
+    <div class="lane">
+      <div class="fb core"><b>Граф знаний</b><span class="d">рычаг → механизм → диагноз → KPI</span></div>
+      <div class="arr">→</div>
+      <div class="fb core"><b>Движок (Rust)</b><span class="d">детерминированный обход от KPI назад</span></div>
+      <div class="arr">→</div>
+      <div class="fb out"><b>Гипотезы</b><span class="d">что изменить + $ эффект + trace до ячейки/страницы + план эксперимента</span></div>
+    </div>
+  </div>
+  <p class="src">Домен целиком живёт в одном YAML (pack) — движок не знает слова «флотация».</p>
+  <div class="foot"><span>Фабрика гипотез · GoatWhistle</span><span>5</span></div>
+</section>
+
+<!-- ==================== 6. Демо: диагноз ==================== -->
+<section class="slide" id="s6">
+  <h2>Демо: диагноз за секунды</h2>
+  <div class="tiles">
+    <div class="tile"><div class="lbl">Потеряно за год (металл-28)</div><div class="val">10 392 т</div><div class="sub">в отвальных хвостах КГМК</div></div>
+    <div class="tile mint"><div class="lbl">Технологически извлекаемо</div><div class="val">7 564 т</div><div class="sub">по минералогии из инструкции кейса</div></div>
+    <div class="tile lav"><div class="lbl">Потенциал при $16 500/т</div><div class="val">≈ $124,8 млн</div><div class="sub">цена — параметр, не прогноз</div></div>
+  </div>
+
+  <!-- Карта потерь: строки = минеральные формы, колонки = классы крупности, т металла-28 -->
+  <div class="hm" role="table" aria-label="Потери металла-28 по классам крупности и минеральным формам, тонн">
+    <div class="h"></div>
+    <div class="h">+125 ⚠</div><div class="h">+71</div><div class="h">−71+45</div>
+    <div class="h">−45+20</div><div class="h">−20+10</div><div class="h">−10</div>
+
+    <div class="rl">Раскрытый Pnt/Cp <span class="ok">✓</span></div>
+    <div class="c ref" title="битая ячейка исходника — прочитано, учтено как 0">#REF!</div>
+    <div class="c" style="background:var(--q100)" data-ink="b" title="+71 · раскрытый · 13,4 т · flotation_kinetics">13,4</div>
+    <div class="c" style="background:var(--q100)" data-ink="b" title="−71+45 · раскрытый · 45,3 т · flotation_kinetics">45,3</div>
+    <div class="c" style="background:var(--q200)" data-ink="b" title="−45+20 · раскрытый · 140,3 т · flotation_kinetics">140,3</div>
+    <div class="c" style="background:var(--q200)" data-ink="b" title="−20+10 · раскрытый · 161,2 т · flotation_kinetics">161,2</div>
+    <div class="c max" style="background:var(--q700)" data-ink="w" title="−10 · раскрытый · 2 409,9 т · slimes_overgrinding — переизмельчение">2 409,9</div>
+
+    <div class="rl">Закрытый Pnt/Cp (сростки) <span class="ok">✓</span></div>
+    <div class="c ref" title="битая ячейка исходника — прочитано, учтено как 0">#REF!</div>
+    <div class="c max" style="background:var(--q650)" data-ink="w" title="+71 · сростки · 2 088,3 т · liberation_deficit — Итог!E44">2 088,3</div>
+    <div class="c" style="background:var(--q500)" data-ink="w" title="−71+45 · сростки · 916,7 т · liberation_deficit">916,7</div>
+    <div class="c" style="background:var(--q550)" data-ink="w" title="−45+20 · сростки · 1 392,7 т · liberation_deficit">1 392,7</div>
+    <div class="c" style="background:var(--q300)" data-ink="b" title="−20+10 · сростки · 382,2 т · liberation_deficit">382,2</div>
+    <div class="c" style="background:var(--q100)" data-ink="b" title="−10 · сростки · 14,1 т · liberation_deficit">14,1</div>
+
+    <div class="rl">Миллерит <span class="ok">✓</span></div>
+    <div class="c ref" title="битая ячейка исходника — прочитано, учтено как 0">#REF!</div>
+    <div class="c zero">0</div><div class="c zero">0</div><div class="c zero">0</div>
+    <div class="c zero">0</div><div class="c zero">0</div>
+
+    <div class="rl">Примесь в пирротине</div>
+    <div class="c ref" title="битая ячейка исходника — прочитано, учтено как 0">#REF!</div>
+    <div class="c nr" title="+71 · 28,7 т · не извлекается текущей технологией">28,7</div>
+    <div class="c nr" title="−71+45 · 15,1 т · не извлекается">15,1</div>
+    <div class="c nr" title="−45+20 · 68,6 т · не извлекается">68,6</div>
+    <div class="c nr" title="−20+10 · 81,1 т · не извлекается">81,1</div>
+    <div class="c nr" title="−10 · 83,0 т · не извлекается">83,0</div>
+
+    <div class="rl">Силикатная форма / Валлериит</div>
+    <div class="c ref" title="битая ячейка исходника — прочитано, учтено как 0">#REF!</div>
+    <div class="c nr" title="+71 · 550,6 т · не извлекается">550,6</div>
+    <div class="c nr" title="−71+45 · 480,9 т · не извлекается">480,9</div>
+    <div class="c nr" title="−45+20 · 786,7 т · не извлекается">786,7</div>
+    <div class="c nr" title="−20+10 · 256,8 т · не извлекается">256,8</div>
+    <div class="c nr" title="−10 · 476,7 т · не извлекается">476,7</div>
+
+    <div class="rl">Пирит / другие сульфиды</div>
+    <div class="c ref" title="битая ячейка исходника — прочитано, учтено как 0">#REF!</div>
+    <div class="c nr zero">0</div><div class="c nr zero">0</div><div class="c nr zero">0</div>
+    <div class="c nr zero" title="−20+10 · 0,02 т">0,02</div>
+    <div class="c nr zero" title="−10 · 0,08 т">0,08</div>
+  </div>
+  <div class="hm-legend">
+    <span>0 т</span><span class="hm-scale"></span><span>2 410 т</span>
+    <span style="margin-left:.6rem"><span class="sw-nr"></span> неизвлекаемо текущей технологией</span>
+    <span><span style="color:var(--mint-text);font-weight:700">✓</span> извлекаемая форма</span>
+  </div>
+
+
+  <div class="notes">46% всех потерь металла-28 — недораскрытые сростки: 4 794 т, диагноз
+    liberation_deficit (это 63% извлекаемых потерь; две трети этих тонн — крупные классы
+    +71 и −71+45). Система поставила диагноз за секунды, детерминированно.</div>
+  <p class="src">Данные: <code>fixtures/diagnostics_kgmk.json</code> → loss_cells, diagnosis_summary. Наведите курсор на ячейку — класс, форма, диагноз.</p>
+  <div class="foot"><span>Фабрика гипотез · GoatWhistle</span><span>6</span></div>
+</section>
+
+<!-- ==================== 7. Гипотеза с trace ==================== -->
+<section class="slide" id="s7">
+  <h2>Демо: гипотеза с доказательствами</h2>
+  <div class="cols" style="grid-template-columns:1fr 1.1fr; max-width:1300px">
+  <div class="card">
+    <h3>Заменить песковые насадки гидроциклонов 12″ → 8″</h3>
+    <div class="badges">
+      <span class="badge rec">recommended</span>
+      <span class="badge acc">ранг #1 · score 0.867</span>
+      <span class="badge">① настройка, без capex</span>
+      <span class="badge">DOE: 6 прогонов</span>
+    </div>
+    <div class="kv">
+      <span class="k">Механизм</span>
+      <span class="chain" style="margin:0">
+        <span class="st">граница разделения ↓</span><span class="sep">→</span>
+        <span class="st">крупные сростки на доизмельчение</span><span class="sep">→</span>
+        <span class="st">раскрытие Pnt/Cp</span>
+      </span>
+    </div>
+    <div class="trace">trace: Итог!E44 (2 088 т сростков в классе +71) → claim_001 → учебник, стр. 212</div>
+    <div class="kv">
+      <span class="k">Экономика</span>
+      <span>адресует <b>4 794 т</b> → при +5–15% раскрытия = <b>$4,0–11,9 млн/год</b>; допущения раскрыты: цена $16 500/т — параметр, диапазон — из литературы</span>
+      <span class="k">Эксперимент</span>
+      <span>факторы: диаметр насадки, давление на входе ГЦ · измеряем: гранулометрию слива, долю закрытого Pnt/Cp, содержание металла-28 в хвостах</span>
+      <span class="k">Честно</span>
+      <span>риск: рост циркулирующей нагрузки на мельницы · пробел: нет claim о влиянии на металл-29</span>
+    </div>
+  </div>
+  <figure style="margin:0">
+    <img src="graph.png" alt="Граф знаний, вкладка Graph: подсвечен узел «диаметр песковой насадки гидроциклона» и его механизм «граница разделения классификации»"
+         style="width:100%; border:1px solid var(--grid); border-radius:14px; display:block">
+    <figcaption class="src" style="margin-top:.5rem">Живой скрин вкладки Graph (КГМК, 24 узла / 26 связей):
+      рычаг гипотезы подсвечен вместе с механизмом «граница разделения классификации» —
+      та же цепочка, что в trace слева. В демо кликабельно.</figcaption>
+  </figure>
+  </div>
+  <div class="notes">Каждое число прослеживается до первоисточника — trace в UI кликабелен:
+    ячейка исходного xlsx и страница учебника. Это и есть интерпретируемость из ТЗ —
+    не «объяснение от нейросети», а цепочка данных.</div>
+  <p class="src">Данные: <code>fixtures/board.json</code> → hyp_001 · 4 794 × 5–15% × $16 500 = $3,96–11,87 млн</p>
+  <div class="foot"><span>Фабрика гипотез · GoatWhistle</span><span>7</span></div>
+</section>
+
+<!-- ==================== 8. Benchmark ==================== -->
+<section class="slide" id="s8">
+  <h2>Benchmark против экспертов</h2>
+  <div class="hero" style="font-size:clamp(2.2rem,6vw,4.2rem)">КГМК: 5 из 5 гипотез экспертов + 6 новых</div>
+  <div class="hero-cap" style="margin-bottom:1.4rem">система не видела их списки — они использованы как ground truth</div>
+
+  <div class="cols">
+    <div class="match">
+      <div class="mrow"><span class="exp">Магнитная сепарация + доизмельчение</span><span class="mk hit">✓</span><span class="sys">Магнитная сепарация пирротиновой фракции <span class="pill hit">совпадение</span></span></div>
+      <div class="mrow"><span class="exp">Геометрия футеровки мельниц</span><span class="mk hit">✓</span><span class="sys">Настроить геометрию футеровки <span class="pill hit">совпадение</span></span></div>
+      <div class="mrow"><span class="exp">Насадки ГЦ 12″ → 8″</span><span class="mk hit">✓</span><span class="sys">Диаметр песковой насадки гидроциклона <span class="pill hit">совпадение</span></span></div>
+      <div class="mrow"><span class="exp">Полная замена классификаторов на ГЦ</span><span class="mk hit">✓</span><span class="sys">Скорость вращения классификатора <span class="pill hit">совпадение</span></span></div>
+      <div class="mrow"><span class="exp">Грохота тонкого грохочения</span><span class="mk hit">✓</span><span class="sys">Тонкое грохочение после 2-й стадии <span class="pill hit">совпадение</span></span></div>
+      <div class="mrow"><span class="exp" style="color:var(--muted)">—</span><span class="mk" style="color:var(--acc)">+</span><span class="sys">6 новых: зазор дробилки, мелющие шары, контактные чаны, плотность пульпы, фронт флотации, депрессор <span class="pill new">новые</span></span></div>
+    </div>
+    <div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Фабрика</th><th class="num">У экспертов</th><th class="num">Воспроизведено</th><th class="num">Новых</th></tr></thead>
+        <tbody>
+          <tr><td>КГМК</td><td class="num">5</td><td class="num">5</td><td class="num">6</td></tr>
+          <tr><td>НОФ-вкр</td><td class="num">6</td><td class="num">5</td><td class="num">6</td></tr>
+          <tr><td>НОФ-мед</td><td class="num">8</td><td class="num">7</td><td class="num">4</td></tr>
+          <tr><td>ТОФ</td><td class="num">8</td><td class="num">4</td><td class="num">7</td></tr>
+          <tr><td><b>Всего</b></td><td class="num"><b>27</b></td><td class="num"><b>21 (78%)</b></td><td class="num"><b>23</b></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="src">Live-прогон по всем 4 фабрикам: <code>POST /run</code> + <code>GET /benchmark</code>
+        (вкладка 04 Benchmark в UI). Эталон — 27 гипотез экспертов из данных кейса.</p>
+    </div>
+  </div>
+  <div class="notes">В данных кейса лежали гипотезы реальных мозговых штурмов по четырём фабрикам.
+    Мы использовали их не как подсказку, а как ground truth — система их не видела.
+    Это измеримое качество, а не «поверьте нам».</div>
+  <div class="foot"><span>Фабрика гипотез · GoatWhistle</span><span>8</span></div>
+</section>
+
+<!-- ==================== 9. Экономика портфеля ==================== -->
+<section class="slide" id="s9">
+  <h2>Экономика портфеля</h2>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>#</th><th>Гипотеза</th><th>Эффект, $ млн/год</th><th style="min-width:190px">0 — 20</th><th>Затраты</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Насадки гидроциклонов 12″ → 8″</td><td class="num">4,0 – 11,9</td>
+        <td><div class="range"><div class="track"></div><div class="bar" style="left:20%;width:39.5%"></div></div></td><td>① настройка</td></tr>
+      <tr><td>2</td><td>Геометрия футеровки мельниц</td><td class="num">2,4 – 7,9</td>
+        <td><div class="range"><div class="track"></div><div class="bar" style="left:11.9%;width:27.7%"></div></div></td><td>② замена узла</td></tr>
+      <tr><td>3</td><td>Грохота тонкого грохочения</td><td class="num">6,3 – 15,8</td>
+        <td><div class="range"><div class="track"></div><div class="bar" style="left:31.6%;width:47.5%"></div></div></td><td>③ новое оборудование</td></tr>
+      <tr><td>4</td><td>Фронт первой контрольной флотации</td><td class="num">0,3 – 0,7</td>
+        <td><div class="range"><div class="track"></div><div class="bar" style="left:1.5%;width:2.1%"></div></div></td><td>① настройка</td></tr>
+      <tr><td>5</td><td>Магнитная сепарация + отдельный цикл</td><td class="num">7,9 – 19,8</td>
+        <td><div class="range"><div class="track"></div><div class="bar" style="left:39.6%;width:59.3%"></div></div></td><td>③ новое оборудование</td></tr>
+      <tr><td>6</td><td>Снизить переизмельчение (стабилизация помола)</td><td class="num">1,2 – 3,2</td>
+        <td><div class="range"><div class="track"></div><div class="bar" style="left:6%;width:9.9%"></div></div></td><td>① настройка</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="src">Ранжирование — по скорингу (деньги на единицу риска), не по максимуму эффекта.
+    Данные: <code>fixtures/board.json</code>; после реального прогона — из него.</p>
+  <div class="notes">Портфель ранжирован по деньгам на единицу риска. Гипотеза №1 — настройка
+    за копейки, №3 и №5 — capex-проекты: система различает их и даёт менеджеру выбор,
+    а не свалку идей.</div>
+  <div class="foot"><span>Фабрика гипотез · GoatWhistle</span><span>9</span></div>
+</section>
+
+<!-- ==================== 10. Соответствие ТЗ ==================== -->
+<section class="slide" id="s10">
+  <h2>Соответствие ТЗ — чек-лист</h2>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Требование ТЗ</th><th>Как закрыто</th></tr></thead>
+    <tbody>
+      <tr><td>Приём разнородных / неполных данных</td><td>Якорный парсер xlsx; битые ячейки → панель Data Readiness</td></tr>
+      <tr><td>Генерация + ранжирование гипотез</td><td>Детерминированные операторы + скоринг по 6 осям</td></tr>
+      <tr><td>Обоснование + привязка к источникам</td><td>Trace до ячейки отчёта и страницы PDF</td></tr>
+      <tr><td>Экспорт</td><td>CSV / JSON одним кликом + REST API</td></tr>
+      <tr><td>Открытые источники (пожелание организаторов)</td><td>Корпус расширен open access статьями (MDPI; метаданные — Semantic Scholar API из рекомендаций кейса)</td></tr>
+      <tr><td>Локальное развёртывание</td><td>Rust + Python + web; без внешних зависимостей в рантайме</td></tr>
+      <tr><td>Мультиязычность</td><td>Корпус ru + en обрабатывается одинаково; UI RU/EN</td></tr>
+      <tr><td>Новые предметные области</td><td>Домен = один YAML-pack; движок не меняется</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="notes">Постановка ТЗ шире данных кейса: цель — параметр (KpiContract),
+    домен — сменный YAML-pack. Мы показали движок на той области, для которой
+    организаторы дали данные и эталон качества.</div>
+  <div class="foot"><span>Фабрика гипотез · GoatWhistle</span><span>10</span></div>
+</section>
+
+<!-- ==================== 11. Финал ==================== -->
+<section class="slide" id="s12">
+  <div class="kicker">Итог</div>
+  <div class="hero" style="font-size:clamp(3rem,9vw,7rem)">$124 млн/год</div>
+  <div class="hero-cap">потенциала — одна фабрика, один отчёт</div>
+  <p class="quote">Система нашла за 3 минуты то, что эксперты искали неделю, —
+    и посчитала это в деньгах, с доказательствами до ячейки исходника.</p>
+  <div class="foot"><span>Фабрика гипотез · GoatWhistle</span><span>11</span></div>
+</section>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var counter = document.getElementById('counter');
+  function current(){
+    var y = window.scrollY + window.innerHeight/2;
+    for (var i=0;i<slides.length;i++){
+      var s=slides[i];
+      if (y >= s.offsetTop && y < s.offsetTop + s.offsetHeight) return i;
+    }
+    return 0;
+  }
+  function update(){ counter.textContent = (current()+1) + ' / ' + slides.length; }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+  document.addEventListener('keydown', function(e){
+    if (e.key==='s' || e.key==='S' || e.key==='ы' || e.key==='Ы'){
+      document.body.classList.toggle('show-notes'); return;
+    }
+    var i = current(), t = null;
+    if (e.key==='ArrowRight' || e.key==='PageDown' || e.key===' ') t = Math.min(i+1, slides.length-1);
+    if (e.key==='ArrowLeft'  || e.key==='PageUp')                 t = Math.max(i-1, 0);
+    if (e.key==='Home') t = 0;
+    if (e.key==='End')  t = slides.length-1;
+    if (t!==null && t!==i){ e.preventDefault(); slides[t].scrollIntoView(); }
+  });
+  document.getElementById('btn-notes').addEventListener('click', function(){
+    document.body.classList.toggle('show-notes');
+  });
+})();
+</script>
+</body>
+</html>

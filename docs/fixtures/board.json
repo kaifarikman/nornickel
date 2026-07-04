@@ -1069,7 +1069,7 @@
         ],
         "minimum_runs": 5
       },
-      "expert_match": { "matched": true, "expert_hypothesis_id": "kgmk_h1" }
+      "expert_match": { "matched": true, "expert_hypothesis_id": "kgmk_h5" }
     },
     {
       "id": "hyp_003",
@@ -1198,7 +1198,7 @@
         ],
         "minimum_runs": 6
       },
-      "expert_match": { "matched": true, "expert_hypothesis_id": "kgmk_h5" }
+      "expert_match": { "matched": true, "expert_hypothesis_id": "kgmk_h1" }
     },
     {
       "id": "hyp_006",
