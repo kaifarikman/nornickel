@@ -44,7 +44,9 @@ pub fn build(
                 .filter(|n| n.has_tag("controllable"))
                 .and_then(|n| n.capex_class())
         });
-        let (Some(diagnosis), Some(capex)) = (diagnosis, capex) else { continue };
+        let (Some(diagnosis), Some(capex)) = (diagnosis, capex) else {
+            continue;
+        };
         if h.economic_effect.value_usd_range[1] <= 0.0 {
             continue;
         }
@@ -108,10 +110,10 @@ pub fn build(
             .collect();
 
         let capex = item.capex_class;
-        items_by_capex
-            .entry(capex)
-            .or_default()
-            .push(RoadmapItem { alternatives, ..item });
+        items_by_capex.entry(capex).or_default().push(RoadmapItem {
+            alternatives,
+            ..item
+        });
     }
 
     let phases = items_by_capex

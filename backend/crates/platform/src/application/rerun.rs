@@ -20,23 +20,27 @@ pub fn execute(
         Some(id) => runs
             .get(id)
             .ok_or_else(|| UseCaseError::NotFound(format!("run '{id}' not found")))?,
-        None => runs
-            .last()
-            .ok_or_else(|| UseCaseError::NotFound("no run yet; call POST /run first".to_string()))?,
+        None => runs.last().ok_or_else(|| {
+            UseCaseError::NotFound("no run yet; call POST /run first".to_string())
+        })?,
     };
 
     rerun::apply(&mut run.contract, &action);
 
     // Граф переиспользуем из уже проаннотированного extract прогона.
-    let graph = engine::Graph::build(&run.extract).map_err(|m| {
-        UseCaseError::Validation(ApiError::new("VALIDATION_ERROR", m, Value::Null))
-    })?;
+    let graph = engine::Graph::build(&run.extract)
+        .map_err(|m| UseCaseError::Validation(ApiError::new("VALIDATION_ERROR", m, Value::Null)))?;
     let mut board = engine::discover(&graph, &run.contract, &run.pack);
     board.snapshot = run.snapshot.clone();
     board.diagnostics = run.diagnostics.clone();
 
     let experts = load_experts(experts_gw);
-    benchmark::match_experts(&mut board.hypotheses, &run.extract.entities, &experts, &run.contract.factory_id);
+    benchmark::match_experts(
+        &mut board.hypotheses,
+        &run.extract.entities,
+        &experts,
+        &run.contract.factory_id,
+    );
 
     run.board = board.clone();
     runs.store(run);

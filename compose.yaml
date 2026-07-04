@@ -51,10 +51,11 @@ services:
     volumes:
       - ./docs:/app/docs:ro
       - ./norn-hack:/app/norn-hack:ro
+    depends_on:
+      - postgres
 
   postgres:
     image: pgvector/pgvector:pg16
-    profiles: ["rag"]
     environment:
       POSTGRES_DB: nornikel
       POSTGRES_USER: nornikel

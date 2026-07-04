@@ -58,6 +58,9 @@ impl RunRepository for MemoryRunRepository {
 
     fn last(&self) -> Option<RunRecord> {
         let inner = self.inner.read().unwrap_or_else(|e| e.into_inner());
-        inner.last.as_ref().and_then(|id| inner.runs.get(id).cloned())
+        inner
+            .last
+            .as_ref()
+            .and_then(|id| inner.runs.get(id).cloned())
     }
 }

@@ -137,3 +137,75 @@ def test_parse_llm_extract_content_accepts_fenced_json_and_nodes_alias() -> None
     assert parsed.entities[0].kind == "factor"
     assert parsed.claims[0].evidence_type == "literature"
     assert parsed.edges[0].source_claims == ["claim_1"]
+
+
+def test_parse_llm_extract_content_fills_empty_duplicate_ids() -> None:
+    content = """{
+      "claims": [
+        {
+          "source_claim": "First claim.",
+          "source_ref": "doc_1",
+          "source_page": null,
+          "confidence": 0.7
+        },
+        {
+          "id": "",
+          "source_claim": "Second claim.",
+          "source_ref": "doc_1",
+          "source_page": null,
+          "confidence": 0.8
+        }
+      ],
+      "entities": [
+        { "id": "", "name": "Lever", "type": "parameter", "tags": ["controllable"] },
+        { "id": "", "name": "KPI", "type": "kpi" }
+      ],
+      "edges": [
+        {
+          "id": "",
+          "source": "node_001",
+          "target": "node_002",
+          "relation": "affects",
+          "claim_id": "claim_001"
+        }
+      ]
+    }"""
+
+    parsed = _parse_llm_extract_content(content)
+
+    assert [claim.id for claim in parsed.claims] == ["claim_001", "claim_002"]
+    assert [entity.id for entity in parsed.entities] == ["node_001", "node_002"]
+    assert parsed.edges[0].id == "edge_001"
+
+
+def test_parse_llm_extract_content_resolves_edge_labels_to_ids() -> None:
+    content = """{
+      "claims": [
+        {
+          "id": "claim_1",
+          "text": "Nozzle diameter changes classification.",
+          "source_ref": "doc_1",
+          "source_page": null,
+          "confidence": 0.8,
+          "evidence_type": "literature"
+        }
+      ],
+      "entities": [
+        { "id": "node_nozzle", "name": "диаметр песковой насадки гидроциклона", "type": "parameter", "tags": ["controllable"] },
+        { "id": "node_classification", "name": "классификация", "type": "mechanism" }
+      ],
+      "edges": [
+        {
+          "id": "",
+          "source": "диаметр песковой насадки гидроциклона",
+          "target": "классификация",
+          "relation": "affects",
+          "claim_id": "claim_1"
+        }
+      ]
+    }"""
+
+    parsed = _parse_llm_extract_content(content)
+
+    assert parsed.edges[0].src == "node_nozzle"
+    assert parsed.edges[0].dst == "node_classification"

@@ -84,7 +84,11 @@ fn golden_board_flotation_v1() {
     }
 
     let expected = std::fs::read_to_string(&golden_path).unwrap();
-    assert_eq!(actual.trim(), expected.trim(), "engine output drifted from golden");
+    assert_eq!(
+        actual.trim(),
+        expected.trim(),
+        "engine output drifted from golden"
+    );
 }
 
 /// Детерминизм: один и тот же вход -> идентичный портфель.
@@ -111,31 +115,49 @@ fn kgmk_portfolio_shape() {
         assert_eq!(h.rank as usize, i + 1, "ранги должны идти 1..N по порядку");
     }
     for w in board.hypotheses.windows(2) {
-        assert!(w[0].score_total >= w[1].score_total, "сортировка по score_total");
+        assert!(
+            w[0].score_total >= w[1].score_total,
+            "сортировка по score_total"
+        );
     }
 
     // Топ-3 содержит гипотезу с рычагом гидроциклона.
     let top3_has_hydrocyclone = board.hypotheses.iter().take(3).any(|h| {
-        h.source_nodes.iter().any(|n| n == "node_hydrocyclone_nozzle")
+        h.source_nodes
+            .iter()
+            .any(|n| n == "node_hydrocyclone_nozzle")
     });
-    assert!(top3_has_hydrocyclone, "в топ-3 ожидается node_hydrocyclone_nozzle");
+    assert!(
+        top3_has_hydrocyclone,
+        "в топ-3 ожидается node_hydrocyclone_nozzle"
+    );
 
     // Гипотеза от gap с недоступным на kgmk рычагом присутствует.
     let has_gap_unavailable = board.hypotheses.iter().any(|h| {
-        h.source_nodes.iter().any(|n| {
-            n == "node_fine_screening" || n == "node_magnetic_separation"
-        })
+        h.source_nodes
+            .iter()
+            .any(|n| n == "node_fine_screening" || n == "node_magnetic_separation")
     });
-    assert!(has_gap_unavailable, "ожидается gap-гипотеза с недоступным рычагом");
+    assert!(
+        has_gap_unavailable,
+        "ожидается gap-гипотеза с недоступным рычагом"
+    );
 
     // Гипотеза гидроциклона несёт заполненный экономический эффект.
     let hydro = board
         .hypotheses
         .iter()
-        .find(|h| h.source_nodes.iter().any(|n| n == "node_hydrocyclone_nozzle"))
+        .find(|h| {
+            h.source_nodes
+                .iter()
+                .any(|n| n == "node_hydrocyclone_nozzle")
+        })
         .expect("гипотеза гидроциклона");
     let v = hydro.economic_effect.value_usd_range;
-    assert!(v[0] > 0.0 && v[1] > v[0], "value_usd_range заполнен и монотонен");
+    assert!(
+        v[0] > 0.0 && v[1] > v[0],
+        "value_usd_range заполнен и монотонен"
+    );
 }
 
 /// change_price: удвоение цены element_28 удваивает value_usd_range денежных гипотез.
@@ -176,14 +198,21 @@ fn excluded_factor_changes_portfolio() {
     let graph = Graph::build(&extract).unwrap();
     let before = discover(&graph, &contract, &pack);
 
-    contract.excluded_factors.push("node_hydrocyclone_nozzle".to_string());
+    contract
+        .excluded_factors
+        .push("node_hydrocyclone_nozzle".to_string());
     let after = discover(&graph, &contract, &pack);
 
     let mentions = |b: &BoardResponse, id: &str| {
-        b.hypotheses.iter().any(|h| h.source_nodes.iter().any(|n| n == id))
+        b.hypotheses
+            .iter()
+            .any(|h| h.source_nodes.iter().any(|n| n == id))
     };
     assert!(mentions(&before, "node_hydrocyclone_nozzle"));
-    assert!(!mentions(&after, "node_hydrocyclone_nozzle"), "исключённый фактор не должен встречаться");
+    assert!(
+        !mentions(&after, "node_hydrocyclone_nozzle"),
+        "исключённый фактор не должен встречаться"
+    );
 }
 
 /// contradiction-оператор включается pack'ом и находит pos/neg на одном узле.
@@ -202,8 +231,22 @@ fn contradiction_operator_when_enabled() {
             node("k", NodeKind::Kpi, "goal", &["kpi"]),
         ],
         edges: vec![
-            edge("e1", "f1", "k", EdgeType::Mechanism, Polarity::Positive, &["c1"]),
-            edge("e2", "f2", "k", EdgeType::Mechanism, Polarity::Negative, &["c2"]),
+            edge(
+                "e1",
+                "f1",
+                "k",
+                EdgeType::Mechanism,
+                Polarity::Positive,
+                &["c1"],
+            ),
+            edge(
+                "e2",
+                "f2",
+                "k",
+                EdgeType::Mechanism,
+                Polarity::Negative,
+                &["c2"],
+            ),
         ],
     };
     let pack = DomainPack {
@@ -229,7 +272,10 @@ fn contradiction_operator_when_enabled() {
     let graph = Graph::build(&extract).unwrap();
     let board = discover(&graph, &contract, &pack);
     assert!(
-        board.hypotheses.iter().any(|h| h.title.contains("граничное условие")),
+        board
+            .hypotheses
+            .iter()
+            .any(|h| h.title.contains("граничное условие")),
         "contradiction-гипотеза должна появиться"
     );
 }

@@ -4,6 +4,9 @@ import type {
   ExpertHypothesis,
   ExtractResponse,
   Hypothesis,
+  NarrateResponse,
+  NoveltyResponse,
+  SkepticResponse,
 } from '@/contracts.ts'
 import type { LibraryMock } from '@/mocks/library.ts'
 
@@ -87,4 +90,30 @@ export function assertLibrary(v: unknown): LibraryMock {
     throw new ContractError('LibraryMock')
   }
   return v as unknown as LibraryMock
+}
+
+export function assertSkeptic(v: unknown): SkepticResponse {
+  if (!isObject(v) || typeof v['objection'] !== 'string') {
+    throw new ContractError('SkepticResponse')
+  }
+  return {
+    objection: v['objection'],
+    missing_evidence: Array.isArray(v['missing_evidence']) ? v['missing_evidence'].map(String) : [],
+    risks: Array.isArray(v['risks']) ? v['risks'].map(String) : [],
+    suggested_checks: Array.isArray(v['suggested_checks']) ? v['suggested_checks'].map(String) : [],
+  }
+}
+
+export function assertNarrate(v: unknown): NarrateResponse {
+  if (!isObject(v) || typeof v['text'] !== 'string') {
+    throw new ContractError('NarrateResponse')
+  }
+  return v as unknown as NarrateResponse
+}
+
+export function assertNovelty(v: unknown): NoveltyResponse {
+  if (!isObject(v) || typeof v['novelty_score'] !== 'number' || !hasArray(v, 'similar')) {
+    throw new ContractError('NoveltyResponse')
+  }
+  return v as unknown as NoveltyResponse
 }

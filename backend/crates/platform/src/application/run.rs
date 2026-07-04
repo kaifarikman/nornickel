@@ -12,7 +12,7 @@ use crate::application::ports::{
     RunRepository,
 };
 use crate::application::run_record::RunRecord;
-use crate::domain::{annotate, benchmark, snapshot, validation};
+use crate::domain::{annotate, benchmark, scaffold, snapshot, validation};
 
 pub struct RunInput {
     pub factory_id: String,
@@ -42,6 +42,7 @@ pub fn execute(
         .load(&pack_id)
         .map_err(UseCaseError::Internal)?;
     extract.pack_id = pack_id.clone();
+    scaffold::ensure_generation_scaffold(&mut extract);
     validation::validate(&extract).map_err(UseCaseError::Validation)?;
 
     let mut diagnostics =

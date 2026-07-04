@@ -25,12 +25,17 @@ export function RunView() {
   const navigate = useNavigate()
   const location = useLocation()
   const queryClient = useQueryClient()
-  const params = parseRunParams(location.state)
+  const params = useMemo(() => parseRunParams(location.state), [location.state])
 
   const [stage, setStage] = useState(0)
   const [graphProgress, setGraphProgress] = useState({ revealed: 0, total: 0 })
   const finishedRef = useRef(false)
-  const extract = useQuery({ queryKey: ['extract'], queryFn: api.getExtract })
+  const board = useQuery({ queryKey: ['board', factory], queryFn: () => api.getBoard(factory) })
+  const extract = useQuery({
+    queryKey: ['extract'],
+    queryFn: api.getExtract,
+    enabled: board.isSuccess,
+  })
 
   const handleGraphProgress = useCallback((revealed: number, total: number) => {
     setGraphProgress({ revealed, total })
@@ -42,6 +47,9 @@ export function RunView() {
     if (stage >= STAGE_KEYS.length - 1) {
       return
     }
+    if (stage >= STAGE_KEYS.indexOf('score' as StageKey) && !board.isSuccess) {
+      return
+    }
     if (stage === STAGE_KEYS.length - 2 && !extract.isSuccess) {
       return
     }
@@ -51,17 +59,20 @@ export function RunView() {
     }
     const timer = setTimeout(() => setStage((s) => s + 1), STAGE_MS)
     return () => clearTimeout(timer)
-  }, [stage, extract.isSuccess, graphComplete])
+  }, [stage, board.isSuccess, extract.isSuccess, graphComplete])
 
   useEffect(() => {
     if (stage < STAGE_KEYS.length - 1 || finishedRef.current) {
       return
     }
-    finishedRef.current = true
-    markRun(factory)
     let cancelled = false
 
     const applyParamsThenGo = async () => {
+      if (cancelled || finishedRef.current) {
+        return
+      }
+      finishedRef.current = true
+      markRun(factory)
       try {
         if (params !== null) {
           const actions: RerunAction[] = []
@@ -85,6 +96,9 @@ export function RunView() {
             queryClient.setQueryData(['board', factory], board)
           }
         }
+        if (!cancelled && board.data !== undefined) {
+          queryClient.setQueryData(['board', factory], board.data)
+        }
       } catch (err) {
         console.warn('[run] applying params failed, continuing to diagnosis:', err)
       } finally {
@@ -99,7 +113,7 @@ export function RunView() {
       cancelled = true
       clearTimeout(timer)
     }
-  }, [stage])
+  }, [stage, board.data, factory, markRun, navigate, params, queryClient])
 
   const nodes = extract.data?.entities ?? []
   const edges = extract.data?.edges ?? []
@@ -142,6 +156,7 @@ export function RunView() {
           {stage >= STAGE_KEYS.length - 1 && (
             <span className={styles.finishing}>{t.run.finishing}</span>
           )}
+          {!board.isSuccess && <span className={styles.liveStatus}>{t.run.liveStatus}</span>}
         </Panel>
 
         <Panel className={styles.graphPanel}>

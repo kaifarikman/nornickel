@@ -4,7 +4,9 @@
 
 use std::collections::HashMap;
 
-use contracts::{ClaimRef, DiagnosticsReport, ExtractResponse, Hypothesis, SourceCell, TraceReport};
+use contracts::{
+    ClaimRef, DiagnosticsReport, ExtractResponse, Hypothesis, SourceCell, TraceReport,
+};
 
 /// Максимум ячеек-источников в ответе (по убыванию тоннажа).
 const MAX_CELLS: usize = 15;
@@ -26,8 +28,11 @@ pub fn trace(hyp: &Hypothesis, extract: &ExtractResponse, diag: &DiagnosticsRepo
         .collect();
 
     // Диагноз гипотезы — из её source-узлов.
-    let node_by_id: HashMap<&str, &contracts::GraphNode> =
-        extract.entities.iter().map(|n| (n.id.as_str(), n)).collect();
+    let node_by_id: HashMap<&str, &contracts::GraphNode> = extract
+        .entities
+        .iter()
+        .map(|n| (n.id.as_str(), n))
+        .collect();
     let diagnosis = hyp
         .source_nodes
         .iter()
@@ -50,7 +55,11 @@ pub fn trace(hyp: &Hypothesis, extract: &ExtractResponse, diag: &DiagnosticsRepo
             .collect(),
         None => Vec::new(),
     };
-    source_cells.sort_by(|a, b| b.tons.partial_cmp(&a.tons).unwrap_or(std::cmp::Ordering::Equal));
+    source_cells.sort_by(|a, b| {
+        b.tons
+            .partial_cmp(&a.tons)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
     source_cells.truncate(MAX_CELLS);
 
     TraceReport {

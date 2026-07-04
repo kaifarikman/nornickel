@@ -17,8 +17,10 @@ pub fn match_experts(
 ) -> BenchmarkReport {
     let by_id: std::collections::HashMap<&str, &GraphNode> =
         nodes.iter().map(|n| (n.id.as_str(), n)).collect();
-    let factory_experts: Vec<&ExpertHypothesis> =
-        experts.iter().filter(|e| e.factory_id == factory_id).collect();
+    let factory_experts: Vec<&ExpertHypothesis> = experts
+        .iter()
+        .filter(|e| e.factory_id == factory_id)
+        .collect();
 
     let mut claimed: HashSet<&str> = HashSet::new();
     let mut matches = Vec::new();

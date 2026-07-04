@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react'
 import { Link, useParams } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@/api.ts'
+import type { Hypothesis } from '@/contracts.ts'
 import { Panel } from '@/components/Panel/Panel.tsx'
 import { refetchAll } from '@/components/QueryBoundary/QueryBoundary.tsx'
 import { ErrorState, LoadingState } from '@/components/QueryState/QueryState.tsx'
@@ -25,6 +26,33 @@ export function HypothesisDetail() {
   const hypothesisQuery = useQuery({
     queryKey: ['hypothesis', factory, id],
     queryFn: () => api.getHypothesis(factory, id ?? ''),
+  })
+  const aiHypothesis = hypothesisQuery.data ?? null
+  const skeptic = useQuery({
+    queryKey: ['skeptic', factory, id],
+    queryFn: () => api.getSkeptic(aiHypothesis as Hypothesis),
+    enabled: aiHypothesis !== null,
+  })
+  const novelty = useQuery({
+    queryKey: ['novelty', factory, id],
+    queryFn: () => api.getNovelty(aiHypothesis as Hypothesis),
+    enabled: aiHypothesis !== null,
+  })
+  const narrative = useQuery({
+    queryKey: [
+      'narrative',
+      factory,
+      id,
+      skeptic.dataUpdatedAt,
+      novelty.dataUpdatedAt,
+      skeptic.errorUpdatedAt,
+      novelty.errorUpdatedAt,
+    ],
+    queryFn: () => api.getNarrative(aiHypothesis as Hypothesis, skeptic.data, novelty.data),
+    enabled:
+      aiHypothesis !== null &&
+      !skeptic.isPending &&
+      !novelty.isPending,
   })
 
   if (board.isPending || extract.isPending || hypothesisQuery.isPending) {
@@ -220,6 +248,55 @@ export function HypothesisDetail() {
         <div className={styles.side}>
           <Panel title={t.detail.evidenceGraphTitle}>
             <EvidenceGraph hypothesis={hypothesis} extract={extract.data} />
+          </Panel>
+          <Panel title={t.detail.aiNarrativeTitle}>
+            {narrative.isPending ? (
+              <p className={styles.aiMuted}>{t.detail.aiLoading}</p>
+            ) : narrative.isError ? (
+              <p className={styles.aiMuted}>{t.detail.aiUnavailable}</p>
+            ) : (
+              <p className={styles.aiText}>{narrative.data.text}</p>
+            )}
+          </Panel>
+          <Panel title={t.detail.aiReviewTitle}>
+            {skeptic.isPending ? (
+              <p className={styles.aiMuted}>{t.detail.aiLoading}</p>
+            ) : skeptic.isError ? (
+              <p className={styles.aiMuted}>{t.detail.aiUnavailable}</p>
+            ) : (
+              <div className={styles.aiBlock}>
+                <span className={styles.aiLabel}>{t.detail.objection}</span>
+                <p className={styles.aiText}>{skeptic.data.objection}</p>
+                {skeptic.data.suggested_checks.length > 0 && (
+                  <>
+                    <span className={styles.aiLabel}>{t.detail.suggestedChecks}</span>
+                    <ul className={styles.list}>
+                      {skeptic.data.suggested_checks.map((check) => (
+                        <li key={check} className={styles.missing}>
+                          {check}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
+            )}
+          </Panel>
+          <Panel title={t.detail.noveltyTitle}>
+            {novelty.isPending ? (
+              <p className={styles.aiMuted}>{t.detail.aiLoading}</p>
+            ) : novelty.isError ? (
+              <p className={styles.aiMuted}>{t.detail.aiUnavailable}</p>
+            ) : (
+              <div className={styles.aiBlock}>
+                <span className={styles.noveltyBadge}>
+                  {t.detail.noveltyScore(novelty.data.novelty_score)}
+                </span>
+                {novelty.data.similar[0] !== undefined && (
+                  <p className={styles.aiMuted}>{novelty.data.similar[0].text}</p>
+                )}
+              </div>
+            )}
           </Panel>
           <Panel title={t.detail.risksTitle}>
             <ul className={styles.list}>

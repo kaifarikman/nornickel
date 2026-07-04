@@ -42,5 +42,8 @@ pub fn plan(graph: &Graph, cand: &Candidate) -> DoePlan {
 }
 
 fn label(graph: &Graph, id: &str) -> String {
-    graph.node(id).map(|n| n.label.clone()).unwrap_or_else(|| id.to_string())
+    graph
+        .node(id)
+        .map(|n| n.label.clone())
+        .unwrap_or_else(|| id.to_string())
 }

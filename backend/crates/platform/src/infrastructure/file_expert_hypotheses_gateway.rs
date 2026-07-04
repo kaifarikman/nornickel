@@ -13,7 +13,10 @@ pub struct FileExpertHypothesesGateway {
 impl FileExpertHypothesesGateway {
     pub fn new(base_dir: impl AsRef<Path>) -> Self {
         FileExpertHypothesesGateway {
-            path: base_dir.as_ref().join("golden").join("expert_hypotheses.json"),
+            path: base_dir
+                .as_ref()
+                .join("golden")
+                .join("expert_hypotheses.json"),
         }
     }
 }

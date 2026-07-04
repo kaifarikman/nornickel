@@ -88,7 +88,10 @@ fn relevant_elements(
     contract: &KpiContract,
     tons_by_el: &BTreeMap<String, f64>,
 ) -> Vec<String> {
-    let kpi_id = graph.node(&cand.kpi).map(|n| normalize(&n.id)).unwrap_or_default();
+    let kpi_id = graph
+        .node(&cand.kpi)
+        .map(|n| normalize(&n.id))
+        .unwrap_or_default();
     let mut els: Vec<String> = contract
         .prices_usd_per_t
         .keys()
@@ -134,17 +137,23 @@ pub fn score(
         if total == 0 {
             0.0
         } else {
-            let grounded = cand.edges.iter().filter(|e| edge_grounded(graph, **e)).count();
+            let grounded = cand
+                .edges
+                .iter()
+                .filter(|e| edge_grounded(graph, **e))
+                .count();
             grounded as f64 / total as f64
         }
     };
 
     let cost = cost_score(graph, cand);
 
-    let n_contradictions = if cand.operator == "contradiction" { 1 } else { 0 };
-    let risk = (1.0
-        - 0.1 * missing_evidence.len() as f64
-        - 0.15 * n_contradictions as f64)
+    let n_contradictions = if cand.operator == "contradiction" {
+        1
+    } else {
+        0
+    };
+    let risk = (1.0 - 0.1 * missing_evidence.len() as f64 - 0.15 * n_contradictions as f64)
         .clamp(0.0, 1.0);
 
     let novelty = if cand.is_gap {
@@ -192,7 +201,9 @@ pub fn weighted_total(
         ("risk", b.risk),
         ("novelty", b.novelty),
     ];
-    dims.iter().map(|(k, v)| pack.weight(k, overrides) * v).sum()
+    dims.iter()
+        .map(|(k, v)| pack.weight(k, overrides) * v)
+        .sum()
 }
 
 /// Флагаем только те constraint-метрики, у которых есть узел-ограничение в графе,
@@ -202,7 +213,10 @@ fn missing_evidence(graph: &Graph, contract: &KpiContract) -> Vec<String> {
     for con in &contract.constraints {
         if let Some(idx) = constraint_node(graph, &con.metric) {
             if !graph.node_has_evidenced_edge(idx) {
-                out.push(format!("No claim covers constraint metric '{}'.", con.metric));
+                out.push(format!(
+                    "No claim covers constraint metric '{}'.",
+                    con.metric
+                ));
             }
         }
     }

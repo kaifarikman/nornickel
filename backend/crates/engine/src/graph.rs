@@ -42,10 +42,16 @@ impl Graph {
         }
         for edge in &extract.edges {
             let s = *idx.get(&edge.src).ok_or_else(|| {
-                format!("edge '{}' src references unknown node '{}'", edge.id, edge.src)
+                format!(
+                    "edge '{}' src references unknown node '{}'",
+                    edge.id, edge.src
+                )
             })?;
             let d = *idx.get(&edge.dst).ok_or_else(|| {
-                format!("edge '{}' dst references unknown node '{}'", edge.id, edge.dst)
+                format!(
+                    "edge '{}' dst references unknown node '{}'",
+                    edge.id, edge.dst
+                )
             })?;
             graph.add_edge(s, d, edge.clone());
         }
@@ -146,7 +152,15 @@ impl Graph {
         let mut edges = Vec::new();
         let mut visited = HashSet::new();
         visited.insert(start);
-        self.dfs(start, allowed, until_tag, &mut visited, &mut nodes, &mut edges, &mut out);
+        self.dfs(
+            start,
+            allowed,
+            until_tag,
+            &mut visited,
+            &mut nodes,
+            &mut edges,
+            &mut out,
+        );
         out
     }
 

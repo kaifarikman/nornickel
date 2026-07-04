@@ -2,6 +2,8 @@
 //! /expert_hypotheses, /export/board.{json,csv}. Каждый — тонкая обёртка:
 //! извлечь вход, вызвать use case, отдать JSON/файл.
 
+use std::collections::BTreeMap;
+use std::path::Path as FsPath;
 use std::time::Duration;
 
 use axum::extract::{Path, Query, State};
@@ -12,7 +14,7 @@ use contracts::{
     ConstraintFactor, ConstraintParseRequest, ConstraintParseResponse,
     ConstraintParseSidecarRequest, ExtractResponse, Hypothesis,
 };
-use serde_json::Value;
+use serde_json::{json, Value};
 
 use crate::application::{self, export, UseCaseError};
 use crate::state::AppState;
@@ -127,6 +129,47 @@ pub async fn parse_constraints(
     Ok(Json(parsed))
 }
 
+/// POST /skeptic — LLM review block for a hypothesis detail page.
+pub async fn skeptic(
+    State(state): State<AppState>,
+    Json(body): Json<Value>,
+) -> Result<Json<Value>, HttpError> {
+    proxy_sidecar_json(state, "skeptic", body).await
+}
+
+/// POST /narrate — LLM explanation block for a hypothesis detail page.
+pub async fn narrate(
+    State(state): State<AppState>,
+    Json(body): Json<Value>,
+) -> Result<Json<Value>, HttpError> {
+    proxy_sidecar_json(state, "narrate", body).await
+}
+
+/// POST /novelty — embedding/RAG novelty score for a hypothesis detail page.
+pub async fn novelty(
+    State(state): State<AppState>,
+    Json(body): Json<Value>,
+) -> Result<Json<Value>, HttpError> {
+    proxy_sidecar_json(state, "novelty", body).await
+}
+
+async fn proxy_sidecar_json(
+    state: AppState,
+    endpoint: &str,
+    body: Value,
+) -> Result<Json<Value>, HttpError> {
+    let sidecar_url = state
+        .sidecar_url
+        .clone()
+        .ok_or_else(|| UseCaseError::Internal("SIDECAR_URL is not configured".to_string()))?;
+    let url = format!("{}/{}", sidecar_url.trim_end_matches('/'), endpoint);
+    let value: Value = tokio::task::spawn_blocking(move || blocking_post(url, &body))
+        .await
+        .map_err(|e| UseCaseError::Internal(format!("sidecar task panicked: {e}")))?
+        .map_err(UseCaseError::Internal)?;
+    Ok(Json(value))
+}
+
 /// GET /benchmark?run_id= — покрытие эталонных гипотез экспертов (golden set).
 pub async fn benchmark(
     State(state): State<AppState>,
@@ -231,12 +274,69 @@ pub async fn factories(
 
 /// GET /extract — текущий ExtractResponse (документы + claims) для Library/trace.
 pub async fn extract(State(state): State<AppState>) -> Result<Json<ExtractResponse>, HttpError> {
+    if let Some(run) = state.runs.last() {
+        return Ok(Json(run.extract));
+    }
     // extract_source может ходить в сайдкар (blocking) — на blocking-пул.
     let extract = tokio::task::spawn_blocking(move || state.extract_source.load("flotation-v1"))
         .await
         .map_err(|e| UseCaseError::Internal(format!("extract task panicked: {e}")))?
         .map_err(UseCaseError::Internal)?;
     Ok(Json(extract))
+}
+
+/// GET /library — corpus summary built from the current live extract.
+pub async fn library(State(state): State<AppState>) -> Result<Json<Value>, HttpError> {
+    let extract = if let Some(run) = state.runs.last() {
+        run.extract
+    } else {
+        tokio::task::spawn_blocking(move || state.extract_source.load("flotation-v1"))
+            .await
+            .map_err(|e| UseCaseError::Internal(format!("library task panicked: {e}")))?
+            .map_err(UseCaseError::Internal)?
+    };
+
+    let mut claims_by_doc: BTreeMap<&str, usize> = BTreeMap::new();
+    for claim in &extract.claims {
+        *claims_by_doc.entry(claim.source_ref.as_str()).or_default() += 1;
+    }
+
+    let mut type_counts: BTreeMap<String, usize> = BTreeMap::new();
+    let files: Vec<Value> = extract
+        .documents
+        .iter()
+        .map(|doc| {
+            let path = FsPath::new(&doc.path);
+            let name = path
+                .file_name()
+                .and_then(|value| value.to_str())
+                .unwrap_or(doc.path.as_str());
+            let extension = path
+                .extension()
+                .and_then(|value| value.to_str())
+                .map(|value| value.to_ascii_uppercase())
+                .unwrap_or_else(|| "TXT".to_string());
+            *type_counts.entry(extension).or_default() += 1;
+            json!({
+                "name": name,
+                "documentId": doc.id,
+                "status": "processed",
+                "factsCount": claims_by_doc.get(doc.id.as_str()).copied().unwrap_or(0),
+                "kind": if doc.source_url.is_some() { "open" } else { "case" },
+            })
+        })
+        .collect();
+
+    let type_counts: Vec<Value> = type_counts
+        .into_iter()
+        .map(|(label, count)| json!({ "label": label, "count": count }))
+        .collect();
+
+    Ok(Json(json!({
+        "folder": format!("live extract / {}", extract.pack_id),
+        "files": files,
+        "typeCounts": type_counts,
+    })))
 }
 
 /// GET /expert_hypotheses — golden/expert_hypotheses.json для Benchmark view.

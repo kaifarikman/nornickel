@@ -108,6 +108,13 @@
   font-weight: 600;
 }
 
+.liveStatus {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--color-text-tertiary);
+}
+
 .graphPanel {
   padding: 0;
   overflow: hidden;

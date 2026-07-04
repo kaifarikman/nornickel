@@ -73,7 +73,9 @@ pub fn discover(graph: &Graph, contract: &KpiContract, pack: &DomainPack) -> Boa
 
     // Сортировка: score_total desc, тай-брейк по стабильному ключу.
     scored.sort_by(|a, b| {
-        b.0.partial_cmp(&a.0).unwrap_or(Ordering::Equal).then_with(|| a.1.cmp(&b.1))
+        b.0.partial_cmp(&a.0)
+            .unwrap_or(Ordering::Equal)
+            .then_with(|| a.1.cmp(&b.1))
     });
 
     let hypotheses = scored
@@ -114,7 +116,10 @@ fn factor_labels(graph: &Graph, cand: &operators::Candidate) -> String {
 }
 
 fn node_label(graph: &Graph, id: &str) -> String {
-    graph.node(id).map(|n| n.label.clone()).unwrap_or_else(|| id.to_string())
+    graph
+        .node(id)
+        .map(|n| n.label.clone())
+        .unwrap_or_else(|| id.to_string())
 }
 
 /// Метка управляемого рычага (controllable), если он один; иначе все факторы.
@@ -148,7 +153,9 @@ fn summary(graph: &Graph, cand: &operators::Candidate) -> String {
     let lever = lever_label(graph, cand);
     match cand.operator {
         "mechanism_path" => {
-            format!("Изменить «{lever}», чтобы повлиять на «{kpi}» по прослеженной причинной цепочке.")
+            format!(
+                "Изменить «{lever}», чтобы повлиять на «{kpi}» по прослеженной причинной цепочке."
+            )
         }
         "substitution" => {
             format!("Использовать «{lever}» как альтернативный путь к «{kpi}» с тем же эффектом.")

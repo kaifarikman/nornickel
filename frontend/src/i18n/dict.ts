@@ -90,6 +90,7 @@ export interface Dict {
     stageDetail: (args: { file: string; factory: string }) => string
     graphCaption: string
     graphProgress: (args: { revealed: number; total: number }) => string
+    liveStatus: string
     finishing: string
   }
   graph: {
@@ -173,6 +174,14 @@ export interface Dict {
     addressableTons: string
     recoveryGain: string
     evidenceGraphTitle: string
+    aiReviewTitle: string
+    aiNarrativeTitle: string
+    noveltyTitle: string
+    aiLoading: string
+    aiUnavailable: string
+    objection: string
+    suggestedChecks: string
+    noveltyScore: (value: number) => string
     risksTitle: string
     missingEvidenceTitle: string
     doeTitle: string

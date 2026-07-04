@@ -6,8 +6,11 @@ import type {
   FactoryId,
   Hypothesis,
   KnownFactoryId,
+  NarrateResponse,
+  NoveltyResponse,
   ParseConstraintsResponse,
   RerunAction,
+  SkepticResponse,
 } from './contracts.ts'
 import type { LibraryMock } from '@/mocks/library.ts'
 import { libraryMock } from '@/mocks/library.ts'
@@ -19,6 +22,9 @@ import {
   assertExtract,
   assertHypothesis,
   assertLibrary,
+  assertNarrate,
+  assertNovelty,
+  assertSkeptic,
 } from '@/lib/validate.ts'
 import boardFixture from '@/mocks/fixtures/board.json'
 import extractFixture from '@/mocks/fixtures/extract_response.json'
@@ -40,6 +46,13 @@ export interface ApiClient {
   getExtract: () => Promise<ExtractResponse>
   getExpertHypotheses: () => Promise<ExpertHypothesis[]>
   getLibrary: () => Promise<LibraryMock>
+  getSkeptic: (hypothesis: Hypothesis) => Promise<SkepticResponse>
+  getNarrative: (
+    hypothesis: Hypothesis,
+    skeptic?: SkepticResponse,
+    novelty?: NoveltyResponse,
+  ) => Promise<NarrateResponse>
+  getNovelty: (hypothesis: Hypothesis) => Promise<NoveltyResponse>
   parseConstraints: (factory: FactoryId, text: string) => Promise<ParseConstraintsResponse>
   rerun: (factory: FactoryId, action: RerunAction) => Promise<BoardResponse | null>
   resetRun: (factory: FactoryId) => Promise<BoardResponse | null>
@@ -99,6 +112,29 @@ function createFixtureClient(): ApiClient {
     async getLibrary() {
       await delay(80)
       return structuredClone(libraryMock)
+    },
+    async getSkeptic(hypothesis) {
+      await delay(120)
+      return {
+        objection:
+          'Механизм требует проверки на конкретном сырье и режиме фабрики до масштабирования.',
+        missing_evidence: hypothesis.missing_evidence,
+        risks: hypothesis.risks,
+        suggested_checks: hypothesis.doe_plan.measurements,
+      }
+    },
+    async getNarrative(hypothesis) {
+      await delay(120)
+      return {
+        text: `${hypothesis.summary} Гипотеза должна быть подтверждена DOE перед внедрением.`,
+      }
+    },
+    async getNovelty(hypothesis) {
+      await delay(120)
+      return {
+        novelty_score: hypothesis.score_breakdown.novelty,
+        similar: [],
+      }
     },
     async parseConstraints(factory, text) {
       await delay(120)
@@ -325,7 +361,26 @@ export function createHttpClient(baseUrl: string): ApiClient {
       return assertExpertHypotheses(await getJson(`${base}/expert_hypotheses`))
     },
     async getLibrary() {
-      return assertLibrary(await getJson(`${base}/library`))
+      try {
+        return assertLibrary(await getJson(`${base}/library`))
+      } catch (err) {
+        console.warn('getLibrary failed, using fixture fallback', err)
+        return fixtureFallback.getLibrary()
+      }
+    },
+    async getSkeptic(hypothesis) {
+      return assertSkeptic(await postJson(`${base}/skeptic`, { hypothesis }))
+    },
+    async getNarrative(hypothesis, skeptic, novelty) {
+      return assertNarrate(await postJson(`${base}/narrate`, { hypothesis, skeptic, novelty }))
+    },
+    async getNovelty(hypothesis) {
+      return assertNovelty(
+        await postJson(`${base}/novelty`, {
+          hypothesis_text: `${hypothesis.title}\n\n${hypothesis.summary}`,
+          top_k: 5,
+        }),
+      )
     },
     async parseConstraints(factory, text) {
       const runId = runIds.get(factory) ?? (await ensureRun(factory)).run_id

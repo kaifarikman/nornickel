@@ -65,7 +65,11 @@ fn normalize(s: &str) -> String {
 }
 
 pub fn generate(graph: &Graph, contract: &KpiContract, pack: &DomainPack) -> Vec<Candidate> {
-    let excluded: HashSet<&str> = contract.excluded_factors.iter().map(String::as_str).collect();
+    let excluded: HashSet<&str> = contract
+        .excluded_factors
+        .iter()
+        .map(String::as_str)
+        .collect();
     let mut cands = Vec::new();
     let mut levers: Vec<Candidate> = Vec::new();
 
@@ -84,9 +88,14 @@ pub fn generate(graph: &Graph, contract: &KpiContract, pack: &DomainPack) -> Vec
         for kpi_idx in target_kpis(graph, contract) {
             let kpi_id = graph.weight(kpi_idx).id.clone();
             for path in graph.enumerate_paths(kpi_idx, &MECHANISM_EDGES, "controllable") {
-                let source_nodes: Vec<String> =
-                    path.nodes.iter().map(|i| graph.weight(*i).id.clone()).collect();
-                let Some(controllable) = source_nodes.first().cloned() else { continue };
+                let source_nodes: Vec<String> = path
+                    .nodes
+                    .iter()
+                    .map(|i| graph.weight(*i).id.clone())
+                    .collect();
+                let Some(controllable) = source_nodes.first().cloned() else {
+                    continue;
+                };
                 if excluded.contains(controllable.as_str()) {
                     continue;
                 }
@@ -147,9 +156,15 @@ pub fn generate(graph: &Graph, contract: &KpiContract, pack: &DomainPack) -> Vec
     // --- substitution: альтернативный фактор через substitution-ребро в рычаг ---
     if pack.operator_enabled("substitution") {
         for base in &levers {
-            let Some(ctrl_id) = &base.controllable else { continue };
-            let Some(ctrl_idx) = graph.index(ctrl_id) else { continue };
-            for (sub_idx, sub_edge) in graph.incoming_edges_of_type(ctrl_idx, EdgeType::Substitution) {
+            let Some(ctrl_id) = &base.controllable else {
+                continue;
+            };
+            let Some(ctrl_idx) = graph.index(ctrl_id) else {
+                continue;
+            };
+            for (sub_idx, sub_edge) in
+                graph.incoming_edges_of_type(ctrl_idx, EdgeType::Substitution)
+            {
                 let sub_id = graph.weight(sub_idx).id.clone();
                 if excluded.contains(sub_id.as_str()) {
                     continue;
@@ -218,7 +233,10 @@ fn contradiction(graph: &Graph) -> Vec<Candidate> {
     for node in graph_node_indices(graph) {
         let mut pos: Option<EdgeIndex> = None;
         let mut neg: Option<EdgeIndex> = None;
-        for er in graph.raw().edges_directed(node, petgraph::Direction::Incoming) {
+        for er in graph
+            .raw()
+            .edges_directed(node, petgraph::Direction::Incoming)
+        {
             match er.weight().polarity {
                 Some(Polarity::Positive) if pos.is_none() => pos = Some(er.id()),
                 Some(Polarity::Negative) if neg.is_none() => neg = Some(er.id()),

@@ -249,3 +249,26 @@ export interface ParseConstraintsResponse {
   kpi_contract_patch?: Record<string, unknown>
   unparsed: string[]
 }
+
+export interface SkepticResponse {
+  objection: string
+  missing_evidence: string[]
+  risks: string[]
+  suggested_checks: string[]
+}
+
+export interface NarrateResponse {
+  text: string
+}
+
+export interface NoveltySimilar {
+  doc: string
+  page: number | null
+  score: number
+  text: string
+}
+
+export interface NoveltyResponse {
+  novelty_score: number
+  similar: NoveltySimilar[]
+}

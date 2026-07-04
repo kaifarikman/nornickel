@@ -71,12 +71,24 @@ async fn run_returns_wrapped_board_with_money() {
     let hydro = board
         .hypotheses
         .iter()
-        .find(|h| h.source_nodes.iter().any(|n| n == "node_hydrocyclone_nozzle"))
+        .find(|h| {
+            h.source_nodes
+                .iter()
+                .any(|n| n == "node_hydrocyclone_nozzle")
+        })
         .expect("гипотеза гидроциклона");
     assert!(hydro.rank <= 3, "гидроциклон ожидается в топ-3");
     let v = hydro.economic_effect.value_usd_range;
-    assert!((v[0] - 3_955_050.0).abs() < 1.0, "value_lo ≈ 3.96M, got {}", v[0]);
-    assert!((v[1] - 11_865_150.0).abs() < 1.0, "value_hi ≈ 11.87M, got {}", v[1]);
+    assert!(
+        (v[0] - 3_955_050.0).abs() < 1.0,
+        "value_lo ≈ 3.96M, got {}",
+        v[0]
+    );
+    assert!(
+        (v[1] - 11_865_150.0).abs() < 1.0,
+        "value_hi ≈ 11.87M, got {}",
+        v[1]
+    );
 
     // gap-гипотеза с недоступным на kgmk рычагом присутствует.
     assert!(board.hypotheses.iter().any(|h| {
@@ -148,7 +160,10 @@ async fn export_board_csv_is_valid() {
         lines.next().unwrap(),
         "rank,id,title,status,score_total,value_usd_lo,value_usd_hi,capex_class,addressable_tons_28,trace"
     );
-    assert!(lines.next().is_some(), "должна быть хотя бы одна строка данных");
+    assert!(
+        lines.next().is_some(),
+        "должна быть хотя бы одна строка данных"
+    );
 }
 
 #[tokio::test]
@@ -157,7 +172,11 @@ async fn extract_and_expert_hypotheses_available() {
     let extract = body_json(get(&app, "/extract").await).await;
     assert_eq!(extract["pack_id"], "flotation-v1");
     let experts = body_json(get(&app, "/expert_hypotheses").await).await;
-    assert!(experts.as_array().unwrap().iter().any(|e| e["id"] == "kgmk_h3"));
+    assert!(experts
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|e| e["id"] == "kgmk_h3"));
 }
 
 /// Все 4 diagnostics_*.json десериализуются в DiagnosticsReport (DoD).
@@ -169,7 +188,10 @@ fn all_diagnostics_deserialize() {
                 .unwrap();
         let d: DiagnosticsReport = serde_json::from_str(&text).unwrap();
         assert_eq!(d.factory_id, f);
-        assert!(!d.diagnosis_summary.is_empty(), "{f}: непустой diagnosis_summary");
+        assert!(
+            !d.diagnosis_summary.is_empty(),
+            "{f}: непустой diagnosis_summary"
+        );
     }
 }
 
@@ -216,7 +238,10 @@ async fn trace_resolves_claims_and_cells() {
     assert!(!r["claims"].as_array().unwrap().is_empty());
     let cells = r["source_cells"].as_array().unwrap();
     assert!(!cells.is_empty());
-    assert!(cells[0]["cell_ref"].as_str().unwrap().contains('!'), "cell_ref вида Лист!Ячейка");
+    assert!(
+        cells[0]["cell_ref"].as_str().unwrap().contains('!'),
+        "cell_ref вида Лист!Ячейка"
+    );
 }
 
 /// GET /factories: карта денег по всем 4 фабрикам кейса.
@@ -250,7 +275,10 @@ async fn roadmap_dedupes_value_by_diagnosis() {
         .iter()
         .map(|h| h["economic_effect"]["value_usd_range"][1].as_f64().unwrap())
         .sum();
-    assert!(naive_hi > total_hi * 1.5, "roadmap должен убирать двойной счёт: naive={naive_hi} total={total_hi}");
+    assert!(
+        naive_hi > total_hi * 1.5,
+        "roadmap должен убирать двойной счёт: naive={naive_hi} total={total_hi}"
+    );
 
     // Бюджет max_capex=1 (только быстрые настройки) не даёт больше, чем полный план.
     let cheap = body_json(get(&app, "/roadmap?max_capex=1").await).await;
