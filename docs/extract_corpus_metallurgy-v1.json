@@ -1,0 +1,8 @@
+{
+  "pack_id": "metallurgy-v1",
+  "docs": [
+    { "path": "docs/sample_docs/metallurgy/slag-temperature-coalescence.docx" },
+    { "path": "docs/sample_docs/metallurgy/matte-granulation.docx" },
+    { "path": "docs/sample_docs/metallurgy/slag-depletion-review.docx" }
+  ]
+}

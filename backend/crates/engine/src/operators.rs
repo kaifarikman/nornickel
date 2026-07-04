@@ -90,20 +90,24 @@ pub fn generate(graph: &Graph, contract: &KpiContract, pack: &DomainPack) -> Vec
                 if excluded.contains(controllable.as_str()) {
                     continue;
                 }
-                // диагноз-узел пути с ненулевым тоннажом — обязателен
-                let Some(diag_idx) = path
+                // If quantitative diagnostics are present, keep the normal
+                // requirement: a mechanism path must pass through a diagnosis
+                // node with addressable tons. In literature-only runs there is
+                // no xlsx diagnosis, so allow claims-only hypotheses with no
+                // economic value instead of returning an empty portfolio.
+                let diag_idx = path
                     .nodes
                     .iter()
                     .find(|i| {
                         let n = graph.weight(**i);
                         n.has_tag("diagnosis") && diagnosis_tons(n) > 0.0
                     })
-                    .copied()
-                else {
+                    .copied();
+                if total_diag > 0.0 && diag_idx.is_none() {
                     continue;
-                };
-                let diagnosis_node = Some(graph.weight(diag_idx).id.clone());
-                let diag_tons = diagnosis_tons(graph.weight(diag_idx));
+                }
+                let diagnosis_node = diag_idx.map(|i| graph.weight(i).id.clone());
+                let diag_tons = diag_idx.map(|i| diagnosis_tons(graph.weight(i))).unwrap_or(0.0);
                 let available = graph.node(&controllable).map(|n| n.is_available()).unwrap_or(true);
                 let trace = graph.claims_on_edges(&path.edges);
 

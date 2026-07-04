@@ -1,0 +1,322 @@
+{
+  "pack_id": "flotation-v1",
+  "documents": [
+    {
+      "id": "doc_как_читать_отчет_института_по_хвостам",
+      "title": "В excel файле представлен результат комплексного анализа хвостов обогатительных фабрик. Хвосты - отвальные продукты, получаемые в рамках процесса флотационного обогащения руд цветных металлов. Хвосты - отработанный материал, который далее не используется и захоранивается в хвостохранилище до момента ликвидации рудника и дальнейшей рекультивации земель. Если металлы встречаются в хвостах - они считаются потерянными, соответственно перед Компанией всегда стоит задача по минимизации их содержания в хвостах.",
+      "path": "norn-hack/Как читать отчет института по хвостам.docx",
+      "source_url": null
+    },
+    {
+      "id": "doc_classification_notes",
+      "title": "Заметки: классификация и раскрытие (выжимка для отладки /extract)",
+      "path": "docs/sample_docs/flotation/classification_notes.txt",
+      "source_url": null
+    },
+    {
+      "id": "doc_flotation_kinetics_notes",
+      "title": "Заметки: кинетика флотации и потери тонких классов (выжимка для отладки /extract)",
+      "path": "docs/sample_docs/flotation/flotation_kinetics_notes.txt",
+      "source_url": null
+    }
+  ],
+  "claims": [
+    {
+      "id": "claim_001",
+      "text": "Хвосты — отвальные продукты, получаемые в рамках процесса флотационного обогащения руд цветных металлов",
+      "source_ref": "doc_как_читать_отчет_института_по_хвостам",
+      "source_page": null,
+      "confidence": 0.9,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_002",
+      "text": "Если металлы встречаются в хвостах — они считаются потерянными",
+      "source_ref": "doc_как_читать_отчет_института_по_хвостам",
+      "source_page": null,
+      "confidence": 0.8,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_003",
+      "text": "Перед Компанией всегда стоит задача по минимизации содержания металлов в хвостах",
+      "source_ref": "doc_как_читать_отчет_института_по_хвостам",
+      "source_page": null,
+      "confidence": 0.7,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_004",
+      "text": "Гидроциклонная классификация разделяет материал по крупности и плотности",
+      "source_ref": "doc_classification_notes",
+      "source_page": null,
+      "confidence": 0.6,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_005",
+      "text": "Уменьшение диаметра песковой насадки смещает границу разделения в тонкую сторону",
+      "source_ref": "doc_classification_notes",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_006",
+      "text": "Возврат крупных классов на доизмельчение повышает степень раскрытия сростков сульфидных минералов",
+      "source_ref": "doc_classification_notes",
+      "source_page": null,
+      "confidence": 0.4,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_007",
+      "text": "Тонкое грохочение разделяет строго по размеру, а не по плотности",
+      "source_ref": "doc_classification_notes",
+      "source_page": null,
+      "confidence": 0.3,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_008",
+      "text": "Скорость вращения спирали классификатора регулирует границу разделения",
+      "source_ref": "doc_classification_notes",
+      "source_page": null,
+      "confidence": 0.2,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_009",
+      "text": "Частицы мельче примерно 10 мкм флотируются плохо",
+      "source_ref": "doc_flotation_kinetics_notes",
+      "source_page": null,
+      "confidence": 0.1,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_010",
+      "text": "Переизмельчение ведёт к ошламованию — раскрытый минерал уходит в класс -10 мкм и теряется с хвостами",
+      "source_ref": "doc_flotation_kinetics_notes",
+      "source_page": null,
+      "confidence": 0.05,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_011",
+      "text": "Извлечение раскрытых зёрен средних классов крупности растёт с увеличением времени флотации",
+      "source_ref": "doc_flotation_kinetics_notes",
+      "source_page": null,
+      "confidence": 0.04,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_012",
+      "text": "Увеличение времени агитации в контактных чанах повышает степень закрепления собирателя на поверхности сульфидов",
+      "source_ref": "doc_flotation_kinetics_notes",
+      "source_page": null,
+      "confidence": 0.03,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_013",
+      "text": "Депрессоры на основе карбоксиметилцеллюлозы подавляют флотацию силикатной пустой породы и повышают селективность",
+      "source_ref": "doc_flotation_kinetics_notes",
+      "source_page": null,
+      "confidence": 0.02,
+      "evidence_type": "literature"
+    }
+  ],
+  "entities": [
+    {
+      "id": "1",
+      "kind": "property",
+      "label": "Хвосты",
+      "tags": [],
+      "properties": {
+        "type": "property",
+        "normalization_warning": "unmatched_pack_entity"
+      }
+    },
+    {
+      "id": "2",
+      "kind": "kpi",
+      "label": "Содержание металлов в хвостах",
+      "tags": [
+        "kpi"
+      ],
+      "properties": {
+        "type": "kpi",
+        "normalization_warning": "unmatched_pack_entity"
+      }
+    },
+    {
+      "id": "node_hydrocyclone",
+      "kind": "mechanism",
+      "label": "Гидроциклонная классификация",
+      "tags": [],
+      "properties": {
+        "type": "mechanism",
+        "original_id": "3",
+        "pack_entity_id": "hydrocyclone",
+        "pack_alias": "гидроциклон",
+        "pack_match_score": 100.0,
+        "canonical_source": "pack.synonyms"
+      }
+    },
+    {
+      "id": "4",
+      "kind": "factor",
+      "label": "Диаметр песковой насадки",
+      "tags": [
+        "controllable"
+      ],
+      "properties": {
+        "type": "factor",
+        "tag": "controllable",
+        "normalization_warning": "unmatched_pack_entity"
+      }
+    },
+    {
+      "id": "5",
+      "kind": "property",
+      "label": "Степень раскрытия сростков",
+      "tags": [],
+      "properties": {
+        "type": "property",
+        "normalization_warning": "unmatched_pack_entity"
+      }
+    },
+    {
+      "id": "node_fine_screen",
+      "kind": "mechanism",
+      "label": "Тонкое грохочение",
+      "tags": [],
+      "properties": {
+        "type": "mechanism",
+        "original_id": "6",
+        "pack_entity_id": "fine_screen",
+        "pack_alias": "тонкое грохочение",
+        "pack_match_score": 100.0,
+        "canonical_source": "pack.synonyms"
+      }
+    },
+    {
+      "id": "node_spiral_classifier",
+      "kind": "factor",
+      "label": "Скорость вращения спирали классификатора",
+      "tags": [
+        "controllable"
+      ],
+      "properties": {
+        "type": "factor",
+        "tag": "controllable",
+        "original_id": "7",
+        "pack_entity_id": "spiral_classifier",
+        "pack_alias": "классификатор",
+        "pack_match_score": 100.0,
+        "canonical_source": "pack.synonyms"
+      }
+    },
+    {
+      "id": "8",
+      "kind": "factor",
+      "label": "Время флотации",
+      "tags": [
+        "controllable"
+      ],
+      "properties": {
+        "type": "factor",
+        "tag": "controllable",
+        "normalization_warning": "unmatched_pack_entity"
+      }
+    },
+    {
+      "id": "node_collector_reagent",
+      "kind": "property",
+      "label": "Степень закрепления собирателя",
+      "tags": [],
+      "properties": {
+        "type": "property",
+        "original_id": "9",
+        "pack_entity_id": "collector_reagent",
+        "pack_alias": "собиратель",
+        "pack_match_score": 90.0,
+        "canonical_source": "pack.synonyms"
+      }
+    },
+    {
+      "id": "node_depressant_reagent",
+      "kind": "factor",
+      "label": "Депрессоры на основе карбоксиметилцеллюлозы",
+      "tags": [
+        "controllable"
+      ],
+      "properties": {
+        "type": "factor",
+        "tag": "controllable",
+        "original_id": "10",
+        "pack_entity_id": "depressant_reagent",
+        "pack_alias": "депрессор",
+        "pack_match_score": 100.0,
+        "canonical_source": "pack.synonyms"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge_001",
+      "src": "4",
+      "dst": "node_hydrocyclone",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_005"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_002",
+      "src": "node_hydrocyclone",
+      "dst": "5",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_006"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_003",
+      "src": "node_spiral_classifier",
+      "dst": "node_fine_screen",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_008"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_004",
+      "src": "8",
+      "dst": "node_collector_reagent",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_011"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_005",
+      "src": "node_depressant_reagent",
+      "dst": "2",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_013"
+      ],
+      "polarity": "positive"
+    }
+  ]
+}

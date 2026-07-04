@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
@@ -30,6 +31,14 @@ from app.schemas import DocumentInput, DocumentRef, ExtractRequest, ExtractRespo
 DEFAULT_CONFIG = DOCS_DIR / "extract_corpus.json"
 DEFAULT_OUTPUT = DOCS_DIR / "fixtures" / "extract_response_v2.json"
 MAX_BATCH_CHARS = 8000
+OFFLINE_PROMPT_SUFFIX = """\
+
+Дополнительные правила для offline corpus fixture:
+- entities обязан содержать КАЖДЫЙ узел, который используется в edges.src или edges.dst.
+- edges.src и edges.dst должны быть ровно entity.id, а не label/название сущности.
+- Для причинной цепочки factor -> mechanism/property -> kpi создавай промежуточные entities.
+- Если добавляешь edge, source_claims должен ссылаться на id claim из текущего ответа.
+"""
 
 
 @dataclass(frozen=True)
@@ -129,6 +138,7 @@ def merge_payloads(
     for payload in payloads:
         claim_id_map: dict[str, str] = {}
         payload_claim_ids = {claim.id for claim in payload.claims}
+        entity_ref_map = _entity_ref_map(payload)
 
         for claim in payload.claims:
             new_id = f"claim_{claim_seq:03d}"
@@ -139,7 +149,9 @@ def merge_payloads(
         entities.extend(entity.model_copy(deep=True) for entity in payload.entities)
 
         for edge in payload.edges:
-            if edge.src not in all_entity_ids or edge.dst not in all_entity_ids:
+            src = _resolve_entity_ref(edge.src, entity_ref_map)
+            dst = _resolve_entity_ref(edge.dst, entity_ref_map)
+            if src not in all_entity_ids or dst not in all_entity_ids:
                 _warn(f"drop edge {edge.id}: unknown entity ref {edge.src}->{edge.dst}")
                 dropped_edges += 1
                 continue
@@ -160,7 +172,12 @@ def merge_payloads(
             edge_seq += 1
             edges.append(
                 edge.model_copy(
-                    update={"id": new_edge_id, "source_claims": mapped_claims},
+                    update={
+                        "id": new_edge_id,
+                        "src": src,
+                        "dst": dst,
+                        "source_claims": mapped_claims,
+                    },
                     deep=True,
                 )
             )
@@ -189,7 +206,7 @@ def _extract_batches(batches: Sequence[Sequence[DocumentChunk]], settings) -> li
 
 def _extract_batch(client, model: str, chunks: Sequence[DocumentChunk]) -> LlmExtractPayload | None:
     messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "system", "content": SYSTEM_PROMPT + OFFLINE_PROMPT_SUFFIX},
         {"role": "user", "content": _user_prompt(list(chunks))},
     ]
     last_error: Exception | None = None
@@ -205,12 +222,54 @@ def _extract_batch(client, model: str, chunks: Sequence[DocumentChunk]) -> LlmEx
             last_error = ValueError("LLM extraction returned empty content")
             continue
         try:
-            return _parse_llm_extract_content(content)
+            return _parse_batch_content(content)
         except (json.JSONDecodeError, ValidationError, ValueError) as exc:
             last_error = exc
     if last_error is not None:
         _warn(str(last_error))
     return None
+
+
+def _parse_batch_content(content: str) -> LlmExtractPayload:
+    try:
+        return _parse_llm_extract_content(content)
+    except ValidationError:
+        data = _json_object(content)
+        unwrapped = _unwrap_payload(data)
+        return _parse_llm_extract_content(json.dumps(unwrapped, ensure_ascii=False))
+
+
+def _json_object(content: str) -> dict:
+    text = content.strip()
+    if text.startswith("```"):
+        lines = text.splitlines()
+        if lines and lines[0].startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        text = "\n".join(lines).strip()
+    start = text.find("{")
+    end = text.rfind("}")
+    if start == -1 or end == -1 or end <= start:
+        raise ValueError("LLM extraction output does not contain a JSON object")
+    loaded = json.loads(text[start : end + 1])
+    if not isinstance(loaded, dict):
+        raise ValueError("LLM extraction output is not a JSON object")
+    return loaded
+
+
+def _unwrap_payload(data: dict) -> dict:
+    if {"claims", "entities", "edges"} & set(data):
+        return {
+            "claims": data.get("claims", []),
+            "entities": data.get("entities", data.get("nodes", [])),
+            "edges": data.get("edges", []),
+        }
+    for key in ("response", "result", "payload", "extract"):
+        value = data.get(key)
+        if isinstance(value, dict):
+            return _unwrap_payload(value)
+    raise ValueError("LLM extraction output does not contain claims/entities/edges")
 
 
 def _load_chunks(docs: Sequence[CorpusDoc]) -> list[DocumentChunk]:
@@ -229,6 +288,29 @@ def _load_chunks(docs: Sequence[CorpusDoc]) -> list[DocumentChunk]:
 
 def _page_selected(page: int, ranges: Sequence[range]) -> bool:
     return any(page in page_range for page_range in ranges)
+
+
+def _entity_ref_map(payload: LlmExtractPayload) -> dict[str, str]:
+    refs: dict[str, str] = {}
+    for entity in payload.entities:
+        for value in (entity.id, entity.label):
+            if value:
+                refs.setdefault(value, entity.id)
+                refs.setdefault(_normalize_ref(value), entity.id)
+        aliases = entity.properties.get("aliases") if isinstance(entity.properties, dict) else None
+        if isinstance(aliases, list):
+            for alias in aliases:
+                refs.setdefault(str(alias), entity.id)
+                refs.setdefault(_normalize_ref(str(alias)), entity.id)
+    return refs
+
+
+def _resolve_entity_ref(ref: str, refs: dict[str, str]) -> str:
+    return refs.get(ref) or refs.get(_normalize_ref(ref)) or ref
+
+
+def _normalize_ref(value: str) -> str:
+    return re.sub(r"\s+", " ", value.strip().lower().replace("ё", "е"))
 
 
 def _corpus_docs(config: dict) -> list[CorpusDoc]:

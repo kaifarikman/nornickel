@@ -51,8 +51,8 @@ def test_merge_payloads_renumbers_claims_edges_and_drops_broken_edges() -> None:
             edges=[
                 GraphEdge(
                     id="edge_001",
-                    src="node_factor",
-                    dst="node_property",
+                    src="Factor",
+                    dst="Property",
                     edge_type="mechanism",
                     mechanism="another valid path",
                     source_claims=["claim_001"],
@@ -84,5 +84,9 @@ def test_merge_payloads_renumbers_claims_edges_and_drops_broken_edges() -> None:
 
     assert [claim.id for claim in result.response.claims] == ["claim_001", "claim_002"]
     assert [edge.id for edge in result.response.edges] == ["edge_001", "edge_002"]
+    assert [(edge.src, edge.dst) for edge in result.response.edges] == [
+        ("node_factor", "node_kpi"),
+        ("node_factor", "node_property"),
+    ]
     assert [edge.source_claims for edge in result.response.edges] == [["claim_001"], ["claim_002"]]
     assert result.dropped_edges == 2

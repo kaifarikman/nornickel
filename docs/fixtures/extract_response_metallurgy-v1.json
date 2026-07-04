@@ -1,0 +1,949 @@
+{
+  "pack_id": "metallurgy-v1",
+  "documents": [
+    {
+      "id": "doc_slag_temperature_coalescence",
+      "title": "UDC 669.053.2",
+      "path": "docs/sample_docs/metallurgy/slag-temperature-coalescence.docx",
+      "source_url": null
+    },
+    {
+      "id": "doc_matte_granulation",
+      "title": "ИССЛЕДОВАНИЕ ПРОЦЕССА ГРАНУЛЯЦИИ МЕДНО-НИКЕЛЕВЫХ ШТЕЙНОВ",
+      "path": "docs/sample_docs/metallurgy/matte-granulation.docx",
+      "source_url": null
+    },
+    {
+      "id": "doc_slag_depletion_review",
+      "title": "ООО «ИНСТИТУТ ГИПРОНИКЕЛЬ»",
+      "path": "docs/sample_docs/metallurgy/slag-depletion-review.docx",
+      "source_url": null
+    }
+  ],
+  "claims": [
+    {
+      "id": "claim_001",
+      "text": "Повышение температуры процесса ведёт к увеличению размера металлической взвеси в объёме расплава",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 0.9,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_002",
+      "text": "Оптимальные температурные условия для восстановительной плавки шлаков обеспечивают минимальные потери металлов с отвальными шлаками",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 1.0,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_003",
+      "text": "Механические потери металлов играют превалирующую роль в общем балансе потерь со шлаками цветных и благородных металлов.",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 0.9,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_004",
+      "text": "Переработка сырья в электропечах влечёт за собой повышенные механические потери цветных и благородных металлов.",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 0.8,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_005",
+      "text": "Использование печи Ванюкова в восстановительном режиме может снизить капитальные затраты при обеднении шлака.",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 1.0,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_006",
+      "text": "Агрегатное состояние металлического сплава влияет на величину механических потерь металла со шлаками.",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 0.7,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_007",
+      "text": "Температура влияет на формирование и коалесценцию частиц металлического сплава.",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 0.6,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_008",
+      "text": "Кремнийсодержащие флюсы позволяют поддерживать температуру шлака на уровне 1250-1300 °С.",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_009",
+      "text": "Соотношение Cu/Ni в исходном шлаке влияет на температуру плавления получаемого сплава.",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 0.4,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_010",
+      "text": "При снижении соотношения Cu/Ni будет наблюдаться рост температуры плавления металлической фазы.",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 0.9,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_011",
+      "text": "С увеличением температуры плавки наблюдается стабилизация состава механической взвеси.",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 0.8,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_012",
+      "text": "Механические потери Ni и Cu снижаются с ростом температуры.",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 0.7,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_013",
+      "text": "Выход сплава снижается с увеличением температуры из-за смещения равновесия реакции восстановления.",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 0.6,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_014",
+      "text": "При температуре ниже температуры ликвидус сплава формирование донной фазы не наблюдается.",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_015",
+      "text": "С увеличением температуры процесса наблюдается экспоненциальный рост эквивалентного размера частиц металлических корольков.",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 0.4,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_016",
+      "text": "вязкость шлаков обуславливается внутренним трением между соседними слоями шлакового расплава и зависит от силы сцепления между молекулами шлака",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 0.9,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_017",
+      "text": "температура процесса обеднения выше температуры ликвидус сплава приводит к эффективной коалесценции восстановленных металлических частиц",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 1.0,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_018",
+      "text": "добавка сульфидизатора интенсифицирует процессы коалесценции механической взвеси сульфидов в исходном шлаке",
+      "source_ref": "doc_slag_temperature_coalescence",
+      "source_page": null,
+      "confidence": 0.8,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_019",
+      "text": "Установлено заметное подкисление воды, пошедшей на грануляцию расплава, вероятно связанное с образованием растворимых сульфатов цветных металлов и серной кислоты.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_020",
+      "text": "Для минимизации риска износа оборудования предложен способ нейтрализации оборотной воды узла грануляции щелочью.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_021",
+      "text": "На основании химического состава гранулируемых штейнов установлено время накопления сульфата натрия до предела растворимости в условиях замкнутого цикла водоснабжения установки грануляции.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_022",
+      "text": "Данные, полученные в рамках исследования проб гранулированного штейна методами ДТА и ТГА, указывают на снижение эквивалентного диаметра частиц гранулированного штейна по мере увеличения степени перегрева относительно температуры ликвидус.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_023",
+      "text": "Наряду с величиной перегрева расплава установлено влияние напора подаваемой на грануляцию водно-воздушной струи на степень диспергации расплава.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_024",
+      "text": "При грануляции штейнов происходит заметное подкисление воды, пошедшей на грануляцию.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.9,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_025",
+      "text": "При высокой интенсивности слива расплава и ограниченном объёме грануляционного бака возможно образование конгломератов гранулированных частиц.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.8,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_026",
+      "text": "В результате высокой интенсивности слива расплава, при его дроблении водовоздушной струёй образуется большое количество гранул, которые под действием силы тяжести опускаются на дно грануляционного бака.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.7,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_027",
+      "text": "Ограниченный объём грануляционного бака приводит к движению гранул в стеснённых условиях, контакту отдельных гранул и, как следствие, их слиянию.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.6,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_028",
+      "text": "На основании экспериментов по наработке материала можно только на качественном уровне оценить изменение кислотности воды.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_029",
+      "text": "Для более детальных исследований процесса грануляции медных штейнов была проведена серия опытов по грануляции штейнов различного состава с массой навески равной 0,5 кг.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.4,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_030",
+      "text": "Грануляция следующей порции материала производилась в пустой грануляционный бак свежей водой.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.3,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_031",
+      "text": "В рамках 2 серии экспериментов также наблюдается изменение кислотности поды после грануляции.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.2,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_032",
+      "text": "На основании этого можно предположить, что химизм изменения кислотности воды при грануляции заключается в образовании растворимых сульфатов цветных металлов и серной кислоты.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.1,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_033",
+      "text": "Увеличение степени перегрева расплава штейна относительно его температуры ликвидус приводит к снижению эквивалентного диаметра частиц гранулированного штейна.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.9,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_034",
+      "text": "При грануляции штейнов происходит изменение кислотности грануляционной воды – значение pH снижается с ~7 ед. до 2-4 ед. в зависимости от состава штейна.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.8,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_035",
+      "text": "Напор водной струи гидромонитора, разбивающей расплав, имеет влияние на крупность получаемых частиц гранулированного штейна.",
+      "source_ref": "doc_matte_granulation",
+      "source_page": null,
+      "confidence": 0.7,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_036",
+      "text": "При интенсивной плавке/частичном конвертировании сухого концентрата до белого матта с ≈75% Cu в конвертере El Teniente получается сильно окисленный шлак с высоким содержанием магнетита.",
+      "source_ref": "doc_slag_depletion_review",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_037",
+      "text": "Потери меди со шлаком бывают механические (увлечённые частицы штейна) и физико-химические (растворённая «сульфидная» и «окисленная» медь).",
+      "source_ref": "doc_slag_depletion_review",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_038",
+      "text": "При 75% Cu в условиях El Teniente шлак близок к насыщению магнетитом и кремнезёмом. Преимущественной формой потерь меди со шлаком являются механически захваченные частицы штейна.",
+      "source_ref": "doc_slag_depletion_review",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_039",
+      "text": "При пирометаллургическом обеднении шлаков, используемых, например, чилийскими медеплавильными заводами, шлаки конвертера Teniente обедняют вдуванием пылевидного угля непосредственно в расплавленный шлак, температура которого поддерживается с помощью кислородных горелок.",
+      "source_ref": "doc_slag_depletion_review",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_040",
+      "text": "Магнетит восстанавливается углём, вязкость шлака снижается, что облегчает осаждение меди.",
+      "source_ref": "doc_slag_depletion_review",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_041",
+      "text": "Расплавленные продукты, полученные после отстаивания, представлены отвальным шлаком с <1% Cu и богатым штейном с 60-70% Cu (возвращается в конвертер Пирса-Смита).",
+      "source_ref": "doc_slag_depletion_review",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_042",
+      "text": "На заводе Potrerillos компании Codelco в 2011 г. было решено заменить обеднение в электропечах на флотацию шлаков от конвертера Teniente, содержащих 8-10% Cu. Получится медный концентрат с 38% Cu и отвал с 0,4% Cu.",
+      "source_ref": "doc_slag_depletion_review",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_043",
+      "text": "За счет реализации этого проекта извлечение меди на плавильном заводе увеличится с 95,5% до 97,4%.",
+      "source_ref": "doc_slag_depletion_review",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    },
+    {
+      "id": "claim_044",
+      "text": "На медеплавильном заводе Caletones компании Codelco намечен комплекс мер по улучшению экологических показателей и повышению конкурентоспособности. В рамках этой программы также предусмотрен переход на флотацию шлаков.",
+      "source_ref": "doc_slag_depletion_review",
+      "source_page": null,
+      "confidence": 0.5,
+      "evidence_type": "literature"
+    }
+  ],
+  "entities": [
+    {
+      "id": "factor_1",
+      "kind": "factor",
+      "label": "Температура процесса",
+      "tags": [
+        "controllable"
+      ],
+      "properties": {
+        "type": "factor",
+        "tag": "controllable",
+        "normalization_warning": "unmatched_pack_entity"
+      }
+    },
+    {
+      "id": "mechanism_1",
+      "kind": "mechanism",
+      "label": "Увеличение размера металлической взвеси",
+      "tags": [],
+      "properties": {
+        "type": "mechanism",
+        "normalization_warning": "unmatched_pack_entity"
+      }
+    },
+    {
+      "id": "node_slag",
+      "kind": "kpi",
+      "label": "получение сильно окисленного шлака с высоким содержанием магнетита",
+      "tags": [
+        "controllable",
+        "kpi"
+      ],
+      "properties": {
+        "type": "kpi",
+        "original_id": "kpi_1",
+        "pack_entity_id": "slag",
+        "pack_alias": "шлак",
+        "pack_match_score": 100.0,
+        "canonical_source": "pack.synonyms",
+        "merged_original_ids": [
+          "kpi_1",
+          "entity_3",
+          "entity_5",
+          "entity_factor_1",
+          "entity_mechanism_1",
+          "entity_factor_2",
+          "entity_2",
+          "entity_4",
+          "entity_7"
+        ],
+        "tag": "controllable"
+      }
+    },
+    {
+      "id": "node_depletion",
+      "kind": "factor",
+      "label": "интенсивная плавка/частичное конвертирование",
+      "tags": [
+        "controllable"
+      ],
+      "properties": {
+        "type": "factor",
+        "tag": "controllable",
+        "original_id": "entity_1",
+        "pack_entity_id": "depletion",
+        "pack_alias": "обеднение",
+        "pack_match_score": 100.0,
+        "canonical_source": "pack.synonyms",
+        "merged_original_ids": [
+          "entity_1",
+          "entity_5"
+        ]
+      }
+    },
+    {
+      "id": "entity_2",
+      "kind": "mechanism",
+      "label": "Образование растворимых сульфатов и серной кислоты",
+      "tags": [],
+      "properties": {
+        "type": "mechanism",
+        "normalization_warning": "unmatched_pack_entity",
+        "tag": null
+      }
+    },
+    {
+      "id": "entity_4",
+      "kind": "kpi",
+      "label": "Минимизация риска износа оборудования",
+      "tags": [
+        "kpi"
+      ],
+      "properties": {
+        "type": "kpi",
+        "normalization_warning": "unmatched_pack_entity",
+        "tag": null
+      }
+    },
+    {
+      "id": "node_matte",
+      "kind": "factor",
+      "label": "Степень перегрева относительно температуры ликвидус",
+      "tags": [
+        "controllable"
+      ],
+      "properties": {
+        "type": "factor",
+        "tag": "controllable",
+        "original_id": "entity_6",
+        "pack_entity_id": "matte",
+        "pack_alias": "штейн",
+        "pack_match_score": 100.0,
+        "canonical_source": "pack.synonyms",
+        "merged_original_ids": [
+          "entity_6",
+          "entity_7",
+          "entity_3"
+        ]
+      }
+    },
+    {
+      "id": "entity_3",
+      "kind": "property",
+      "label": "Повышение конкурентоспособности",
+      "tags": [
+        "kpi"
+      ],
+      "properties": {
+        "type": "property",
+        "normalization_warning": "unmatched_pack_entity",
+        "tag": null
+      }
+    },
+    {
+      "id": "entity_5",
+      "kind": "property",
+      "label": "выход сплава",
+      "tags": [],
+      "properties": {
+        "type": "property",
+        "normalization_warning": "unmatched_pack_entity"
+      }
+    },
+    {
+      "id": "entity_6",
+      "kind": "property",
+      "label": "размер частиц металлических корольков",
+      "tags": [],
+      "properties": {
+        "type": "property",
+        "normalization_warning": "unmatched_pack_entity"
+      }
+    },
+    {
+      "id": "entity_property_1",
+      "kind": "property",
+      "label": "агрегатное состояние сплава",
+      "tags": [],
+      "properties": {
+        "type": "property",
+        "normalization_warning": "unmatched_pack_entity"
+      }
+    },
+    {
+      "id": "entity_kpi_1",
+      "kind": "kpi",
+      "label": "механические потери металлов",
+      "tags": [
+        "kpi"
+      ],
+      "properties": {
+        "type": "kpi",
+        "normalization_warning": "unmatched_pack_entity"
+      }
+    },
+    {
+      "id": "entity_8",
+      "kind": "property",
+      "label": "Снижение эквивалентного диаметра частиц",
+      "tags": [
+        "kpi"
+      ],
+      "properties": {
+        "type": "property",
+        "normalization_warning": "unmatched_pack_entity"
+      }
+    },
+    {
+      "id": "node_temperature_regime",
+      "kind": "factor",
+      "label": "Напор водно-воздушной струи",
+      "tags": [
+        "controllable"
+      ],
+      "properties": {
+        "type": "factor",
+        "tag": "controllable",
+        "original_id": "entity_9",
+        "pack_entity_id": "temperature_regime",
+        "pack_alias": "перегрев",
+        "pack_match_score": 100.0,
+        "canonical_source": "pack.synonyms"
+      }
+    },
+    {
+      "id": "entity_10",
+      "kind": "property",
+      "label": "Степень диспергации расплава",
+      "tags": [],
+      "properties": {
+        "type": "property",
+        "normalization_warning": "unmatched_pack_entity"
+      }
+    },
+    {
+      "id": "node_granulation",
+      "kind": "property",
+      "label": "Изменение pH грануляционной воды",
+      "tags": [
+        "controllable"
+      ],
+      "properties": {
+        "type": "property",
+        "original_id": "entity_4",
+        "pack_entity_id": "granulation",
+        "pack_alias": "грануляция",
+        "pack_match_score": 90.0,
+        "canonical_source": "pack.synonyms",
+        "merged_original_ids": [
+          "entity_4",
+          "entity_5"
+        ],
+        "tag": "controllable"
+      }
+    },
+    {
+      "id": "node_viscosity",
+      "kind": "mechanism",
+      "label": "восстановление магнетита углём",
+      "tags": [],
+      "properties": {
+        "type": "mechanism",
+        "original_id": "entity_6",
+        "pack_entity_id": "viscosity",
+        "pack_alias": "магнетит",
+        "pack_match_score": 100.0,
+        "canonical_source": "pack.synonyms"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge_001",
+      "src": "factor_1",
+      "dst": "mechanism_1",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_001"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_002",
+      "src": "mechanism_1",
+      "dst": "node_slag",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_002"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_003",
+      "src": "node_depletion",
+      "dst": "entity_2",
+      "edge_type": "mechanism",
+      "mechanism": "изменение температуры плавления",
+      "source_claims": [
+        "claim_010"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_004",
+      "src": "node_depletion",
+      "dst": "entity_3",
+      "edge_type": "mechanism",
+      "mechanism": "стабилизация состава",
+      "source_claims": [
+        "claim_011"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_005",
+      "src": "node_depletion",
+      "dst": "entity_4",
+      "edge_type": "mechanism",
+      "mechanism": "снижение механических потерь",
+      "source_claims": [
+        "claim_012"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_006",
+      "src": "node_depletion",
+      "dst": "node_depletion",
+      "edge_type": "mechanism",
+      "mechanism": "смещение равновесия реакции восстановления",
+      "source_claims": [
+        "claim_013"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_007",
+      "src": "node_depletion",
+      "dst": "node_viscosity",
+      "edge_type": "mechanism",
+      "mechanism": "экспоненциальный рост размера частиц",
+      "source_claims": [
+        "claim_015"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_008",
+      "src": "node_slag",
+      "dst": "node_slag",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_016"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_009",
+      "src": "node_slag",
+      "dst": "entity_property_1",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_017"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_010",
+      "src": "entity_property_1",
+      "dst": "entity_kpi_1",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_017"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_011",
+      "src": "node_slag",
+      "dst": "node_slag",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_018"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_012",
+      "src": "node_depletion",
+      "dst": "entity_2",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_019"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_013",
+      "src": "entity_2",
+      "dst": "entity_3",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_019"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_014",
+      "src": "node_depletion",
+      "dst": "entity_4",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_020"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_015",
+      "src": "node_depletion",
+      "dst": "node_viscosity",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_021"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_016",
+      "src": "node_slag",
+      "dst": "entity_8",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_022"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_017",
+      "src": "node_temperature_regime",
+      "dst": "entity_10",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_023"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_018",
+      "src": "node_depletion",
+      "dst": "entity_2",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_025"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_019",
+      "src": "node_depletion",
+      "dst": "entity_3",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_024"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_020",
+      "src": "entity_3",
+      "dst": "entity_4",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_031"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_021",
+      "src": "node_depletion",
+      "dst": "entity_2",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_036"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_022",
+      "src": "entity_2",
+      "dst": "entity_3",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_037"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_023",
+      "src": "entity_3",
+      "dst": "entity_4",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_038"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_024",
+      "src": "node_depletion",
+      "dst": "node_viscosity",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_039"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_025",
+      "src": "node_viscosity",
+      "dst": "node_slag",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_040"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_026",
+      "src": "node_slag",
+      "dst": "entity_8",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_041"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_027",
+      "src": "node_depletion",
+      "dst": "entity_2",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_042",
+        "claim_043"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_028",
+      "src": "entity_2",
+      "dst": "entity_3",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_043"
+      ],
+      "polarity": "positive"
+    },
+    {
+      "id": "edge_029",
+      "src": "node_depletion",
+      "dst": "entity_4",
+      "edge_type": "mechanism",
+      "mechanism": "",
+      "source_claims": [
+        "claim_044"
+      ],
+      "polarity": "positive"
+    }
+  ]
+}

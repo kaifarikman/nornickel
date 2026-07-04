@@ -8,7 +8,7 @@ use crate::application::run_record::RunRecord;
 
 /// Источник extract-результата сайдкара (в MVP — файловая фикстура).
 pub trait ExtractSource: Send + Sync {
-    fn load(&self) -> Result<ExtractResponse, String>;
+    fn load(&self, pack_id: &str) -> Result<ExtractResponse, String>;
 }
 
 /// Источник диагностики хвостов по фабрике. Для известных фабрик это может быть

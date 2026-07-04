@@ -116,7 +116,7 @@ impl DiagnosticsSource for HttpDiagnosticsSource {
 pub struct HttpExtractSource {
     sidecar_url: String,
     fallback: FileExtractSource,
-    corpus_config: std::path::PathBuf,
+    base_dir: std::path::PathBuf,
 }
 
 impl HttpExtractSource {
@@ -128,13 +128,22 @@ impl HttpExtractSource {
         HttpExtractSource {
             sidecar_url,
             fallback,
-            corpus_config: base_dir.as_ref().join("extract_corpus.json"),
+            base_dir: base_dir.as_ref().to_path_buf(),
         }
     }
 
-    /// Корпус live-извлечения из `docs/extract_corpus.json` (список документов —
+    fn corpus_config_path(&self, pack_id: &str) -> std::path::PathBuf {
+        let pack_path = self.base_dir.join(format!("extract_corpus_{pack_id}.json"));
+        if pack_path.exists() {
+            pack_path
+        } else {
+            self.base_dir.join("extract_corpus.json")
+        }
+    }
+
+    /// Корпус live-извлечения из `docs/extract_corpus*.json` (список документов —
     /// это ДАННЫЕ, не код); нет/битый файл -> минимальный набор заметок.
-    fn live_extract_docs(&self) -> Vec<(String, String)> {
+    fn live_extract_docs(&self, pack_id: &str) -> Vec<(String, String)> {
         #[derive(serde::Deserialize)]
         struct CorpusDoc {
             path: String,
@@ -145,7 +154,7 @@ impl HttpExtractSource {
         struct Corpus {
             docs: Vec<CorpusDoc>,
         }
-        let parsed: Option<Corpus> = std::fs::read_to_string(&self.corpus_config)
+        let parsed: Option<Corpus> = std::fs::read_to_string(self.corpus_config_path(pack_id))
             .ok()
             .and_then(|text| serde_json::from_str(&text).ok());
         match parsed {
@@ -172,21 +181,21 @@ impl HttpExtractSource {
 }
 
 impl ExtractSource for HttpExtractSource {
-    fn load(&self) -> Result<ExtractResponse, String> {
+    fn load(&self, pack_id: &str) -> Result<ExtractResponse, String> {
         let url = format!("{}/extract", self.sidecar_url.trim_end_matches('/'));
         let docs: Vec<Value> = self
-            .live_extract_docs()
+            .live_extract_docs(pack_id)
             .into_iter()
             .map(|(path, mime)| json!({ "path": path, "mime": mime }))
             .collect();
-        let body = json!({ "docs": docs, "pack_id": "flotation-v1" });
+        let body = json!({ "docs": docs, "pack_id": pack_id });
         // Демо-страховка (README: стек обязан работать без LLM-ключей): live
         // недоступен/не сконфигурирован -> зафиксированная фикстура, /run не падает.
         match blocking_post::<ExtractResponse>(url, body) {
             Ok(extract) => Ok(extract),
             Err(e) => {
                 eprintln!("sidecar /extract failed: {e}; using file fallback");
-                self.fallback.load()
+                self.fallback.load(pack_id)
             }
         }
     }

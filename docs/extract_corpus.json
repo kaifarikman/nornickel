@@ -3,6 +3,10 @@
   "pack_id": "flotation-v1",
   "docs": [
     { "path": "norn-hack/Как читать отчет института по хвостам.docx" },
+    {
+      "path": "norn-hack/Дополнительные материалы/geokniga-tehnologiyaobogashcheniyapoleznyhiskopaemyh.pdf",
+      "pages": "128-172"
+    },
     { "path": "docs/sample_docs/flotation/classification_notes.txt" },
     { "path": "docs/sample_docs/flotation/flotation_kinetics_notes.txt" }
   ]

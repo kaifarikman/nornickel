@@ -37,10 +37,13 @@ pub fn execute(
     runs: &dyn RunRepository,
     input: RunInput,
 ) -> Result<RunOutput, UseCaseError> {
-    let mut extract = extract_source.load().map_err(UseCaseError::Internal)?;
+    let pack_id = input.pack_id.unwrap_or_else(|| "flotation-v1".to_string());
+    let mut extract = extract_source
+        .load(&pack_id)
+        .map_err(UseCaseError::Internal)?;
+    extract.pack_id = pack_id.clone();
     validation::validate(&extract).map_err(UseCaseError::Validation)?;
 
-    let pack_id = input.pack_id.unwrap_or_else(|| extract.pack_id.clone());
     let mut diagnostics =
         match diagnostics_source.load(&input.factory_id, input.source_file.as_deref(), &pack_id) {
             Ok(report) => report,

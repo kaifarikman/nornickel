@@ -20,7 +20,9 @@ pub fn execute(
     packs: &dyn PackRepository,
     experts_gw: &dyn ExpertHypothesesGateway,
 ) -> Result<Vec<FactorySummary>, UseCaseError> {
-    let base_extract = extract_source.load().map_err(UseCaseError::Internal)?;
+    let base_extract = extract_source
+        .load("flotation-v1")
+        .map_err(UseCaseError::Internal)?;
     validation::validate(&base_extract).map_err(UseCaseError::Validation)?;
     let experts = load_experts(experts_gw);
 

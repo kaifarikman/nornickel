@@ -1,0 +1,71 @@
+id: metallurgy-v1
+name: Metallurgy slag and matte pack
+description: >
+  Домен проверки: металлургическая переработка Cu-Ni шлаков и штейнов без
+  xlsx-хвостов. Доменная семантика хранится в pack и extract-данных.
+
+units:
+  tons: t
+  temperature: celsius
+  capex_class: class
+
+node_types:
+  factor:
+    tags: [controllable]
+  mechanism:
+    tags: []
+  property:
+    tags: []
+  kpi:
+    tags: [kpi]
+
+extra_tags:
+  constraint:
+    description: "KPI-узел ограничения, а не цель"
+    applies_to: [kpi]
+  diagnosis:
+    description: "Property-узел механизма потерь/риска для literature-only кейса"
+    applies_to: [property]
+
+edge_types:
+  - mechanism
+  - tradeoff
+  - substitution
+  - proxy
+
+operators:
+  - mechanism_path
+  - gap
+  - uncovered_constraint
+
+default_gain_pct_range: [5, 15]
+
+scoring_weights:
+  kpi_impact:   0.35
+  evidence:     0.20
+  plausibility: 0.15
+  cost:         0.15
+  risk:         0.10
+  novelty:      0.05
+
+hard_constraints:
+  - { metric: capex_class, op: "<=", value: 3 }
+
+skeptic_rules:
+  - id: uncovered_constraint
+    when: "kpi_contract has constraint with no claim on that property"
+    flag: "Need expert review: влияние на <property> не покрыто ни одним claim"
+
+synonyms:
+  slag: [шлак, шлаки, конвертерный шлак, медно-никелевый шлак, Cu-Ni шлак]
+  matte: [штейн, медно-никелевый штейн, файнштейн, донная фаза]
+  depletion: [обеднение, обеднительная печь, восстановительно-сульфидирующее обеднение]
+  electric_furnace: [электропечь, электропечи, дуговая печь, печь постоянного тока]
+  vanyukov_furnace: [печь Ванюкова, ПВК, ПВО, двухзонная печь Ванюкова]
+  temperature_regime: [температурный режим, перегрев, температура ликвидус]
+  coalescence: [коалесценция, корольки, капли штейна, металлическая взвесь]
+  viscosity: [вязкость, низкая вязкость, Fe3O4, магнетит]
+  reductant: [восстановитель, кокс, уголь, биочар, FeSi, CuSi]
+  sulfiding_agent: [сульфидирующий агент, пирит, гипс, CaS]
+  granulation: [грануляция, гидромонитор, водовоздушная струя, грануляционный бак]
+  flotation_slag: [флотация шлаков, измельчение шлака, сульфидирование]

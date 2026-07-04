@@ -232,7 +232,7 @@ pub async fn factories(
 /// GET /extract — текущий ExtractResponse (документы + claims) для Library/trace.
 pub async fn extract(State(state): State<AppState>) -> Result<Json<ExtractResponse>, HttpError> {
     // extract_source может ходить в сайдкар (blocking) — на blocking-пул.
-    let extract = tokio::task::spawn_blocking(move || state.extract_source.load())
+    let extract = tokio::task::spawn_blocking(move || state.extract_source.load("flotation-v1"))
         .await
         .map_err(|e| UseCaseError::Internal(format!("extract task panicked: {e}")))?
         .map_err(UseCaseError::Internal)?;
