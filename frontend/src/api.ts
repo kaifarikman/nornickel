@@ -12,6 +12,7 @@ import type {
 import type { LibraryMock } from '@/mocks/library.ts'
 import { libraryMock } from '@/mocks/library.ts'
 import { applyRerun } from '@/lib/rerun.ts'
+import { FACTORY_SOURCE_FILE } from '@/lib/domain.ts'
 import {
   assertBoard,
   assertExpertHypotheses,
@@ -150,10 +151,6 @@ async function postJson(url: string, body: unknown): Promise<unknown> {
   return await res.json()
 }
 
-function warnFallback(op: string, err: unknown): void {
-  console.warn(`[api] backend "${op}" failed, using fixture data:`, err)
-}
-
 interface RunResponse {
   run_id: string
   board: BoardResponse
@@ -255,17 +252,48 @@ function parseConstraintsFixture(
 export function createHttpClient(baseUrl: string): ApiClient {
   const base = baseUrl.replace(/\/$/, '')
   const runIds = new Map<FactoryId, string>()
-  const fallback = createFixtureClient()
+  const pendingRuns = new Map<FactoryId, Promise<RunResponse>>()
+  // Deterministic demo insurance: if the backend is unreachable, degrade to the
+  // committed fixtures instead of surfacing a hard error (mirrors the Rust
+  // sidecar fallback). Also used to resolve hypotheses when /hypothesis fails.
+  const fixtureFallback = createFixtureClient()
 
   async function ensureRun(factory: FactoryId): Promise<RunResponse> {
     const cached = runIds.get(factory)
     if (cached !== undefined) {
-      const board = assertBoard(await getJson(`${base}/board?run_id=${encodeURIComponent(cached)}`))
-      return { run_id: cached, board }
+      try {
+        const board = assertBoard(
+          await getJson(`${base}/board?run_id=${encodeURIComponent(cached)}`),
+        )
+        return { run_id: cached, board }
+      } catch {
+        // The run_id is stale (e.g. backend restarted): drop it and start a
+        // fresh run rather than failing every request until a page reload.
+        runIds.delete(factory)
+      }
     }
-    const run = assertRun(await postJson(`${base}/run`, { factory_id: factory, pack_id: PACK_ID }))
-    runIds.set(factory, run.run_id)
-    return run
+    const inFlight = pendingRuns.get(factory)
+    if (inFlight !== undefined) {
+      return inFlight
+    }
+    const body = {
+      factory_id: factory,
+      pack_id: PACK_ID,
+      source_file: FACTORY_SOURCE_FILE[factory as keyof typeof FACTORY_SOURCE_FILE],
+    }
+    const promise = postJson(`${base}/run`, body)
+      .then((raw) => {
+        const run = assertRun(raw)
+        runIds.set(factory, run.run_id)
+        return run
+      })
+      .finally(() => {
+        // Drop the in-flight entry once settled: on success the run is now
+        // cached by run_id; on failure this allows a later retry.
+        pendingRuns.delete(factory)
+      })
+    pendingRuns.set(factory, promise)
+    return promise
   }
 
   const client: ApiClient = {
@@ -273,86 +301,58 @@ export function createHttpClient(baseUrl: string): ApiClient {
       try {
         return (await ensureRun(factory)).board
       } catch (err) {
-        warnFallback('getBoard', err)
-        return fallback.getBoard(factory)
+        console.warn(`getBoard(${factory}) failed, using fixture fallback`, err)
+        return fixtureFallback.getBoard(factory)
       }
     },
     async getHypothesis(factory, id) {
       try {
-        return assertHypothesis(await getJson(`${base}/hypothesis/${encodeURIComponent(id)}`))
+        const hypothesis = await getJson(`${base}/hypothesis/${encodeURIComponent(id)}`)
+        return assertHypothesis(hypothesis)
       } catch (err) {
-        warnFallback('getHypothesis', err)
+        console.warn(`getHypothesis(${id}) failed, falling back to board lookup`, err)
         const board = await client.getBoard(factory)
         return board?.hypotheses.find((h) => h.id === id) ?? null
       }
     },
     async getDiagnostics(factory) {
-      try {
-        return (await ensureRun(factory)).board.diagnostics
-      } catch (err) {
-        warnFallback('getDiagnostics', err)
-        return fallback.getDiagnostics(factory)
-      }
+      return (await ensureRun(factory)).board.diagnostics
     },
     async getExtract() {
-      try {
-        return assertExtract(await getJson(`${base}/extract`))
-      } catch (err) {
-        warnFallback('getExtract', err)
-        return fallback.getExtract()
-      }
+      return assertExtract(await getJson(`${base}/extract`))
     },
     async getExpertHypotheses() {
-      try {
-        return assertExpertHypotheses(await getJson(`${base}/expert_hypotheses`))
-      } catch (err) {
-        warnFallback('getExpertHypotheses', err)
-        return fallback.getExpertHypotheses()
-      }
+      return assertExpertHypotheses(await getJson(`${base}/expert_hypotheses`))
     },
     async getLibrary() {
-      try {
-        return assertLibrary(await getJson(`${base}/library`))
-      } catch (err) {
-        warnFallback('getLibrary', err)
-        return fallback.getLibrary()
-      }
+      return assertLibrary(await getJson(`${base}/library`))
     },
     async parseConstraints(factory, text) {
-      try {
-        const runId = runIds.get(factory) ?? (await ensureRun(factory)).run_id
-        return assertParseConstraints(
-          await postJson(`${base}/constraints/parse`, { run_id: runId, text }),
-        )
-      } catch (err) {
-        warnFallback('parseConstraints', err)
-        return fallback.parseConstraints(factory, text)
-      }
+      const runId = runIds.get(factory) ?? (await ensureRun(factory)).run_id
+      return assertParseConstraints(
+        await postJson(`${base}/constraints/parse`, { run_id: runId, text }),
+      )
     },
     async rerun(factory, action) {
-      try {
-        const runId = runIds.get(factory) ?? (await ensureRun(factory)).run_id
-        return assertBoard(await postJson(`${base}/rerun`, { run_id: runId, action }))
-      } catch (err) {
-        warnFallback('rerun', err)
-        return fallback.rerun(factory, action)
-      }
+      const runId = runIds.get(factory) ?? (await ensureRun(factory)).run_id
+      return assertBoard(await postJson(`${base}/rerun`, { run_id: runId, action }))
     },
     async resetRun(factory) {
       runIds.delete(factory)
-      try {
-        return (await ensureRun(factory)).board
-      } catch (err) {
-        warnFallback('resetRun', err)
-        return fallback.resetRun(factory)
-      }
+      return (await ensureRun(factory)).board
     },
   }
 
   return client
 }
 
+const hasApiUrl = typeof API_URL === 'string' && API_URL.length > 0
+
+// 'msw' only implies a backend during dev, where the service worker actually
+// intercepts requests (see main.tsx). In a prod build the worker never starts,
+// so 'msw' without a real API_URL falls back to the fixture client instead of
+// pointing the http client at a dead /api endpoint (white screen).
 export const usingBackend =
-  API_MODE === 'msw' || API_MODE === 'http' || (typeof API_URL === 'string' && API_URL.length > 0)
+  API_MODE === 'http' || hasApiUrl || (API_MODE === 'msw' && import.meta.env.DEV)
 
 export const api: ApiClient = usingBackend ? createHttpClient(API_BASE) : createFixtureClient()

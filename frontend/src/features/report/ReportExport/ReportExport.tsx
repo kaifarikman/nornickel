@@ -10,7 +10,7 @@ import { RunPendingState } from '@/components/RunPendingState/RunPendingState.ts
 import { StatusBadge } from '@/components/StatusBadge/StatusBadge.tsx'
 import { useT } from '@/i18n/index.tsx'
 import { buildCsv } from '@/lib/csv.ts'
-import { byRank } from '@/lib/domain.ts'
+import { byRank, targetElement } from '@/lib/domain.ts'
 import { downloadBlob, downloadCsv, downloadJson } from '@/lib/download.ts'
 import { formatHypId, formatUsdRange } from '@/lib/format.ts'
 import { safeHref } from '@/lib/url.ts'
@@ -59,7 +59,12 @@ export function ReportExport() {
     }
     downloadCsv(
       `board_${factory}.csv`,
-      buildCsv(t.report.columns, boardData.hypotheses, extract.data.entities),
+      buildCsv(
+        t.report.columns,
+        boardData.hypotheses,
+        extract.data.entities,
+        targetElement(boardData.kpi_contract),
+      ),
     )
     setLocallyGenerated(true)
   }

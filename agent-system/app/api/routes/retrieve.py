@@ -53,14 +53,14 @@ def retrieve(request: RetrieveRequest, http_request: Request) -> RetrieveRespons
             status_code=502,
             code="RETRIEVE_ERROR",
             message="Retrieval request failed",
-            details={"reason": str(exc)},
+            details={"reason": "internal error"},
         )
         run_id, artifact_path = write_artifact(
             endpoint="/retrieve",
             request=request,
             response={"error": error.body.decode("utf-8")},
             status="error",
-            evidence={"query": request.query},
+            evidence={"query": request.query, "error": str(exc)},
             run_id=run_id_from_request(http_request),
         )
         return add_artifact_headers(error, run_id=run_id, artifact_path=artifact_path)

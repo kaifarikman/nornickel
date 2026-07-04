@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from app.config import Settings, get_settings
-from app.infra.llm import build_yandex_client
 from app.schemas import NarrateRequest, NarrateResponse
+from app.infra.llm import build_llm_client
 
 SYSTEM_PROMPT = """\
 Ты пишешь объяснение для карточки гипотезы в системе «Фабрика гипотез».
@@ -26,9 +26,9 @@ def run_narrate(request: NarrateRequest, settings: Settings | None = None) -> Na
     settings = settings or get_settings()
     if not settings.sidecar_llm_enabled:
         return _mock_narrate(request)
-    client = build_yandex_client(settings)
+    client = build_llm_client(settings)
     response = client.beta.chat.completions.parse(
-        model=settings.fast_model_uri,
+        model=settings.active_fast_model,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": request.model_dump_json()},
@@ -38,7 +38,7 @@ def run_narrate(request: NarrateRequest, settings: Settings | None = None) -> Na
     )
     parsed = response.choices[0].message.parsed
     if parsed is None:
-        raise ValueError("Yandex narrate parse returned empty parsed payload")
+        raise ValueError("LLM narrate parse returned empty parsed payload")
     return parsed
 
 

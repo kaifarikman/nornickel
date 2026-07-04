@@ -23,10 +23,13 @@ docker compose up --build
 
 - frontend: <http://localhost>
 - backend API: <http://localhost:8080>
-- sidecar API: <http://localhost:8765>
+- sidecar API: <http://localhost:8766>
 
 Стек по умолчанию поднимается без `.env`, внешних LLM-ключей и Postgres.
-RAG/Postgres — опция через профиль `rag` в `compose.yaml`.
+Для live LLM extraction/narration создайте `agent-system/.env` из
+`agent-system/.env.example`, задайте `OPENAI_API_KEY` или Yandex credentials и
+включите `SIDECAR_LLM_ENABLED=true`. RAG/Postgres — опция через профиль `rag` в
+`compose.yaml`.
 
 ## Проверки
 

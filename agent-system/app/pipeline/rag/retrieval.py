@@ -17,15 +17,15 @@ def embed_missing_chunks(settings: Settings | None = None, limit: int = 100) -> 
     settings = settings or get_settings()
     if not settings.database_url:
         raise DbNotConfiguredError()
-    if not settings.embedding_document_model_uri:
-        raise ValueError("YANDEX_EMBEDDING_DOCUMENT_MODEL is not configured")
+    if not settings.active_embedding_document_model:
+        raise ValueError("embedding document model is not configured")
     chunks = load_chunks_without_embeddings(settings, limit=limit)
     if not chunks:
         return 0
     texts = [chunk[3] for chunk in chunks]
     vectors = embed_texts_with_model(
         texts,
-        model_uri=settings.embedding_document_model_uri,
+        model_uri=settings.active_embedding_document_model,
         settings=settings,
     )
     store_chunk_embeddings(settings=settings, chunks=chunks, response=vectors)
@@ -39,14 +39,14 @@ def retrieve_chunks(
     settings = settings or get_settings()
     if not settings.database_url:
         raise DbNotConfiguredError()
-    if not settings.embedding_query_model_uri:
-        raise ValueError("YANDEX_EMBEDDING_QUERY_MODEL is not configured")
+    if not settings.active_embedding_query_model:
+        raise ValueError("embedding query model is not configured")
 
     embed_missing_chunks(settings=settings)
 
     query_vector = embed_texts_with_model(
         [request.query],
-        model_uri=settings.embedding_query_model_uri,
+        model_uri=settings.active_embedding_query_model,
         settings=settings,
     ).vectors[0]
 

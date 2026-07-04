@@ -50,33 +50,35 @@ export function RunView() {
     let cancelled = false
 
     const applyParamsThenGo = async () => {
-      if (params !== null) {
-        const actions: RerunAction[] = []
-        if (params.price !== DEFAULT_PRICE_USD_PER_T[params.element]) {
-          actions.push({
-            kind: 'change_price',
-            payload: { element: params.element, usd_per_t: params.price },
-          })
+      try {
+        if (params !== null) {
+          const actions: RerunAction[] = []
+          if (params.price !== DEFAULT_PRICE_USD_PER_T[params.element]) {
+            actions.push({
+              kind: 'change_price',
+              payload: { element: params.element, usd_per_t: params.price },
+            })
+          }
+          if (params.capexLimit < MAX_CAPEX_CLASS) {
+            actions.push({
+              kind: 'add_constraint',
+              payload: { metric: 'capex_class', op: '<=', value: params.capexLimit },
+            })
+          }
+          let board = null
+          for (const action of actions) {
+            board = await api.rerun(factory, action)
+          }
+          if (!cancelled && board !== null) {
+            queryClient.setQueryData(['board', factory], board)
+          }
         }
-        if (params.capexLimit < MAX_CAPEX_CLASS) {
-          actions.push({
-            kind: 'add_constraint',
-            payload: { metric: 'capex_class', op: '<=', value: params.capexLimit },
-          })
+      } catch (err) {
+        console.warn('[run] applying params failed, continuing to diagnosis:', err)
+      } finally {
+        if (!cancelled) {
+          void navigate('/diagnosis')
         }
-        let board = null
-        for (const action of actions) {
-          board = await api.rerun(factory, action)
-        }
-        if (cancelled) {
-          return
-        }
-        if (board !== null) {
-          queryClient.setQueryData(['board', factory], board)
-        }
-      }
-      if (!cancelled) {
-        void navigate('/diagnosis')
       }
     }
 

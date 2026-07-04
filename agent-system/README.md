@@ -29,7 +29,8 @@ Docker — дополнительный вариант (Postgres/pgvector для
 
 ```bash
 cp .env.example .env
-# для live-режима заполнить YANDEX_API_KEY, YANDEX_FOLDER_ID, YANDEX_MODEL_EXTRACT, YANDEX_MODEL_FAST
+# для live-режима заполнить OPENAI_API_KEY
+# по умолчанию: LLM_PROVIDER=openai, GPT model=gpt-5.5, embeddings=text-embedding-3-small
 docker compose up --build
 ```
 

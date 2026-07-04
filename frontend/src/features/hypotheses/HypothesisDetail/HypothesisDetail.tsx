@@ -8,6 +8,7 @@ import { ErrorState, LoadingState } from '@/components/QueryState/QueryState.tsx
 import { StatusBadge } from '@/components/StatusBadge/StatusBadge.tsx'
 import { useFactory } from '@/app/factory.tsx'
 import { useT } from '@/i18n/index.tsx'
+import { targetElement } from '@/lib/domain.ts'
 import { formatHypId, formatPctRange, formatTons, formatUsdRange } from '@/lib/format.ts'
 import { formatFraction, SCORE_DIMENSIONS, toScore100 } from '@/lib/score.ts'
 import { resolveTrace } from '@/lib/trace.ts'
@@ -47,7 +48,8 @@ export function HypothesisDetail() {
   const traceSteps = resolveTrace(hypothesis, extract.data, board.data.diagnostics)
   const economic = hypothesis.economic_effect
   const doe = hypothesis.doe_plan
-  const element28 = economic.addressable_tons.element_28 ?? 0
+  const element = targetElement(board.data.kpi_contract)
+  const addressableTons = economic.addressable_tons[element] ?? 0
   // source_nodes идёт source-first .. kpi-last (см. Candidate в engine) — целевой
   // узел несёт человекочитаемый label; raw target.metric — техническое id для
   // сопоставления в движке, не для показа пользователю.
@@ -165,7 +167,7 @@ export function HypothesisDetail() {
             <dl className={styles.economicStats}>
               <div className={styles.economicStat}>
                 <dt>{t.detail.addressableTons}</dt>
-                <dd className={styles.mono}>{formatTons(element28, t.units)}</dd>
+                <dd className={styles.mono}>{formatTons(addressableTons, t.units)}</dd>
               </div>
               <div className={styles.economicStat}>
                 <dt>{t.detail.recoveryGain}</dt>

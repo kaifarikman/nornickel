@@ -42,14 +42,14 @@ def narrate(request: NarrateRequest, http_request: Request) -> NarrateResponse |
             status_code=502,
             code="NARRATE_ERROR",
             message="Narrate request failed",
-            details={"reason": str(exc)},
+            details={"reason": "internal error"},
         )
         run_id, artifact_path = write_artifact(
             endpoint="/narrate",
             request=request,
             response={"error": error.body.decode("utf-8")},
             status="error",
-            evidence={"hypothesis_id": request.hypothesis.get("id")},
+            evidence={"hypothesis_id": request.hypothesis.get("id"), "error": str(exc)},
             run_id=run_id_from_request(http_request),
         )
         return add_artifact_headers(error, run_id=run_id, artifact_path=artifact_path)

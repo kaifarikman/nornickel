@@ -11,7 +11,7 @@ from pathlib import Path
 
 from app.config import get_settings
 from app.infra.paths import AGENT_SYSTEM_DIR, DOCS_DIR, REPO_ROOT
-from app.pipeline.extract.service import extract_with_yandex
+from app.pipeline.extract.service import extract_with_llm
 from app.pipeline.extract.validation import validate_extract_response
 from app.schemas import DocumentInput, ExtractRequest, ExtractResponse
 
@@ -28,7 +28,7 @@ def main() -> None:
         docs=[DocumentInput(path=path, mime=mime) for path, mime in _docs_from_args(args.doc)],
     )
     settings = get_settings().model_copy(update={"database_url": ""})
-    response = extract_with_yandex(request, settings=settings)
+    response = extract_with_llm(request, settings=settings)
     validate_extract_response(response, request=request)
 
     candidate_path = args.candidate or _candidate_path(args.output)

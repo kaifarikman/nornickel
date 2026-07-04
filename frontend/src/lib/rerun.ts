@@ -15,19 +15,27 @@ function valueMid(hyp: Hypothesis): number {
   return (lo + hi) / 2
 }
 
-function repriceEconomics(hyp: Hypothesis, element: Element, usdPerT: number): Hypothesis {
-  const tons = hyp.economic_effect.addressable_tons[element]
-  if (tons === undefined) {
-    return hyp
-  }
+function repriceEconomics(
+  hyp: Hypothesis,
+  changedElement: Element,
+  prices: Record<Element, number>,
+): Hypothesis {
   const [gainLo, gainHi] = hyp.economic_effect.recovery_gain_pct_range
-  const value_usd_range: [number, number] = [
-    Math.round((tons * gainLo * usdPerT) / 100),
-    Math.round((tons * gainHi * usdPerT) / 100),
-  ]
+  const entries = Object.entries(hyp.economic_effect.addressable_tons) as [Element, number][]
+  // Sum the value contribution of every addressable element, pricing the changed
+  // element at its new rate and every other element at its current KpiContract rate.
+  let valueLo = 0
+  let valueHi = 0
+  for (const [el, tons] of entries) {
+    const price = prices[el]
+    valueLo += (tons * gainLo * price) / 100
+    valueHi += (tons * gainHi * price) / 100
+  }
+  const value_usd_range: [number, number] = [Math.round(valueLo), Math.round(valueHi)]
+  const usdPerT = prices[changedElement]
   const assumptions = hyp.economic_effect.assumptions.map((a) =>
-    a.startsWith(`price ${element}`)
-      ? `price ${element} = ${usdPerT} $/t (параметр KpiContract)`
+    a.startsWith(`price ${changedElement}`)
+      ? `price ${changedElement} = ${usdPerT} $/t (параметр KpiContract)`
       : a,
   )
   return {
@@ -126,15 +134,15 @@ export function applyRerun(
     prices[action.payload.element] = action.payload.usd_per_t
   }
 
-  const priceAction =
+  const changedElement =
     action.kind === 'change_price' &&
     action.payload.element !== undefined &&
     action.payload.usd_per_t !== undefined
-      ? { element: action.payload.element, usdPerT: action.payload.usd_per_t }
+      ? action.payload.element
       : null
 
   const repriced = board.hypotheses.map((h) =>
-    priceAction !== null ? repriceEconomics(h, priceAction.element, priceAction.usdPerT) : h,
+    changedElement !== null ? repriceEconomics(h, changedElement, prices) : h,
   )
 
   const maxValueMid = repriced.reduce((max, h) => Math.max(max, valueMid(h)), 0)
@@ -142,7 +150,7 @@ export function applyRerun(
 
   const rescored = repriced.map((h) => {
     const kpiImpact =
-      priceAction !== null && maxValueMid > 0
+      changedElement !== null && maxValueMid > 0
         ? Number((valueMid(h) / maxValueMid).toFixed(2))
         : h.score_breakdown.kpi_impact
     const breakdown = { ...h.score_breakdown, kpi_impact: kpiImpact }

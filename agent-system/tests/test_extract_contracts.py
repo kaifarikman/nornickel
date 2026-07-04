@@ -7,6 +7,7 @@ import pytest
 
 from app.api.routes import extract as extract_route
 from app.pipeline.extract.mock import load_mock_extract_response
+from app.pipeline.extract.service import _parse_llm_extract_content
 from app.pipeline.extract.validation import validate_extract_response
 from app.schemas import ExtractRequest
 
@@ -60,7 +61,7 @@ def test_extract_route_uses_mock_fixture_when_sidecar_llm_disabled(monkeypatch: 
     fixture_response = load_mock_extract_response()
 
     def fail_if_live_extract_is_called(*_args: object, **_kwargs: object) -> None:
-        raise AssertionError("live Yandex extraction must not be called when sidecar LLM is disabled")
+        raise AssertionError("live LLM extraction must not be called when sidecar LLM is disabled")
 
     monkeypatch.setattr(
         extract_route,
@@ -68,9 +69,56 @@ def test_extract_route_uses_mock_fixture_when_sidecar_llm_disabled(monkeypatch: 
         lambda: SimpleNamespace(sidecar_llm_enabled=False),
     )
     monkeypatch.setattr(extract_route, "load_mock_extract_response", lambda: fixture_response)
-    monkeypatch.setattr(extract_route, "extract_with_yandex", fail_if_live_extract_is_called)
+    monkeypatch.setattr(extract_route, "extract_with_llm", fail_if_live_extract_is_called)
 
     response = extract_route.extract(_fixture_request(), SimpleNamespace(headers={}))
 
     assert response.media_type == "application/json"
     assert json.loads(response.body) == fixture_response.model_dump(mode="json")
+
+
+def test_parse_llm_extract_content_accepts_fenced_json_and_nodes_alias() -> None:
+    content = """```json
+{
+  "claims": [
+    {
+      "id": "claim_1",
+      "source_claim": "Fine particles reduce flotation recovery.",
+      "source_ref": "doc_1",
+      "source_page": null,
+      "confidence": 0.7,
+      "type": "property"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "factor_fines",
+      "name": "Fine particles",
+      "type": "parameter",
+      "tags": ["controllable"]
+    },
+    {
+      "id": "kpi_recovery",
+      "name": "Recovery",
+      "type": "kpi"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge_1",
+      "source": "factor_fines",
+      "target": "kpi_recovery",
+      "relation": "Reduced collision probability.",
+      "claim_id": "claim_1",
+      "polarity": "negative"
+    }
+  ]
+}
+```"""
+
+    parsed = _parse_llm_extract_content(content)
+
+    assert parsed.entities[0].id == "factor_fines"
+    assert parsed.entities[0].kind == "factor"
+    assert parsed.claims[0].evidence_type == "literature"
+    assert parsed.edges[0].source_claims == ["claim_1"]

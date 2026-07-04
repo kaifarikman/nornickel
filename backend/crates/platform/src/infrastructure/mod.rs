@@ -18,3 +18,19 @@ pub use file_factory_repository::FileFactoryRepository;
 pub use file_pack_repository::FilePackRepository;
 pub use http_sidecar::{HttpDiagnosticsSource, HttpExtractSource};
 pub use memory_run_repository::MemoryRunRepository;
+
+/// Валидация идентификатора из запроса перед подстановкой в путь файла:
+/// защита от path traversal (`..`, `/`, абсолютные пути). Разрешаем только
+/// `[a-z0-9_-]+`, чем покрываются легальные id ("kgmk", "flotation-v1",
+/// "hidden_nof_med" и т.п.).
+pub(crate) fn validate_id(id: &str) -> Result<(), String> {
+    if !id.is_empty()
+        && id
+            .bytes()
+            .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'_' || b == b'-')
+    {
+        Ok(())
+    } else {
+        Err(format!("invalid id '{id}': expected pattern ^[a-z0-9_-]+$"))
+    }
+}

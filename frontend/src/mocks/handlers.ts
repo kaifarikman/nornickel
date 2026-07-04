@@ -8,6 +8,7 @@ import type {
   RerunAction,
 } from '@/contracts.ts'
 import { applyRerun } from '@/lib/rerun.ts'
+import { targetElement } from '@/lib/domain.ts'
 import { buildCsv, CSV_COLUMNS } from '@/lib/csv.ts'
 import { libraryMock } from '@/mocks/library.ts'
 import boardFixture from '@/mocks/fixtures/board.json'
@@ -179,11 +180,19 @@ export const handlers = [
   http.get(
     '*/export/board.csv',
     () =>
-      new HttpResponse(buildCsv(CSV_COLUMNS, currentBoard().hypotheses, extract.entities), {
-        headers: {
-          'Content-Type': 'text/csv; charset=utf-8',
-          'Content-Disposition': 'attachment; filename="board.csv"',
+      new HttpResponse(
+        buildCsv(
+          CSV_COLUMNS,
+          currentBoard().hypotheses,
+          extract.entities,
+          targetElement(currentBoard().kpi_contract),
+        ),
+        {
+          headers: {
+            'Content-Type': 'text/csv; charset=utf-8',
+            'Content-Disposition': 'attachment; filename="board.csv"',
+          },
         },
-      }),
+      ),
   ),
 ]

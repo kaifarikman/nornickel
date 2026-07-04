@@ -43,14 +43,14 @@ def skeptic(request: SkepticRequest, http_request: Request) -> SkepticResponse |
             status_code=502,
             code="SKEPTIC_ERROR",
             message="Skeptic request failed",
-            details={"reason": str(exc)},
+            details={"reason": "internal error"},
         )
         run_id, artifact_path = write_artifact(
             endpoint="/skeptic",
             request=request,
             response={"error": error.body.decode("utf-8")},
             status="error",
-            evidence={"hypothesis_id": request.hypothesis.get("id")},
+            evidence={"hypothesis_id": request.hypothesis.get("id"), "error": str(exc)},
             run_id=run_id_from_request(http_request),
         )
         return add_artifact_headers(error, run_id=run_id, artifact_path=artifact_path)

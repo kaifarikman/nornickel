@@ -30,7 +30,8 @@ pub struct AppState {
 impl AppState {
     /// Файловые адаптеры относительно `base_dir` (корень данных: docs/) +
     /// in-memory run-стор. Если задан env `SIDECAR_URL` — extract/diagnose берутся
-    /// у живого сайдкара с файловым fallback (см. `HttpExtractSource`).
+    /// у живого сайдкара; файловые адаптеры используются только чтобы получить
+    /// список документов и пути известных xlsx-кейсов.
     pub fn new(base_dir: PathBuf) -> Self {
         let sidecar = std::env::var("SIDECAR_URL").ok().filter(|s| !s.is_empty());
         let extract_source: Arc<dyn ExtractSource> = match &sidecar {

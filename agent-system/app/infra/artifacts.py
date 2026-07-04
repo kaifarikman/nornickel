@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
@@ -14,6 +15,11 @@ from app.infra.paths import AGENT_SYSTEM_DIR
 
 RUN_ID_HEADER = "X-Agent-Run-Id"
 ARTIFACT_HEADER = "X-Agent-Artifact-Path"
+
+# run_id becomes a filesystem path component, so a caller-supplied header must
+# not smuggle `..` or separators. Anything outside this alphabet is discarded in
+# favour of a freshly generated id rather than failing the request.
+_RUN_ID_RE = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
 
 
 def write_artifact(
@@ -32,6 +38,8 @@ def write_artifact(
     disk or read-only mount cannot turn a successful response into a 502.
     """
     run_id = run_id or os.environ.get("AGENT_RUN_ID") or _new_run_id()
+    if not _RUN_ID_RE.match(run_id):
+        run_id = _new_run_id()
     try:
         run_dir = AGENT_SYSTEM_DIR / "runs" / run_id
         run_dir.mkdir(parents=True, exist_ok=True)

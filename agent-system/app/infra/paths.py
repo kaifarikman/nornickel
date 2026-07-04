@@ -30,6 +30,10 @@ def resolve_repo_path(path: str) -> Path:
     candidate = Path(path)
     if candidate.is_absolute():
         raise PathEscapesRepoError(path)
+    # Dotfiles/dotdirs (.env, .git, ...) hold secrets and VCS internals that are
+    # inside REPO_ROOT but must never be served, so reject any dot-prefixed part.
+    if any(part.startswith(".") for part in candidate.parts):
+        raise PathEscapesRepoError(path)
     resolved = (REPO_ROOT / candidate).resolve()
     if REPO_ROOT not in resolved.parents:
         raise PathEscapesRepoError(path)

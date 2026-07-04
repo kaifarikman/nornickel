@@ -24,20 +24,26 @@ pub async fn run(
     State(state): State<AppState>,
     Json(req): Json<RunRequest>,
 ) -> Result<Json<RunResponse>, HttpError> {
-    let out = application::run::execute(
-        state.extract_source.as_ref(),
-        state.diagnostics_source.as_ref(),
-        state.factories.as_ref(),
-        state.packs.as_ref(),
-        state.expert_hypotheses.as_ref(),
-        state.runs.as_ref(),
-        application::run::RunInput {
-            factory_id: req.factory_id,
-            pack_id: req.pack_id,
-            source_file: req.source_file,
-            kpi_contract: req.kpi_contract,
-        },
-    )?;
+    // Use case дергает сайдкар через blocking-HTTP — уводим на tokio blocking-пул,
+    // чтобы не блокировать async-воркер.
+    let out = tokio::task::spawn_blocking(move || {
+        application::run::execute(
+            state.extract_source.as_ref(),
+            state.diagnostics_source.as_ref(),
+            state.factories.as_ref(),
+            state.packs.as_ref(),
+            state.expert_hypotheses.as_ref(),
+            state.runs.as_ref(),
+            application::run::RunInput {
+                factory_id: req.factory_id,
+                pack_id: req.pack_id,
+                source_file: req.source_file,
+                kpi_contract: req.kpi_contract,
+            },
+        )
+    })
+    .await
+    .map_err(|e| UseCaseError::Internal(format!("run task panicked: {e}")))??;
     Ok(Json(RunResponse {
         run_id: out.run_id,
         board: out.board,
@@ -112,8 +118,12 @@ pub async fn parse_constraints(
         factors,
     };
     let url = format!("{}/parse_constraints", sidecar_url.trim_end_matches('/'));
+    // blocking-HTTP к сайдкару — на tokio blocking-пул, не на async-воркере.
     let parsed: ConstraintParseResponse =
-        blocking_post(url, &body).map_err(UseCaseError::Internal)?;
+        tokio::task::spawn_blocking(move || blocking_post(url, &body))
+            .await
+            .map_err(|e| UseCaseError::Internal(format!("sidecar task panicked: {e}")))?
+            .map_err(UseCaseError::Internal)?;
     Ok(Json(parsed))
 }
 
@@ -136,10 +146,7 @@ fn blocking_post<T: serde::de::DeserializeOwned + Send + 'static, B: serde::Seri
 ) -> Result<T, String> {
     let value = serde_json::to_value(body).map_err(|e| e.to_string())?;
     std::thread::spawn(move || -> Result<T, String> {
-        let client = reqwest::blocking::Client::builder()
-            .timeout(Duration::from_millis(1500))
-            .build()
-            .map_err(|e| e.to_string())?;
+        let client = blocking_client()?;
         client
             .post(url)
             .json(&value)
@@ -151,6 +158,27 @@ fn blocking_post<T: serde::de::DeserializeOwned + Send + 'static, B: serde::Seri
     })
     .join()
     .map_err(|_| "sidecar request thread panicked".to_string())?
+}
+
+/// Переиспользуемый blocking-клиент (пул соединений + таймаут один раз).
+fn blocking_client() -> Result<&'static reqwest::blocking::Client, String> {
+    static CLIENT: std::sync::OnceLock<reqwest::blocking::Client> = std::sync::OnceLock::new();
+    if let Some(client) = CLIENT.get() {
+        return Ok(client);
+    }
+    let client = reqwest::blocking::Client::builder()
+        .timeout(sidecar_timeout())
+        .build()
+        .map_err(|e| e.to_string())?;
+    Ok(CLIENT.get_or_init(|| client))
+}
+
+fn sidecar_timeout() -> Duration {
+    let millis = std::env::var("SIDECAR_TIMEOUT_MS")
+        .ok()
+        .and_then(|v| v.parse::<u64>().ok())
+        .unwrap_or(120_000);
+    Duration::from_millis(millis)
 }
 
 /// GET /data_readiness?run_id= — качество исходных данных прогона.
@@ -186,21 +214,27 @@ pub async fn roadmap(
 pub async fn factories(
     State(state): State<AppState>,
 ) -> Result<Json<Vec<contracts::FactorySummary>>, HttpError> {
-    let summaries = application::factories::execute(
-        state.extract_source.as_ref(),
-        state.diagnostics_source.as_ref(),
-        state.factories.as_ref(),
-        state.packs.as_ref(),
-        state.expert_hypotheses.as_ref(),
-    )?;
+    // Пайплайн по всем фабрикам дергает сайдкар (blocking) — на blocking-пул.
+    let summaries = tokio::task::spawn_blocking(move || {
+        application::factories::execute(
+            state.extract_source.as_ref(),
+            state.diagnostics_source.as_ref(),
+            state.factories.as_ref(),
+            state.packs.as_ref(),
+            state.expert_hypotheses.as_ref(),
+        )
+    })
+    .await
+    .map_err(|e| UseCaseError::Internal(format!("factories task panicked: {e}")))??;
     Ok(Json(summaries))
 }
 
 /// GET /extract — текущий ExtractResponse (документы + claims) для Library/trace.
 pub async fn extract(State(state): State<AppState>) -> Result<Json<ExtractResponse>, HttpError> {
-    let extract = state
-        .extract_source
-        .load()
+    // extract_source может ходить в сайдкар (blocking) — на blocking-пул.
+    let extract = tokio::task::spawn_blocking(move || state.extract_source.load())
+        .await
+        .map_err(|e| UseCaseError::Internal(format!("extract task panicked: {e}")))?
         .map_err(UseCaseError::Internal)?;
     Ok(Json(extract))
 }

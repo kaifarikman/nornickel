@@ -20,6 +20,7 @@ impl FileFactoryRepository {
 
 impl FactoryRepository for FileFactoryRepository {
     fn load(&self, factory_id: &str) -> Result<FactoryConfig, String> {
+        crate::infrastructure::validate_id(factory_id)?;
         let path = self.factories_dir.join(format!("{factory_id}.yaml"));
         let text = match std::fs::read_to_string(&path) {
             Ok(text) => text,

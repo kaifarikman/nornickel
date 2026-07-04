@@ -54,7 +54,7 @@ def store_live_extraction(
     from psycopg.types.json import Jsonb
 
     run_id = str(uuid4())
-    with psycopg.connect(settings.database_url) as conn:
+    with psycopg.connect(settings.database_url, connect_timeout=5) as conn:
         _ensure_schema(conn)
         with conn.cursor() as cur:
             for document in documents:
@@ -94,7 +94,7 @@ def store_live_extraction(
                 (
                     run_id,
                     request.pack_id,
-                    settings.extract_model_uri,
+                    settings.active_extract_model,
                     Jsonb(request.model_dump(mode="json")),
                     Jsonb(response.model_dump(mode="json")),
                 ),
@@ -113,7 +113,7 @@ def store_text_embeddings(
 
     import psycopg
 
-    with psycopg.connect(settings.database_url) as conn:
+    with psycopg.connect(settings.database_url, connect_timeout=5) as conn:
         _ensure_schema(conn)
         with conn.cursor() as cur:
             for text, vector in zip(texts, response.vectors, strict=True):
@@ -126,7 +126,12 @@ def store_text_embeddings(
                         embedding = excluded.embedding,
                         created_at = now()
                     """,
-                    (_text_embedding_id(text), settings.embedding_model_uri, text, _vec_literal(vector)),
+                    (
+                        _text_embedding_id(text),
+                        settings.active_embedding_document_model,
+                        text,
+                        _vec_literal(vector),
+                    ),
                 )
 
 
@@ -136,7 +141,7 @@ def load_chunks_without_embeddings(settings: Settings, limit: int = 100) -> list
 
     import psycopg
 
-    with psycopg.connect(settings.database_url) as conn:
+    with psycopg.connect(settings.database_url, connect_timeout=5) as conn:
         _ensure_schema(conn)
         with conn.cursor() as cur:
             cur.execute(
@@ -149,7 +154,7 @@ def load_chunks_without_embeddings(settings: Settings, limit: int = 100) -> list
                 order by c.created_at asc
                 limit %s
                 """,
-                (settings.embedding_document_model_uri, limit),
+                (settings.active_embedding_document_model, limit),
             )
             return [(row[0], row[1], row[2], row[3]) for row in cur.fetchall()]
 
@@ -165,7 +170,7 @@ def store_chunk_embeddings(
 
     import psycopg
 
-    with psycopg.connect(settings.database_url) as conn:
+    with psycopg.connect(settings.database_url, connect_timeout=5) as conn:
         _ensure_schema(conn)
         with conn.cursor() as cur:
             for chunk, vector in zip(chunks, response.vectors, strict=True):
@@ -177,7 +182,7 @@ def store_chunk_embeddings(
                         embedding = excluded.embedding,
                         created_at = now()
                     """,
-                    (chunk[0], settings.embedding_document_model_uri, _vec_literal(vector)),
+                    (chunk[0], settings.active_embedding_document_model, _vec_literal(vector)),
                 )
 
 
@@ -197,7 +202,7 @@ def search_chunks(
     import psycopg
 
     literal = _vec_literal(query_vector)
-    with psycopg.connect(settings.database_url) as conn:
+    with psycopg.connect(settings.database_url, connect_timeout=5) as conn:
         _ensure_schema(conn)
         with conn.cursor() as cur:
             cur.execute(
@@ -210,7 +215,7 @@ def search_chunks(
                 order by e.embedding <=> %s::vector
                 limit %s
                 """,
-                (literal, settings.embedding_document_model_uri, literal, top_k),
+                (literal, settings.active_embedding_document_model, literal, top_k),
             )
             return [(row[0], row[1], row[2], row[3], float(row[4])) for row in cur.fetchall()]
 

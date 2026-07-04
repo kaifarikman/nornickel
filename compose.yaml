@@ -26,6 +26,7 @@ services:
     environment:
       NORNIKEL_ROOT: /data/docs
       SIDECAR_URL: http://sidecar:8765
+      SIDECAR_TIMEOUT_MS: "120000"
       BIND_ADDR: 0.0.0.0:8080
     ports:
       - "8080:8080"
@@ -38,10 +39,17 @@ services:
     build:
       context: ./agent-system
       dockerfile: Dockerfile
+    env_file:
+      - path: ./agent-system/.env
+        required: false
     environment:
-      SIDECAR_LLM_ENABLED: "false"
+      LLM_PROVIDER: ${LLM_PROVIDER:-openai}
+      OPENAI_MODEL_EXTRACT: ${OPENAI_MODEL_EXTRACT:-gpt-5.5}
+      OPENAI_MODEL_FAST: ${OPENAI_MODEL_FAST:-gpt-5.5}
+      OPENAI_EMBEDDING_MODEL: ${OPENAI_EMBEDDING_MODEL:-text-embedding-3-small}
+      SIDECAR_LLM_ENABLED: ${SIDECAR_LLM_ENABLED:-true}
     ports:
-      - "8765:8765"
+      - "8766:8765"
     volumes:
       - ./docs:/app/docs:ro
       - ./norn-hack:/app/norn-hack:ro

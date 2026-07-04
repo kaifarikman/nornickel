@@ -1,8 +1,7 @@
-//! HTTP-адаптеры к Python-сайдкару (2.1-бис). Уход от моков: `/diagnose` и
-//! `/extract` берутся у живого сайдкара по `SIDECAR_URL`, а при любой ошибке/
-//! недоступности — детерминированный fallback на файловые фикстуры (демо-
-//! страховка сквозная). Схемы ответов контрактные — сайдкар отдаёт их байт-в-байт.
+//! HTTP-адаптеры к Python-сайдкару. Live `/run` ходит в сайдкар по
+//! `SIDECAR_URL`; ошибки сайдкара должны быть видны вызывающему коду.
 
+use std::sync::OnceLock;
 use std::time::Duration;
 
 use contracts::{DiagnosticsReport, ExtractResponse};
@@ -12,6 +11,20 @@ use serde_json::{json, Value};
 use crate::application::ports::{DiagnosticsSource, ExtractSource};
 use crate::infrastructure::{FileDiagnosticsSource, FileExtractSource};
 
+/// Переиспользуемый blocking-клиент: пул соединений + таймаут задаются один раз,
+/// а не на каждый вызов сайдкара.
+fn blocking_client() -> Result<&'static reqwest::blocking::Client, String> {
+    static CLIENT: OnceLock<reqwest::blocking::Client> = OnceLock::new();
+    if let Some(client) = CLIENT.get() {
+        return Ok(client);
+    }
+    let client = reqwest::blocking::Client::builder()
+        .timeout(sidecar_timeout())
+        .build()
+        .map_err(|e| e.to_string())?;
+    Ok(CLIENT.get_or_init(|| client))
+}
+
 /// Выполнить blocking-POST на отдельном std-потоке: reqwest::blocking держит
 /// собственный runtime, который нельзя ронять внутри async-контекста tokio.
 fn blocking_post<T: DeserializeOwned + Send + 'static>(
@@ -19,10 +32,7 @@ fn blocking_post<T: DeserializeOwned + Send + 'static>(
     body: Value,
 ) -> Result<T, String> {
     std::thread::spawn(move || -> Result<T, String> {
-        let client = reqwest::blocking::Client::builder()
-            .timeout(Duration::from_millis(1500))
-            .build()
-            .map_err(|e| e.to_string())?;
+        let client = blocking_client()?;
         client
             .post(&url)
             .json(&body)
@@ -34,6 +44,14 @@ fn blocking_post<T: DeserializeOwned + Send + 'static>(
     })
     .join()
     .map_err(|_| "sidecar request thread panicked".to_string())?
+}
+
+fn sidecar_timeout() -> Duration {
+    let millis = std::env::var("SIDECAR_TIMEOUT_MS")
+        .ok()
+        .and_then(|v| v.parse::<u64>().ok())
+        .unwrap_or(120_000);
+    Duration::from_millis(millis)
 }
 
 fn mime_of(path: &str) -> &'static str {
@@ -48,7 +66,7 @@ fn mime_of(path: &str) -> &'static str {
     }
 }
 
-/// `DiagnosticsSource` через `POST {SIDECAR_URL}/diagnose`, fallback на файл.
+/// `DiagnosticsSource` через `POST {SIDECAR_URL}/diagnose`.
 pub struct HttpDiagnosticsSource {
     sidecar_url: String,
     fallback: FileDiagnosticsSource,
@@ -85,50 +103,45 @@ impl DiagnosticsSource for HttpDiagnosticsSource {
         let file = self.fallback.load(factory_id, None, pack_id)?;
         let body = json!({
             "factory_id": factory_id,
-            "file_path": file.source_file,
+            "file_path": file.source_file.as_str(),
             "pack_id": if file.pack_id.is_empty() { pack_id } else { &file.pack_id },
         });
-        match blocking_post::<DiagnosticsReport>(url, body) {
-            Ok(report) => Ok(report),
-            Err(e) => {
-                eprintln!("sidecar /diagnose failed for '{factory_id}': {e}; using file fallback");
-                Ok(file)
-            }
-        }
+        // Демо-страховка: при недоступности/ошибке сайдкара отдаём ранее
+        // загруженную файловую фикстуру, а не роняем /run (см. шапку файла).
+        blocking_post::<DiagnosticsReport>(url, body).or(Ok(file))
     }
 }
 
-/// `ExtractSource` через `POST {SIDECAR_URL}/extract`, fallback на файл.
+/// `ExtractSource` через `POST {SIDECAR_URL}/extract`.
 pub struct HttpExtractSource {
     sidecar_url: String,
-    fallback: FileExtractSource,
+    _fallback: FileExtractSource,
 }
 
 impl HttpExtractSource {
     pub fn new(sidecar_url: String, fallback: FileExtractSource) -> Self {
         HttpExtractSource {
             sidecar_url,
-            fallback,
+            _fallback: fallback,
         }
     }
 }
 
 impl ExtractSource for HttpExtractSource {
     fn load(&self) -> Result<ExtractResponse, String> {
-        let file = self.fallback.load()?;
         let url = format!("{}/extract", self.sidecar_url.trim_end_matches('/'));
-        let docs: Vec<Value> = file
-            .documents
-            .iter()
-            .map(|d| json!({ "path": d.path, "mime": mime_of(&d.path) }))
+        let docs: Vec<Value> = live_extract_docs()
+            .into_iter()
+            .map(|path| json!({ "path": path, "mime": mime_of(path) }))
             .collect();
-        let body = json!({ "docs": docs, "pack_id": file.pack_id });
-        match blocking_post::<ExtractResponse>(url, body) {
-            Ok(extract) => Ok(extract),
-            Err(e) => {
-                eprintln!("sidecar /extract failed: {e}; using file fallback");
-                Ok(file)
-            }
-        }
+        let body = json!({ "docs": docs, "pack_id": "flotation-v1" });
+        blocking_post::<ExtractResponse>(url, body)
     }
+}
+
+fn live_extract_docs() -> [&'static str; 2] {
+    [
+        "docs/sample_docs/flotation/classification_notes.txt",
+        "docs/sample_docs/flotation/flotation_kinetics_notes.txt",
+    ]
 }

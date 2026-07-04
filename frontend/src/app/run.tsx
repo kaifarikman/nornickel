@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useMemo, useState } from 'react
 import type { ReactNode } from 'react'
 import type { Element, FactoryId } from '@/contracts.ts'
 import { ELEMENTS } from '@/lib/domain.ts'
+import { safeGet, safeSet } from '@/lib/storage.ts'
 
 export interface RunParams {
   element: Element
@@ -36,11 +37,11 @@ interface RunContextValue {
 const RunContext = createContext<RunContextValue | null>(null)
 
 function readStored(): Record<string, boolean> {
+  const raw = safeGet(STORAGE_KEY)
+  if (raw === null) {
+    return {}
+  }
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw === null) {
-      return {}
-    }
     const parsed: unknown = JSON.parse(raw)
     return typeof parsed === 'object' && parsed !== null ? (parsed as Record<string, boolean>) : {}
   } catch {
@@ -53,7 +54,7 @@ export function RunProvider({ children }: { children: ReactNode }) {
 
   const persist = useCallback((next: Record<string, boolean>) => {
     setRuns(next)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+    safeSet(STORAGE_KEY, JSON.stringify(next))
   }, [])
 
   const value = useMemo<RunContextValue>(

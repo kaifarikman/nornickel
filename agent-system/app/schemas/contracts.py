@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
 
 class StrictModel(BaseModel):
@@ -12,7 +12,9 @@ class StrictModel(BaseModel):
 
 
 FactoryId = str
-PackId = str
+# pack_id is interpolated into resource/pack paths, so constrain it to a safe
+# slug alphabet (e.g. "flotation-v1") to keep it from smuggling path separators.
+PackId = Annotated[str, StringConstraints(pattern=r"^[a-z0-9_-]+$")]
 
 Section = Literal["rock", "pyrrhotite"]
 Element = Literal["element_28", "element_29"]

@@ -2,6 +2,7 @@ import { createContext, useContext, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { KnownFactoryId } from '@/contracts.ts'
 import { FACTORY_ORDER } from '@/lib/domain.ts'
+import { safeGet, safeSet } from '@/lib/storage.ts'
 
 const STORAGE_KEY = 'hf-factory'
 
@@ -13,7 +14,7 @@ interface FactoryContextValue {
 const FactoryContext = createContext<FactoryContextValue | null>(null)
 
 function readStored(): KnownFactoryId {
-  const stored = localStorage.getItem(STORAGE_KEY)
+  const stored = safeGet(STORAGE_KEY)
   return FACTORY_ORDER.includes(stored as KnownFactoryId) ? (stored as KnownFactoryId) : 'kgmk'
 }
 
@@ -24,7 +25,7 @@ export function FactoryProvider({ children }: { children: ReactNode }) {
     () => ({
       factory,
       setFactory: (next) => {
-        localStorage.setItem(STORAGE_KEY, next)
+        safeSet(STORAGE_KEY, next)
         setFactoryState(next)
       },
     }),

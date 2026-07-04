@@ -6,6 +6,7 @@ import { useT } from '@/i18n/index.tsx'
 import { cx } from '@/lib/cx.ts'
 import { capexClassOf } from '@/lib/capex.ts'
 import { formatHypId, formatTons, formatUsdRange } from '@/lib/format.ts'
+import { targetElement } from '@/lib/domain.ts'
 import { toScore100 } from '@/lib/score.ts'
 import styles from './HypothesisCard.module.css'
 
@@ -21,6 +22,7 @@ interface HypothesisCardProps {
 
 export function HypothesisCard({
   hypothesis,
+  contract,
   entities,
   rankShift,
   highlight,
@@ -30,7 +32,8 @@ export function HypothesisCard({
   const t = useT()
   const score = toScore100(hypothesis.score_total)
   const capexClass = capexClassOf(hypothesis, entities)
-  const addressable = hypothesis.economic_effect.addressable_tons.element_28 ?? 0
+  const element = targetElement(contract)
+  const addressable = hypothesis.economic_effect.addressable_tons[element] ?? 0
   const isTop = hypothesis.rank === 1
   const expertMatched = hypothesis.expert_match?.matched === true
   const canExclude =
@@ -80,7 +83,7 @@ export function HypothesisCard({
         <span className={styles.metric}>
           <span className={styles.metricLabel}>{t.board.addressableTons}</span>
           <span className={styles.metricValue}>
-            {formatTons(addressable, t.units)} {t.elements.element_28}
+            {formatTons(addressable, t.units)} {t.elements[element]}
           </span>
         </span>
         <span className={styles.metric}>

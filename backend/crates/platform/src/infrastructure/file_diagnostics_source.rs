@@ -30,6 +30,7 @@ impl DiagnosticsSource for FileDiagnosticsSource {
                 "source_file diagnostics require a live sidecar (set SIDECAR_URL)".to_string(),
             );
         }
+        crate::infrastructure::validate_id(factory_id)?;
         let path = self
             .fixtures_dir
             .join(format!("diagnostics_{factory_id}.json"));

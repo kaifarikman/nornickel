@@ -20,6 +20,7 @@ impl FilePackRepository {
 
 impl PackRepository for FilePackRepository {
     fn load(&self, pack_id: &str) -> Result<DomainPack, String> {
+        crate::infrastructure::validate_id(pack_id)?;
         let path = self.packs_dir.join(format!("{pack_id}.yaml"));
         let text = std::fs::read_to_string(&path)
             .map_err(|e| format!("cannot read pack '{}': {e}", path.display()))?;

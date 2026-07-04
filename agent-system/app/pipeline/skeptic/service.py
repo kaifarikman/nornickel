@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from app.config import Settings, get_settings
-from app.infra.llm import build_yandex_client
 from app.schemas import SkepticRequest, SkepticResponse
+from app.infra.llm import build_llm_client
 
 SYSTEM_PROMPT = """\
 Ты технический скептик для портфеля проверяемых гипотез по обогащению руд.
@@ -28,9 +28,9 @@ def run_skeptic(request: SkepticRequest, settings: Settings | None = None) -> Sk
     settings = settings or get_settings()
     if not settings.sidecar_llm_enabled:
         return _mock_skeptic(request)
-    client = build_yandex_client(settings)
+    client = build_llm_client(settings)
     response = client.beta.chat.completions.parse(
-        model=settings.fast_model_uri,
+        model=settings.active_fast_model,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": request.model_dump_json()},
@@ -40,7 +40,7 @@ def run_skeptic(request: SkepticRequest, settings: Settings | None = None) -> Sk
     )
     parsed = response.choices[0].message.parsed
     if parsed is None:
-        raise ValueError("Yandex skeptic parse returned empty parsed payload")
+        raise ValueError("LLM skeptic parse returned empty parsed payload")
     return parsed
 
 

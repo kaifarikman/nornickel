@@ -37,14 +37,14 @@ def embed(request: EmbedRequest, http_request: Request) -> EmbedResponse | JSONR
             status_code=502,
             code="EMBED_ERROR",
             message="Embedding request failed",
-            details={"reason": str(exc)},
+            details={"reason": "internal error"},
         )
         run_id, artifact_path = write_artifact(
             endpoint="/embed",
             request=request,
             response={"error": error.body.decode("utf-8")},
             status="error",
-            evidence={"texts": len(request.texts)},
+            evidence={"texts": len(request.texts), "error": str(exc)},
             run_id=run_id_from_request(http_request),
         )
         return add_artifact_headers(error, run_id=run_id, artifact_path=artifact_path)

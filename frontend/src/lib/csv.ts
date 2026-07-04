@@ -1,4 +1,4 @@
-import type { GraphNode, Hypothesis } from '@/contracts.ts'
+import type { Element, GraphNode, Hypothesis } from '@/contracts.ts'
 import { byRank } from './domain.ts'
 import { capexClassOf } from './capex.ts'
 
@@ -24,6 +24,7 @@ export function buildCsv(
   columns: string[],
   hypotheses: Hypothesis[],
   entities: GraphNode[],
+  element: Element,
 ): string {
   const header = columns.join(',')
   const rows = byRank(hypotheses).map((h) => {
@@ -35,7 +36,7 @@ export function buildCsv(
       csvCell(h.status),
       String(lo),
       String(hi),
-      String(h.economic_effect.addressable_tons.element_28 ?? 0),
+      String(h.economic_effect.addressable_tons[element] ?? 0),
       String(capexClassOf(h, entities)),
       String(h.score_total),
       csvCell(h.expert_match?.expert_hypothesis_id ?? ''),

@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import type { Dict, Locale } from './dict.ts'
 import { ru } from './ru.ts'
 import { en } from './en.ts'
+import { safeGet, safeSet } from '@/lib/storage.ts'
 
 const STORAGE_KEY = 'hf-locale'
 
@@ -17,7 +18,7 @@ interface LocaleContextValue {
 const LocaleContext = createContext<LocaleContextValue | null>(null)
 
 function readStoredLocale(): Locale {
-  const stored = localStorage.getItem(STORAGE_KEY)
+  const stored = safeGet(STORAGE_KEY)
   return stored === 'en' ? 'en' : 'ru'
 }
 
@@ -25,7 +26,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(readStoredLocale)
 
   const setLocale = useCallback((next: Locale) => {
-    localStorage.setItem(STORAGE_KEY, next)
+    safeSet(STORAGE_KEY, next)
     setLocaleState(next)
   }, [])
 

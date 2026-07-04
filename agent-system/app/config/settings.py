@@ -18,9 +18,25 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # Yandex-поля опциональны: mock-путь (/diagnose, mock-/extract) обязан
+    # LLM-поля опциональны: mock-путь (/diagnose, mock-/extract) обязан
     # работать на чистой машине без .env. Live-эндпоинты сами проверяют
     # заполненность и отвечают 422 LLM_NOT_CONFIGURED.
+    llm_provider: str = Field(default="yandex", alias="LLM_PROVIDER")
+
+    openai_api_key: str = Field(default="", alias="OPENAI_API_KEY")
+    openai_base_url: str = Field(default="https://api.openai.com/v1", alias="OPENAI_BASE_URL")
+    openai_model_extract: str = Field(default="gpt-5.5", alias="OPENAI_MODEL_EXTRACT")
+    openai_model_fast: str = Field(default="gpt-5.5", alias="OPENAI_MODEL_FAST")
+    openai_embedding_model: str = Field(
+        default="text-embedding-3-small",
+        alias="OPENAI_EMBEDDING_MODEL",
+    )
+    openai_request_timeout_seconds: float = Field(
+        default=60.0,
+        alias="OPENAI_REQUEST_TIMEOUT_SECONDS",
+    )
+    openai_max_retries: int = Field(default=2, alias="OPENAI_MAX_RETRIES")
+
     yandex_api_key: str = Field(default="", alias="YANDEX_API_KEY")
     yandex_folder_id: str = Field(default="", alias="YANDEX_FOLDER_ID")
     yandex_base_url: str = Field(
@@ -48,6 +64,44 @@ class Settings(BaseSettings):
         alias="YANDEX_REQUEST_TIMEOUT_SECONDS",
     )
     yandex_max_retries: int = Field(default=2, alias="YANDEX_MAX_RETRIES")
+
+    @property
+    def normalized_llm_provider(self) -> str:
+        return self.llm_provider.strip().lower()
+
+    @property
+    def active_extract_model(self) -> str:
+        if self.normalized_llm_provider == "openai":
+            return self.openai_model_extract
+        return self.extract_model_uri
+
+    @property
+    def active_fast_model(self) -> str:
+        if self.normalized_llm_provider == "openai":
+            return self.openai_model_fast
+        return self.fast_model_uri
+
+    @property
+    def active_embedding_document_model(self) -> str:
+        if self._use_yandex_embeddings:
+            return self.embedding_document_model_uri
+        return self.openai_embedding_model
+
+    @property
+    def active_embedding_query_model(self) -> str:
+        if self._use_yandex_embeddings:
+            return self.embedding_query_model_uri
+        return self.openai_embedding_model
+
+    @property
+    def _use_yandex_embeddings(self) -> bool:
+        return (
+            self.normalized_llm_provider == "yandex"
+            and bool(self.yandex_api_key)
+            and bool(self.yandex_folder_id)
+            and bool(self.embedding_document_model_uri)
+            and bool(self.embedding_query_model_uri)
+        )
 
     def model_uri(self, model_name: str) -> str:
         """Возвращает URI модели Yandex для OpenAI-совместимых эндпоинтов"""

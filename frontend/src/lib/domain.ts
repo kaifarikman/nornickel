@@ -4,6 +4,7 @@ import type {
   Element,
   KnownFactoryId,
   Hypothesis,
+  KpiContract,
   LossCell,
   MineralForm,
   NodeKind,
@@ -19,6 +20,15 @@ export const NODE_KIND_ORDER: NodeKind[] = ['factor', 'mechanism', 'property', '
 
 export function toElement(value: string): Element {
   return value === 'element_29' ? 'element_29' : 'element_28'
+}
+
+/**
+ * The KPI target's element is encoded in its technical metric id
+ * (e.g. "recoverable_losses_element_29"). Used to pick which addressable_tons
+ * entry to surface so copper runs (element_29) don't show nickel zeros.
+ */
+export function targetElement(contract: KpiContract): Element {
+  return contract.target.metric.includes('element_29') ? 'element_29' : 'element_28'
 }
 
 export function toFactoryId(value: string): KnownFactoryId {
@@ -69,6 +79,13 @@ export const FACTORY_REPORT_FILE: Record<KnownFactoryId, string> = {
   nof_vkr: 'Хвосты НОФ вкрапленная.xlsx',
   nof_med: 'Хвосты НОФ медистая.xlsx',
   tof: 'Хвосты ТОФ.xlsx',
+}
+
+export const FACTORY_SOURCE_FILE: Record<KnownFactoryId, string> = {
+  kgmk: 'norn-hack/Пример 1/Хвосты КГМК.xlsx',
+  nof_vkr: 'norn-hack/Пример 2/Хвосты НОФ Вкр.xlsx',
+  nof_med: 'norn-hack/Пример 3/Хвосты НОФ мед.xlsx',
+  tof: 'norn-hack/Пример 4/Хвосты ТОФ_2.xlsx',
 }
 
 export const DEFAULT_PRICE_USD_PER_T: Record<Element, number> = {
