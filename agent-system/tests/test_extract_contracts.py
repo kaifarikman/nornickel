@@ -6,9 +6,9 @@ from types import SimpleNamespace
 import pytest
 
 from app.api.routes import extract as extract_route
-from app.schemas import ExtractRequest
 from app.pipeline.extract.mock import load_mock_extract_response
 from app.pipeline.extract.validation import validate_extract_response
+from app.schemas import ExtractRequest
 
 
 def _fixture_request() -> ExtractRequest:

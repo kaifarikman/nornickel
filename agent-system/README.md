@@ -1,16 +1,28 @@
-# Nornikel Agent System
+# Nornikel Agent System — Agent Sidecar
 
-Python sidecar for extraction, deterministic diagnostics, pgvector RAG, novelty,
-skeptic review, narration, and per-step run artifacts.
+Python-сайдкар: извлечение фактов, детерминированная диагностика, pgvector-RAG,
+novelty, skeptic-review, нарратив и пошаговые артефакты прогонов. Волатильная
+часть системы (LLM, парсинг, эмбеддинги, оркестрация pipeline) по границе
+волатильности из [../docs/AGENTS.md](../docs/AGENTS.md) — при смене задачи
+переписывается только этот сайдкар и pack, ядро не трогается.
 
-## Run
+## Стек
+
+- Python 3.12
+- FastAPI + uvicorn
+- pydantic 2 / pydantic-settings
+- openai-совместимый клиент (Yandex), pymupdf, python-docx, openpyxl
+- psycopg + pgvector (RAG-путь, опционально)
+- ruff + mypy + pytest
+
+## Быстрый старт
 
 Для демо надёжнее локальный uvicorn — стартует на чистой машине без `.env`,
 без сети и без Postgres (`/health`, `/diagnose`, mock-`/extract` работают из коробки):
 
 ```bash
 pip install .
-uvicorn app.api.main:app --port 8765
+uvicorn app.api.main:app --port 8765   # http://localhost:8765
 ```
 
 Docker — дополнительный вариант (Postgres/pgvector для RAG-пути):
@@ -21,17 +33,18 @@ cp .env.example .env
 docker compose up --build
 ```
 
-API: `http://localhost:8765`
-
-## Checks
+## Проверки
 
 ```bash
+pip install .[dev]
+ruff check app tests    # линт (E501 отключён в pyproject)
+mypy app                # типы
 python -m compileall app
-python -m pytest -p no:rerunfailures tests/test_extract_contracts.py tests/test_retrieval_contracts.py
+python -m pytest        # контракт-тесты extract/retrieval, документы, path-security
 ```
 
-## Runtime Data
+## Данные
 
-`resources/` contains the minimal fixtures, pack, and sample documents needed
-when this repository is cloned without the sibling `docs` repository. If `../docs`
-exists, the service uses it automatically.
+`resources/` содержит минимальные фикстуры, pack и sample-документы, нужные при
+клонировании этого репозитория без соседнего `docs`. Если `../docs` существует,
+сервис использует его автоматически.

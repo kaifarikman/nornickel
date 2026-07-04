@@ -4,7 +4,6 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
 from app.api.errors import error_response
-from app.schemas import EmbedRequest, EmbedResponse
 from app.infra.artifacts import (
     add_artifact_headers,
     json_response_with_artifact,
@@ -12,7 +11,7 @@ from app.infra.artifacts import (
     write_artifact,
 )
 from app.pipeline.rag.embeddings import embed_texts
-
+from app.schemas import EmbedRequest, EmbedResponse
 
 router = APIRouter(tags=["embed"])
 

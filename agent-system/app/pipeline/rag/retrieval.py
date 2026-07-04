@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 from app.config import Settings, get_settings
-from app.schemas import RetrieveRequest, RetrievedChunk, RetrieveResponse
-from app.pipeline.rag.embeddings import embed_texts_with_model
 from app.infra.db import (
     DbNotConfiguredError,
     load_chunks_without_embeddings,
     search_chunks,
     store_chunk_embeddings,
 )
+from app.pipeline.rag.embeddings import embed_texts_with_model
+from app.schemas import RetrievedChunk, RetrieveRequest, RetrieveResponse
 
 
 def embed_missing_chunks(settings: Settings | None = None, limit: int = 100) -> int:

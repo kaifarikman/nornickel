@@ -8,16 +8,15 @@ from fastapi.responses import JSONResponse
 from openpyxl.utils.exceptions import InvalidFileException
 
 from app.api.errors import error_response
-from app.infra.paths import PathEscapesRepoError
-from app.schemas import DiagnoseRequest, DiagnosticsReport
 from app.infra.artifacts import (
     add_artifact_headers,
     json_response_with_artifact,
     run_id_from_request,
     write_artifact,
 )
+from app.infra.paths import PathEscapesRepoError
 from app.pipeline.diagnose.service import ChecksumMismatchError, diagnose_xlsx
-
+from app.schemas import DiagnoseRequest, DiagnosticsReport
 
 router = APIRouter(tags=["diagnose"])
 

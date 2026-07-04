@@ -22,7 +22,7 @@ node_modules/
 dist/
 coverage/
 __pycache__/
-*.pyc
+*.py[cod]
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
@@ -34,8 +34,10 @@ runs/
 
 # OS/IDE
 .DS_Store
+Thumbs.db
 .idea/
-.vscode/
+.vscode/*
+!.vscode/extensions.json
 
 # env/secrets
 .env
@@ -45,3 +47,4 @@ runs/
 .playwright-mcp/
 .codex/
 .claude/
+.impeccable/

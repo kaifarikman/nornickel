@@ -310,7 +310,7 @@ def _ensure_schema(conn) -> None:
 
 
 def _chunk_id(chunk: ChunkLike) -> str:
-    raw = f"{chunk.doc_id}|{chunk.page}|{chunk.text}".encode("utf-8")
+    raw = f"{chunk.doc_id}|{chunk.page}|{chunk.text}".encode()
     return "chunk_" + hashlib.sha256(raw).hexdigest()[:24]
 
 

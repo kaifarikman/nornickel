@@ -10,11 +10,10 @@ import sys
 from pathlib import Path
 
 from app.config import get_settings
-from app.schemas import DocumentInput, ExtractRequest, ExtractResponse
-from app.pipeline.extract.validation import validate_extract_response
-from app.pipeline.extract.service import extract_with_yandex
 from app.infra.paths import AGENT_SYSTEM_DIR, DOCS_DIR, REPO_ROOT
-
+from app.pipeline.extract.service import extract_with_yandex
+from app.pipeline.extract.validation import validate_extract_response
+from app.schemas import DocumentInput, ExtractRequest, ExtractResponse
 
 DEFAULT_DOCS = [
     (str(DOCS_DIR / "sample_docs" / "flotation" / "classification_notes.txt"), "text/plain"),

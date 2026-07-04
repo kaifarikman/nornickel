@@ -7,8 +7,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from app.api.errors import error_response
-from app.api.routes.diagnose import router as diagnose_router
 from app.api.routes.constraints import router as constraints_router
+from app.api.routes.diagnose import router as diagnose_router
 from app.api.routes.embed import router as embed_router
 from app.api.routes.extract import router as extract_router
 from app.api.routes.health import router as health_router

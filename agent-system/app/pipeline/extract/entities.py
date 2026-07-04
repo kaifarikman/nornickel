@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from pathlib import Path
 
 import yaml
 
@@ -29,7 +28,7 @@ class EntityResolver:
     threshold: float = 88.0
 
     @classmethod
-    def from_pack(cls, pack_id: str = "flotation-v1") -> "EntityResolver":
+    def from_pack(cls, pack_id: str = "flotation-v1") -> EntityResolver:
         pack_path = DOCS_DIR / "packs" / f"{pack_id}.yaml"
         data = yaml.safe_load(pack_path.read_text(encoding="utf-8"))
         synonyms = data.get("synonyms", {})

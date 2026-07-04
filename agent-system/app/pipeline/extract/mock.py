@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import json
 
-from app.schemas import ExtractResponse
 from app.infra.paths import FIXTURES_DIR
-
+from app.schemas import ExtractResponse
 
 EXTRACT_FIXTURE = FIXTURES_DIR / "extract_response.json"
 

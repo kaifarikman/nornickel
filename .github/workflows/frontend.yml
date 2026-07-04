@@ -1,14 +1,24 @@
-name: CI
+name: Frontend
 
 on:
   push:
     branches: [main]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend.yml'
   pull_request:
     branches: [main]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend.yml'
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: frontend-${{ github.ref }}
   cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: frontend
 
 env:
   NODE_VERSION: '22'
@@ -28,6 +38,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
 
@@ -44,6 +55,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec tsc -b
 
@@ -60,6 +72,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm test:coverage
 
@@ -76,12 +89,13 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - uses: actions/upload-artifact@v4
         with:
           name: dist
-          path: dist
+          path: frontend/dist
           retention-days: 7
 
   docker:
@@ -94,7 +108,7 @@ jobs:
       - name: Build image (no push)
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: frontend
           push: false
           load: true
           tags: hypothesis-factory-web:ci

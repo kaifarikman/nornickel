@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 from app.config import Settings, get_settings
-from app.schemas import SkepticRequest, SkepticResponse
 from app.infra.llm import build_yandex_client
-
+from app.schemas import SkepticRequest, SkepticResponse
 
 SYSTEM_PROMPT = """\
 Ты технический скептик для портфеля проверяемых гипотез по обогащению руд.

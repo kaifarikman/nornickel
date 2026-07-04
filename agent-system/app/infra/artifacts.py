@@ -12,7 +12,6 @@ from pydantic import BaseModel
 
 from app.infra.paths import AGENT_SYSTEM_DIR
 
-
 RUN_ID_HEADER = "X-Agent-Run-Id"
 ARTIFACT_HEADER = "X-Agent-Artifact-Path"
 

@@ -1,9 +1,10 @@
-# Фабрика гипотез — Frontend
+# Frontend — Фабрика гипотез (UI)
 
 Демонстрационная витрина R&D-платформы «Фабрика гипотез»: объяснимый портфель
 исследовательских гипотез с трассировкой до источников. Фронтенд работает от
 фикстур/моков и не требует backend — это позволяет разрабатывать и демонстрировать
-UI независимо от Rust-движка и Python-агента.
+UI независимо от Rust-движка и Python-агента. Правила проекта —
+[../docs/AGENTS.md](../docs/AGENTS.md).
 
 Целевая поставка — десктоп-приложение на **Tauri** (нативный file dialog, скан
 папки, спавн Python-сайдкара). Сейчас фронт запускается как веб (Vite в браузере);
@@ -51,13 +52,15 @@ pnpm dev          # http://localhost:5173
 
 ### Docker
 
+Compose живёт в корне монорепо (`../compose.yaml`), запускать оттуда:
+
 ```bash
-docker compose --profile dev up dev     # dev-сервер с hot-reload на :5173
-docker compose up frontend              # прод-сборка под nginx на :8080
+docker compose up frontend      # прод-сборка под nginx на :80
 ```
 
-Backend в этом compose не поднимается (живёт в своём репозитории). nginx в
-`frontend` проксирует `/api/` на `http://backend:8080/` и резолвит имя лениво
+Для dev-сервера с hot-reload — локальный `pnpm dev` (см. «Быстрый старт»), Docker не нужен.
+
+nginx в `frontend` проксирует `/api/` на `http://backend:8080/` и резолвит имя лениво
 (resolver + переменная в nginx.conf): контейнер стартует и без бэка — `/api`
 отвечает 502, фронт уходит в fixture-fallback. Когда контейнер бэка появится,
 достаточно подключить его в общую docker-сеть под именем `backend`.
@@ -130,15 +133,16 @@ scripts/          sync-fixtures.mjs — копирование фикстур и
 
 ## CI
 
-GitHub Actions (`.github/workflows/`):
+GitHub Actions в корне монорепо (`../.github/workflows/`), фронтовый workflow
+`frontend.yml` с path-фильтром на `frontend/**`:
 
-- **CI** — lint, typecheck, test (с покрытием), build (артефакт `dist`) и
+- **Frontend** — lint, typecheck, test (с покрытием), build (артефакт `dist`) и
   `docker build` со smoke-тестом контейнера.
 - **Security** — `pnpm audit` (fail на high/critical для prod-зависимостей + не
   блокирующий аудит dev-зависимостей), CodeQL (SAST) и gitleaks (поиск секретов);
   плюс еженедельный запуск по расписанию.
 
-Dependabot обновляет npm-зависимости и GitHub Actions еженедельно.
+Dependabot обновляет npm/cargo/pip-зависимости и GitHub Actions еженедельно.
 
 ## Фикстуры
 

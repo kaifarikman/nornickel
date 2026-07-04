@@ -27,7 +27,7 @@ def parse_text_file(path: str | Path) -> list[DocumentChunk]:
     doc_id = _doc_id(source_path)
 
     chunks = []
-    for index, paragraph in enumerate(paragraphs[1:] or paragraphs, start=1):
+    for paragraph in paragraphs[1:] or paragraphs:
         chunks.append(
             DocumentChunk(
                 doc_id=doc_id,

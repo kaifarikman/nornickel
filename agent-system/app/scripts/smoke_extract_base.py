@@ -5,13 +5,13 @@ from __future__ import annotations
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from app.schemas import Claim, DocumentRef, ExtractResponse, GraphEdge, GraphNode
+from app.infra.paths import DOCS_DIR
 from app.pipeline.extract.documents import parse_pdf_file, parse_text_corpus
 from app.pipeline.extract.entities import EntityResolver
 from app.pipeline.extract.mock import load_mock_extract_response
 from app.pipeline.extract.normalization import normalize_extract_response
 from app.pipeline.extract.validation import validate_extract_response
-from app.infra.paths import DOCS_DIR
+from app.schemas import Claim, DocumentRef, ExtractResponse, GraphEdge, GraphNode
 
 
 def main() -> None:

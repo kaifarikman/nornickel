@@ -4,11 +4,10 @@ from fastapi import APIRouter, Request, Response
 
 from app.api.errors import error_response
 from app.config import get_settings
-from app.schemas import ExtractRequest
 from app.infra.artifacts import add_artifact_headers, run_id_from_request, write_artifact
 from app.pipeline.extract.mock import load_mock_extract_response
 from app.pipeline.extract.service import LlmNotConfiguredError, extract_with_yandex
-
+from app.schemas import ExtractRequest
 
 router = APIRouter(tags=["extract"])
 

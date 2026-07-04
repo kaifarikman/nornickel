@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 from app.config import Settings, get_settings
-from app.schemas import NarrateRequest, NarrateResponse
 from app.infra.llm import build_yandex_client
-
+from app.schemas import NarrateRequest, NarrateResponse
 
 SYSTEM_PROMPT = """\
 Ты пишешь объяснение для карточки гипотезы в системе «Фабрика гипотез».

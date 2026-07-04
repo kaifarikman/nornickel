@@ -1,0 +1,75 @@
+name: Agent System
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'agent-system/**'
+      - '.github/workflows/agent-system.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'agent-system/**'
+      - '.github/workflows/agent-system.yml'
+
+concurrency:
+  group: agent-system-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: agent-system
+
+env:
+  PYTHON_VERSION: '3.12'
+
+jobs:
+  lint:
+    name: Lint (ruff + mypy)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+      - run: pip install .[dev]
+      - name: ruff
+        run: ruff check app tests
+      - name: mypy
+        run: mypy app
+        continue-on-error: true
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+      - run: pip install .[dev]
+      - name: compileall
+        run: python -m compileall app
+      - name: pytest
+        run: python -m pytest
+
+  docker:
+    name: Docker build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build image (no push)
+        uses: docker/build-push-action@v6
+        with:
+          context: agent-system
+          push: false
+          load: true
+          tags: hypothesis-factory-agent:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from app.infra.paths import PathEscapesRepoError, REPO_ROOT, resolve_repo_path
+from app.infra.paths import REPO_ROOT, PathEscapesRepoError, resolve_repo_path
 
 
 def test_resolve_repo_path_accepts_relative_path_under_repo_root() -> None:

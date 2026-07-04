@@ -275,7 +275,6 @@ def parse_tails(
                 continue  # формы после «Итого» блоку не принадлежат
             for key, mineral_form in MINERAL_FORMS:
                 if t2.startswith(key):
-                    share_col = min(ton_cols.values()) - 1  # колонка доли слева от тоннажа
                     for el, col in ton_cols.items():
                         tons = as_float(row_map.get(col))
                         if tons is None:

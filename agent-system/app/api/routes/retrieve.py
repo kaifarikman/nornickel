@@ -4,16 +4,15 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
 from app.api.errors import error_response
-from app.infra.db import DbNotConfiguredError
-from app.schemas import RetrieveRequest, RetrieveResponse
 from app.infra.artifacts import (
     add_artifact_headers,
     json_response_with_artifact,
     run_id_from_request,
     write_artifact,
 )
+from app.infra.db import DbNotConfiguredError
 from app.pipeline.rag.retrieval import retrieve_chunks
-
+from app.schemas import RetrieveRequest, RetrieveResponse
 
 router = APIRouter(tags=["retrieve"])
 

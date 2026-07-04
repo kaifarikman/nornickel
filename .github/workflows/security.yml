@@ -18,9 +18,12 @@ env:
 
 jobs:
   audit:
-    name: Dependency audit
+    name: Frontend dependency audit
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: frontend
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -30,6 +33,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - name: Audit production deps (fail on high/critical)
         run: pnpm audit --audit-level=high --prod

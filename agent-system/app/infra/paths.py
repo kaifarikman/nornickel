@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-
 AGENT_SYSTEM_DIR = Path(__file__).resolve().parents[2]
 REPO_ROOT = AGENT_SYSTEM_DIR.parent
 RESOURCES_DIR = AGENT_SYSTEM_DIR / "resources"

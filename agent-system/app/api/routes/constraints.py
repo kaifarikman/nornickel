@@ -7,7 +7,6 @@ from rapidfuzz import fuzz
 
 from app.schemas import ParseConstraintsRequest, ParseConstraintsResponse
 
-
 router = APIRouter(tags=["constraints"])
 
 

@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 from app.config import Settings, get_settings
+from app.pipeline.rag.retrieval import retrieve_chunks
 from app.schemas import (
     NoveltyRequest,
     NoveltyResponse,
     NoveltySimilar,
     RetrieveRequest,
 )
-from app.pipeline.rag.retrieval import retrieve_chunks
 
 
 def score_novelty(

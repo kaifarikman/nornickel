@@ -7,13 +7,13 @@ from typing import Any
 
 import yaml
 
-from app.schemas import DiagnoseRequest, DiagnosticsReport
 from app.infra.paths import DOCS_DIR, resolve_repo_path
 from app.pipeline.diagnose.parser import (
     DEFAULT_DIAGNOSIS_CONFIG,
     DiagnosisConfig,
     parse_tails,
 )
+from app.schemas import DiagnoseRequest, DiagnosticsReport
 
 # Мягкий диапазон расхождений (1–5%) остаётся репортом в data_quality;
 # выше — файл считается противоречивым сам себе → 422 CHECKSUM_MISMATCH.

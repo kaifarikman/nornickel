@@ -5,7 +5,6 @@ from fastapi.responses import JSONResponse
 
 from app.api.errors import error_response
 from app.config import get_settings
-from app.schemas import NarrateRequest, NarrateResponse
 from app.infra.artifacts import (
     add_artifact_headers,
     json_response_with_artifact,
@@ -13,7 +12,7 @@ from app.infra.artifacts import (
     write_artifact,
 )
 from app.pipeline.narrate.service import run_narrate
-
+from app.schemas import NarrateRequest, NarrateResponse
 
 router = APIRouter(tags=["narrate"])
 

@@ -6,9 +6,9 @@ from typing import Any
 
 import yaml
 
-from app.schemas import ExtractResponse, GraphNode
-from app.pipeline.extract.entities import EntityResolver
 from app.infra.paths import DOCS_DIR
+from app.pipeline.extract.entities import EntityResolver
+from app.schemas import ExtractResponse, GraphNode
 
 
 @dataclass(frozen=True)

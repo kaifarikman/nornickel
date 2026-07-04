@@ -3,6 +3,11 @@ from __future__ import annotations
 from pydantic import ValidationError
 
 from app.config import Settings, get_settings
+from app.infra.db import store_live_extraction
+from app.infra.llm import build_yandex_client
+from app.pipeline.extract.documents import DOCX_MIME, DocumentChunk, parse_documents
+from app.pipeline.extract.normalization import normalize_extract_response
+from app.pipeline.extract.validation import validate_extract_response
 from app.schemas import (
     Claim,
     DocumentRef,
@@ -12,12 +17,6 @@ from app.schemas import (
     GraphNode,
     StrictModel,
 )
-from app.pipeline.extract.documents import DOCX_MIME, DocumentChunk, parse_documents
-from app.pipeline.extract.normalization import normalize_extract_response
-from app.pipeline.extract.validation import validate_extract_response
-from app.infra.db import store_live_extraction
-from app.infra.llm import build_yandex_client
-
 
 SYSTEM_PROMPT = """\
 Ты извлекаешь структурированные причинно-следственные claims для графа знаний.

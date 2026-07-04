@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from app.config import Settings, get_settings
-from app.schemas import EmbedRequest, EmbedResponse
 from app.infra.db import store_text_embeddings
 from app.infra.llm import build_yandex_client
+from app.schemas import EmbedRequest, EmbedResponse
 
 
 def embed_texts(request: EmbedRequest, settings: Settings | None = None) -> EmbedResponse:

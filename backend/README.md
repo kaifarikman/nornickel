@@ -1,10 +1,15 @@
-# backend — Rust platform (флотационный контракт)
+# Backend — Rust-платформа (флотационный контракт)
+
+Стабильное детерминированное ядро + платформа по границе волатильности из
+[../docs/AGENTS.md](../docs/AGENTS.md): движок работает над generic-графом, вся
+доменная семантика приходит из данных (pack, fixtures, factories), не из кода.
+
+## Стек
 
 Три крейта чистой архитектуры:
 
-- `crates/contracts` — единственный источник структур контракта (см. `docs/CONTRACTS.md`).
-- `crates/engine` — Discovery Engine: чистый, без I/O и доменных слов. Вся доменная
-  семантика приходит из данных (pack, fixtures, factories).
+- `crates/contracts` — единственный источник структур контракта (см. [../docs/CONTRACTS.md](../docs/CONTRACTS.md)).
+- `crates/engine` — Discovery Engine: чистый, без I/O и доменных слов.
 - `crates/platform` — axum-платформа (порт 8080), HTTP-шов web ↔ platform.
 
 ## Данные
@@ -12,7 +17,7 @@
 Единый источник правды — каталог `docs/` (`fixtures/`, `packs/flotation-v1.yaml`,
 `factories/*.yaml`, `golden/`). Указывается через `NORNIKEL_ROOT`.
 
-## Запуск
+## Быстрый старт
 
 ```sh
 NORNIKEL_ROOT=../docs cargo run -p platform
@@ -23,6 +28,7 @@ SIDECAR_URL=http://127.0.0.1:8765 NORNIKEL_ROOT=../docs cargo run -p platform
 ```
 
 Эндпоинты:
+
 - `POST /run {factory_id, pack_id?, kpi_contract?}` → `{run_id, board}`
 - `GET /board?run_id=`, `POST /rerun {run_id, action}`, `GET /hypothesis/:id`
 - `GET /extract`, `GET /expert_hypotheses`
@@ -35,9 +41,11 @@ SIDECAR_URL=http://127.0.0.1:8765 NORNIKEL_ROOT=../docs cargo run -p platform
 
 Фронт ходит через vite/nginx proxy `/api` → один origin (CORS в platform нет).
 
-## Тесты
+## Проверки
 
 ```sh
-cargo test
+cargo fmt --all --check                # форматирование
+cargo clippy --workspace -- -D warnings  # линт (обязателен перед PR)
+cargo test                             # тесты
 UPDATE_GOLDEN=1 cargo test -p engine golden_board_flotation_v1   # перегенерить golden
 ```
