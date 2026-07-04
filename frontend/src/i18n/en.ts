@@ -76,6 +76,7 @@ export const en: Dict = {
     },
     stageDetail: ({ file, factory }) => `${factory} · ${file}`,
     graphCaption: 'Knowledge graph assembling: levers → mechanisms → diagnoses → KPI',
+    graphProgress: ({ revealed, total }) => `Extracting nodes: ${revealed} / ${total} drawn`,
     finishing: 'Opening the diagnosis…',
   },
   graph: {

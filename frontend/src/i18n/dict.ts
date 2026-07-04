@@ -89,6 +89,7 @@ export interface Dict {
     }
     stageDetail: (args: { file: string; factory: string }) => string
     graphCaption: string
+    graphProgress: (args: { revealed: number; total: number }) => string
     finishing: string
   }
   graph: {

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Check, Loader2 } from 'lucide-react'
@@ -16,6 +16,7 @@ import styles from './RunView.module.css'
 const STAGE_KEYS = ['read', 'diagnose', 'extract', 'graph', 'score', 'done'] as const
 type StageKey = (typeof STAGE_KEYS)[number]
 const STAGE_MS = 850
+const GRAPH_STAGE = STAGE_KEYS.indexOf('graph' as StageKey)
 
 export function RunView() {
   const { t } = useLocale()
@@ -27,8 +28,15 @@ export function RunView() {
   const params = parseRunParams(location.state)
 
   const [stage, setStage] = useState(0)
+  const [graphProgress, setGraphProgress] = useState({ revealed: 0, total: 0 })
   const finishedRef = useRef(false)
   const extract = useQuery({ queryKey: ['extract'], queryFn: api.getExtract })
+
+  const handleGraphProgress = useCallback((revealed: number, total: number) => {
+    setGraphProgress({ revealed, total })
+  }, [])
+
+  const graphComplete = graphProgress.total > 0 && graphProgress.revealed >= graphProgress.total
 
   useEffect(() => {
     if (stage >= STAGE_KEYS.length - 1) {
@@ -37,9 +45,13 @@ export function RunView() {
     if (stage === STAGE_KEYS.length - 2 && !extract.isSuccess) {
       return
     }
+    // Держим прогон на стадии «граф», пока каждый извлечённый узел не будет отрисован.
+    if (stage === GRAPH_STAGE && !graphComplete) {
+      return
+    }
     const timer = setTimeout(() => setStage((s) => s + 1), STAGE_MS)
     return () => clearTimeout(timer)
-  }, [stage, extract.isSuccess])
+  }, [stage, extract.isSuccess, graphComplete])
 
   useEffect(() => {
     if (stage < STAGE_KEYS.length - 1 || finishedRef.current) {
@@ -142,8 +154,16 @@ export function RunView() {
               ariaLabel={t.run.graphCaption}
               animateBuild={buildStarted}
               buildStepMs={140}
+              onRevealProgress={handleGraphProgress}
             />
-            <figcaption className={styles.graphCaption}>{t.run.graphCaption}</figcaption>
+            <figcaption className={styles.graphCaption}>
+              {buildStarted && !graphComplete && graphProgress.total > 0
+                ? t.run.graphProgress({
+                    revealed: graphProgress.revealed,
+                    total: graphProgress.total,
+                  })
+                : t.run.graphCaption}
+            </figcaption>
           </figure>
         </Panel>
       </div>

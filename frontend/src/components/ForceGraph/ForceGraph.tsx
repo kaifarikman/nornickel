@@ -15,6 +15,7 @@ interface ForceGraphProps {
   ariaLabel: string
   animateBuild?: boolean
   buildStepMs?: number
+  onRevealProgress?: (revealed: number, total: number) => void
 }
 
 const NODE_ORDER: Record<GraphNode['kind'], number> = Object.fromEntries(
@@ -36,6 +37,7 @@ export function ForceGraph({
   ariaLabel,
   animateBuild = false,
   buildStepMs = 300,
+  onRevealProgress,
 }: ForceGraphProps) {
   const staticMode = useMemo(isStaticEnvironment, [])
   const orderedNodes = useMemo(
@@ -86,6 +88,10 @@ export function ForceGraph({
     const timer = setTimeout(() => setRevealed((r) => r + 1), buildStepMs)
     return () => clearTimeout(timer)
   }, [staticMode, animateBuild, revealed, orderedNodes.length, buildStepMs])
+
+  useEffect(() => {
+    onRevealProgress?.(revealed, orderedNodes.length)
+  }, [revealed, orderedNodes.length, onRevealProgress])
 
   useEffect(() => {
     if (staticMode) {

@@ -76,6 +76,7 @@ export const ru: Dict = {
     },
     stageDetail: ({ file, factory }) => `${factory} · ${file}`,
     graphCaption: 'Граф знаний собирается: рычаги → механизмы → диагнозы → KPI',
+    graphProgress: ({ revealed, total }) => `Извлечение узлов: ${revealed} / ${total} на графе`,
     finishing: 'Открываем диагноз…',
   },
   graph: {
